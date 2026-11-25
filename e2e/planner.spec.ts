@@ -16,7 +16,7 @@ test('서버 검색과 장비 화면, 315 경계, 재화 수동 입력 및 최�
       equipment:fixture.equipment.map(item=>({...item,ilvl,track:null,rank:null})),resources:{},progress:null}});
   });
   await page.goto('/');
-  await page.getByLabel('서버',{exact:true}).selectOption('test-realm');
+  await page.getByRole('combobox',{name:'서버',exact:true}).selectOption('test-realm');
   const name = page.getByLabel('캐릭터명');
   await name.fill('경계미만');
   await page.getByRole('button',{name:'검색 및 진단'}).click();
@@ -37,10 +37,10 @@ test('서버 검색과 장비 화면, 315 경계, 재화 수동 입력 및 최�
 test('404 안내와 샘플 탐색',async ({page})=>{
   await page.route('**/api/character?*',route=>route.fulfill({status:404,json:{error:'캐릭터를 찾을 수 없습니다.'}}));
   await page.goto('/');
-  await page.getByLabel('서버',{exact:true}).selectOption('test-realm');
+  await page.getByRole('combobox',{name:'서버',exact:true}).selectOption('test-realm');
   await page.getByLabel('캐릭터명').fill('없는캐릭터');
   await page.getByRole('button',{name:'검색 및 진단'}).click();
-  await expect(page.getByRole('alert')).toHaveText('캐릭터를 찾을 수 없습니다.');
+  await expect(page.getByRole('alert').filter({hasText:'캐릭터를 찾을 수 없습니다.'})).toBeVisible();
   await page.getByRole('button',{name:'샘플 보기'}).click();
   await expect(page.getByRole('heading',{name:'샘플모험가'})).toBeVisible();
   await expect(page.getByRole('table')).toBeVisible();
