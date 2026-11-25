@@ -1,0 +1,177 @@
+'use client';
+
+import {useEffect, useState, type FormEvent} from 'react';
+import {diagnose} from '../src/engine.mjs';
+import {sample} from '../src/sample.mjs';
+import {season} from '../src/rules.mjs';
+
+type Snapshot = Parameters<typeof diagnose>[0];
+type Realm = {slug: string; name: string};
+type Search = {realm: string; name: string};
+type Gear = {slot:string; name?:string; itemId:number; ilvl:number; icon?:string|null; quality?:string|null; track?:string|null; rank?:number|null};
+
+const slots: Record<string,string> = {
+  HEAD:'머리',NECK:'목',SHOULDER:'어깨',BACK:'등',CHEST:'가슴',WRIST:'손목',HANDS:'손',WAIST:'허리',
+  LEGS:'다리',FEET:'발',FINGER_1:'반지 1',FINGER_2:'반지 2',TRINKET_1:'장신구 1',TRINKET_2:'장신구 2',MAIN_HAND:'주 무기',OFF_HAND:'보조 무기',
+};
+const qualities: Record<string,string> = {POOR:'하급',COMMON:'일반',UNCOMMON:'고급',RARE:'희귀',EPIC:'영웅',LEGENDARY:'전설',ARTIFACT:'유물'};
+const balances = [
+  ['cofferKey','복원된 금고 열쇠'],['cofferKeyShard','열쇠 조각'],['adventurerCrest','모험가 안개문장'],
+  ['veteranCrest','노련가 안개문장'],['championCrest','용사 안개문장'],['heroCrest','영웅 안개문장'],
+  ['mythCrest','신화 안개문장'],['venomstone','승천의 맹독석'],['gold','골드'],['spark','제작용 불꽃'],['craftingReagent','기타 제작 재료 수량'],
+];
+const progressFields = [['maxDelveTier','최고 해금 구렁 단계',11],['stableTier','안정적으로 완료할 구렁 단계',11],
+  ['vaultWorld','야외/구렁 금고 진행 횟수',99],['vaultDungeon','던전 금고 진행 횟수',99],['vaultRaid','레이드 금고 진행 횟수',99]] as const;
+
+function presentTime(value?:string) {
+  return value ? new Intl.DateTimeFormat('ko-KR',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Seoul'}).format(new Date(value)) : '—';
+}
+
+export default function Planner() {
+  const [realmList, setRealms] = useState<Realm[]>([]);
+  const [realmError, setRealmError] = useState('');
+  const [realmAttempt, retryRealms] = useState(0);
+  const [realm, setRealm] = useState('');
+  const [name, setName] = useState('');
+  const [recent, setRecent] = useState<Search[]>([]);
+  const [snapshot, setSnapshot] = useState<Snapshot|null>(null);
+  const [isSample, setSample] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [manual, setManual] = useState<Record<string,string>>({});
+  const [saved, setSaved] = useState('');
+  const [savedAt, setSavedAt] = useState('');
+  const [notes, setNotes] = useState<Record<string,string>>({});
+
+  useEffect(() => {
+    try {
+      const items: unknown = JSON.parse(localStorage.getItem('gearpath-recent') ?? '[]');
+      if (Array.isArray(items)) setRecent(items.filter(x => typeof x?.realm === 'string' && typeof x?.name === 'string').slice(0,5));
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch('/api/realms',{signal:controller.signal}).then(async response => {
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? '서버 목록을 불러오지 못했습니다.');
+      setRealms(data.realms);
+      setRealmError('');
+    }).catch(error => { if (!controller.signal.aborted) setRealmError(error.message); });
+    return () => controller.abort();
+  }, [realmAttempt]);
+
+  function load(next: Snapshot, demo: boolean) {
+    setSnapshot(next);
+    setSample(demo);
+    setManual({});
+    setNotes({});
+    setSaved('');
+    setSavedAt('');
+    setError('');
+  }
+
+  async function search(query: Search) {
+    setBusy(true);
+    setError('');
+    try {
+      const response = await fetch('/api/character?' + new URLSearchParams(query), {cache:'no-store'});
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? '캐릭터를 불러오지 못했습니다.');
+      load(data, false);
+      const next = [query,...recent.filter(x=>x.realm!==query.realm || x.name!==query.name)].slice(0,5);
+      setRecent(next);
+      try { localStorage.setItem('gearpath-recent',JSON.stringify(next)); } catch {}
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '조회에 실패했습니다.');
+    } finally { setBusy(false); }
+  }
+
+  function applyResources(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!snapshot) return;
+    const observedAt = isSample ? '2026-11-26T10:00:00+09:00' : new Date().toISOString();
+    const value = (id:string) => manual[id] === undefined || manual[id] === '' ? null : Number(manual[id]);
+    const resources = Object.fromEntries(balances.map(([id])=>[id,{value:value(id), source:'manual', observedAt}]));
+    const dungeon = manual.dungeon?.trim();
+    const keyLevel = value('keyLevel');
+    if ((!dungeon) !== (keyLevel === null)) {
+      setSaved('보유 쐐기돌은 던전명과 단계를 함께 입력하세요.');
+      return;
+    }
+    const next = {...snapshot,resources,progress:{maxDelveTier:value('maxDelveTier'),stableTier:value('stableTier'),
+      vaultWorld:value('vaultWorld'),vaultDungeon:value('vaultDungeon'),vaultRaid:value('vaultRaid'),
+      venomstoneUnlocked:manual.venomstoneUnlocked==='' || !manual.venomstoneUnlocked ? null : manual.venomstoneUnlocked==='yes',source:'manual',observedAt},
+      keystone:dungeon && keyLevel!==null ? {dungeon,level:keyLevel,source:'manual',observedAt} : null};
+    setSnapshot(next);
+    setNotes({...manual});
+    setSavedAt(observedAt);
+    setSaved('재화와 진행 상황을 반영했습니다.');
+  }
+
+  const result = snapshot ? diagnose(snapshot, isSample ? {demo:!savedAt,now:new Date(savedAt || '2026-11-26T10:00:00+09:00'),web:true} : {web:true}) : null;
+  const nextGoal = !result || result.rawAverage === null || result.rawAverage >= 315 ? null : 315;
+  const profile = snapshot?.profile;
+  const gear: Gear[] = snapshot?.equipment ?? [];
+  const weak = new Set(result?.weakSlots.map((row:Gear)=>row.slot));
+
+  return <main>
+    <header className="mast"><a href="/">WoW <strong>GearPath</strong></a><span>한국 리테일 <i /> {season.name}</span></header>
+    <section className="lookup" aria-labelledby="lookup">
+      <div><p className="eyebrow">장비 · 재화 · 파밍</p><h1 id="lookup">캐릭터 장비 진단</h1></div>
+      <form className="search" onSubmit={event=>{event.preventDefault(); void search({realm,name:name.trim()});}}>
+        <label>서버<select required value={realm} onChange={e=>setRealm(e.target.value)}>
+          <option value="">{realmList.length ? '서버 선택' : '서버 목록 대기'}</option>
+          {realmList.map(row=><option key={row.slug} value={row.slug}>{row.name}</option>)}
+        </select></label>
+        <label>캐릭터명<input required maxLength={24} value={name} onChange={e=>setName(e.target.value)} placeholder="캐릭터명 입력" /></label>
+        <button className="primary" disabled={busy || !realm || !name.trim()}>{busy?'조회 중…':'검색 및 진단'}</button>
+        <button type="button" disabled={busy} onClick={()=>load(sample(),true)}>샘플 보기</button>
+      </form>
+      {realmError && <p className="feedback" role="status">{realmError} <button type="button" onClick={()=>retryRealms(x=>x+1)}>다시 불러오기</button></p>}
+      {error && <p className="feedback" role="alert">{error}</p>}
+      {recent.length>0 && <div className="recent"><span>최근 검색</span>{recent.map(row=><button key={JSON.stringify(row)} disabled={busy} onClick={()=>{setRealm(row.realm);setName(row.name);void search(row);}}>{row.name} · {realmList.find(x=>x.slug===row.realm)?.name ?? row.realm}</button>)}</div>}
+    </section>
+    {snapshot && result && <>
+      <section className="character">
+        <div><p className="eyebrow">{isSample ? '가상 샘플' : realmList.find(x=>x.slug===snapshot.realm)?.name ?? snapshot.realm}</p>
+          <h2>{snapshot.name}</h2><p>{profile?.race ?? '종족 미확인'} · {profile?.className ?? '직업 미확인'} · {profile?.specialization ?? '전문화 미확인'} · {profile?.level ?? '—'} 레벨</p>
+          <small>조회 시각 {presentTime(snapshot.fetchedAt ?? snapshot.observedAt)} KST</small></div>
+        <div className="metric"><span>평균 장착 레벨</span><strong>{result.displayAverage ?? '미확인'}</strong></div>
+        <div className="metric"><span>다음 목표</span><strong>{nextGoal ?? '—'}</strong><small>{result.groupEligible?'그룹 후보 표시':'315부터 그룹 후보 표시'}</small></div>
+      </section>
+      <div className="columns">
+        <section className="panel"><div className="section-title"><h2>장착 장비</h2><span>교체 후보 표시</span></div>
+          <div className="table-scroll"><table><thead><tr><th>부위</th><th>아이템</th><th>레벨</th><th>강화</th></tr></thead><tbody>
+            {Object.entries(slots).map(([slot,label])=>{
+              const item = gear.find(x=>x.slot===slot);
+              return <tr className={weak.has(slot)?'weak':''} key={slot}>
+                <th scope="row">{label}{weak.has(slot)&&<small>교체 검토</small>}</th>
+                <td>{item ? <div className="gear">{item.icon ? <img src={item.icon} width={30} height={30} alt="" /> : <span className="icon" aria-hidden="true" />}
+                  <span className={item.quality ?? ''}>{item.name || '이름 미확인'}<small>{qualities[item.quality ?? ''] ?? '등급 미확인'}</small></span></div>
+                  : slot==='OFF_HAND'&&snapshot.weaponMode==='two-hand' ? '양손 무기 사용' : '미확인'}</td>
+                <td className="number">{item?.ilvl ?? '—'}</td><td>{item?.track ? `${item.track} ${item.rank ?? '—'}` : '미확인'}</td>
+              </tr>;
+            })}
+          </tbody></table></div>
+        </section>
+        <section className="panel"><div className="section-title"><h2>추천 파밍 순서</h2><span>솔플 우선</span></div>
+          <ol className="routes">{result.activities.map(row=><li key={row.id}><div><h3>{row.title}</h3><span className="badge">{row.kind==='group'?'그룹':row.certainty}</span></div><p>{row.id==='weak-slots' ? result.weakSlots.map((item:Gear)=>`${slots[item.slot] ?? item.slot} ${item.ilvl}`).join(' · ') : row.reason}</p></li>)}</ol>
+          {savedAt && <div className="progress-note"><strong>입력한 진행 상황</strong><dl>{progressFields.map(([id,label])=><div key={id}><dt>{label}</dt><dd>{notes[id] || '미입력'}</dd></div>)}</dl></div>}
+          <details><summary>진단 범위 및 공식 출처</summary><ul>{result.warnings.map(w=><li key={w}>{w}</li>)}</ul><a href={season.source}>한국 시즌 공지</a> · <a href={season.updateSource}>12.1.5 공지</a></details>
+        </section>
+      </div>
+      <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>빈칸은 미입력, 0은 보유 없음</span></div>
+      <form onSubmit={applyResources}><div className="inputs">
+        {balances.map(([id,label])=><label key={id}>{label}<input type="number" min={0} max={999999999} step={1} placeholder="미입력" value={manual[id]??''} onChange={e=>setManual({...manual,[id]:e.target.value})} /></label>)}
+        {progressFields.map(([id,label,max])=><label key={id}>{label}<input type="number" min={id.includes('Tier')?1:0} max={max} step={1} placeholder="미입력" value={manual[id]??''} onChange={e=>setManual({...manual,[id]:e.target.value})} /></label>)}
+        <label>승천의 맹독석 해금<select value={manual.venomstoneUnlocked??''} onChange={e=>setManual({...manual,venomstoneUnlocked:e.target.value})}><option value="">미입력</option><option value="yes">해금</option><option value="no">미해금</option></select></label>
+        <label>보유 쐐기돌 던전<input maxLength={80} value={manual.dungeon??''} onChange={e=>setManual({...manual,dungeon:e.target.value})} placeholder="미입력" /></label>
+        <label>보유 쐐기돌 단계<input type="number" min={2} max={100} value={manual.keyLevel??''} onChange={e=>setManual({...manual,keyLevel:e.target.value})} placeholder="미입력" /></label>
+      </div><button className="primary">진단에 반영</button><span className="save" role="status">{saved}</span></form>
+      </section>
+    </>}
+    {!result && <div className="empty"><strong>장착 장비와 파밍 경로</strong><p>한국 리테일 캐릭터를 검색하거나 샘플을 열어 진단 내용을 확인하세요.</p></div>}
+    <footer>WoW GearPath · 월드 오브 워크래프트 팬 도구 <span>315는 서비스의 추천 기준입니다.</span></footer>
+  </main>;
+}

@@ -1,4 +1,4 @@
-import { season, demoRules } from './rules.mjs';
+import { season, demoRules, ruleCatalog } from './rules.mjs';
 
 export const SLOTS = ['HEAD','NECK','SHOULDER','BACK','CHEST','WRIST','HANDS','WAIST','LEGS','FEET','FINGER_1','FINGER_2','TRINKET_1','TRINKET_2','MAIN_HAND','OFF_HAND'];
 const SOURCES = ['manual','addon','blizzard','sample'];
@@ -24,6 +24,11 @@ export function validate(p) {
     if (!SOURCES.includes(p.progress.source) || !Number.isFinite(Date.parse(p.progress.observedAt))) fail('진행 정보의 출처와 시각이 필요합니다.');
     if (p.progress.maxDelveTier != null && (!Number.isInteger(p.progress.maxDelveTier) || p.progress.maxDelveTier < 1 || p.progress.maxDelveTier > 11)) fail('구렁 단계는 1~11 또는 null입니다.');
     if (p.progress.venomstoneUnlocked != null && typeof p.progress.venomstoneUnlocked !== 'boolean') fail('해금 여부는 boolean 또는 null입니다.');
+    for (const key of ['stableTier','vaultWorld','vaultDungeon','vaultRaid']) {
+      const value = p.progress[key];
+      const isTier = key === 'stableTier';
+      if (value != null && (!Number.isInteger(value) || value < (isTier ? 1 : 0) || value > (isTier ? 11 : 99))) fail('구렁 또는 금고 진행 횟수를 확인하세요.');
+    }
   }
   if (p.keystone != null && (!SOURCES.includes(p.keystone.source) || !Number.isFinite(Date.parse(p.keystone.observedAt)) || !Number.isInteger(p.keystone.level) || p.keystone.level < 2 || p.keystone.level > 100 || typeof p.keystone.dungeon !== 'string' || !p.keystone.dungeon.trim())) fail('쐐기돌의 던전·단계·출처·시각을 확인하세요.');
   return p;
@@ -34,7 +39,7 @@ function fresh(at, now) {
   return Number.isFinite(age) && age >= -300000 && age <= 86400000;
 }
 
-export function diagnose(input, { now = new Date(), demo = false } = {}) {
+export function diagnose(input, { now = new Date(), demo = false, web = false } = {}) {
   const p = validate(input), timestamp = +new Date(now);
   if (!Number.isFinite(timestamp)) fail('분석 시각이 올바르지 않습니다.');
   if (demo && p.source !== 'sample') fail('샘플 출처에서만 데모 계산을 사용할 수 있습니다.');
@@ -59,14 +64,22 @@ export function diagnose(input, { now = new Date(), demo = false } = {}) {
   const activities = [{id:'weak-slots', kind:'solo', title:'낮은 슬롯부터 교체 후보 확인', reason:weakSlots.map(x=>`${x.slot} ${x.ilvl}`).join(', ') || '장비 입력 필요', certainty:'진단'}];
   if (seasonValid) {
     const keys = resource('cofferKey');
-    activities.push({id:'delves', kind:'solo', title:'안정적으로 완료 가능한 구렁 우선', reason:'최고 해금 단계와 실제 완료 가능 단계를 확인하세요. 해금 단계는 성공을 보장하지 않습니다.', certainty:'조건부'});
+    activities.push({id:'delves', kind:'solo', title:'안정적으로 완료 가능한 구렁 우선', reason:progress.stableTier != null ? `입력한 안정 완료 단계는 ${progress.stableTier}단입니다. 실제 해금 단계와 풍요 보상을 확인하세요.` : '최고 해금 단계와 실제 완료 가능 단계를 확인하세요. 해금 단계는 성공을 보장하지 않습니다.', certainty:'조건부'});
     activities.push({id:'bountiful', kind:'solo', title:keys === null ? '풍요로운 구렁 열쇠 수량 입력' : keys === 0 ? '열쇠 획득 경로 확인' : '풍요로운 구렁 보상 비교 후 열쇠 사용 검토', reason:keys === null ? '미입력·오래된 값은 0개와 구분합니다.' : `관측 열쇠 ${keys}개. 보상 미획득 여부와 단계별 보상을 게임에서 확인해야 합니다.`, certainty:'조건부'});
     activities.push({id:'vault', kind:'solo', title:'이번 주 위대한 금고 진행 확인', reason:'장비 API로 이번 주 구렁 금고 진행·후보를 확정할 수 없습니다. 게임 화면을 대조하세요.', certainty:'확인 필요'});
-    if (resource('cofferKey') > 0 && progress.maxDelveTier === 11 && progress.venomstoneUnlocked === true) activities.push({id:'venomstone', kind:'solo', title:'11단 풍요로운 구렁의 추가 강화 재료 검토', reason:'공식 12.1.5 공지의 해금 조건을 충족한 경우 후보입니다. 성공 가능성과 실제 획득 조건 확인이 필요하며, 획득 수량·확률은 계산하지 않습니다.', certainty:'조건부'});
+    if (web) {
+      activities.push(
+        {id:'world',kind:'solo',title:'필드 보상과 주간 퀘스트 확인',reason:'현재 보상 미리보기에서 교체할 부위를 찾으세요. 획득 완료와 주간 초기화는 게임에 표시된 상태를 따릅니다.',certainty:'확인 필요'},
+        {id:'spend',kind:'solo',title:'교체 기회 확인 후 강화·제작 비교',reason:'이번 주 금고와 파밍 보상으로 교체할 가능성이 있는 부위는 소비를 보류하고, 계속 장착할 부위의 강화 비용·제작 주문을 게임에서 비교하세요.',certainty:'조건부'},
+      );
+    }
+    const venomTier = ruleCatalog.venomstones.bountifulTier;
+    if (resource('cofferKey') > 0 && progress.maxDelveTier === venomTier && (progress.stableTier == null || progress.stableTier >= venomTier) && progress.venomstoneUnlocked === true) activities.push({id:'venomstone', kind:'solo', title:`${venomTier}단 풍요로운 구렁의 추가 강화 재료 검토`, reason:'공식 12.1.5 공지의 해금 조건을 충족한 경우 후보입니다. 성공 가능성과 실제 획득 조건을 확인하세요.', certainty:'조건부'});
     if (groupEligible) {
       activities.push({id:'raid', kind:'group', title:'레이드 보상 후보 비교', reason:'315 기준 충족. 일반 난이도부터 공략 숙련도·역할·모집 조건과 교체 가능한 보상을 확인하세요.', certainty:'후보'});
       const key = p.keystone && fresh(p.keystone.observedAt,timestamp) ? p.keystone : null;
       activities.push({id:'mythic', kind:'group', title:'낮은 쐐기돌부터 보상 후보 비교', reason:`315 기준 충족. ${key ? `보유 쐐기: ${key.dungeon} +${key.level}. ` : '보유 쐐기 정보 미확인. '}던전 숙련도·파티 조건 확인 후 단계를 정하세요. 보유 단계가 권장 단계라는 뜻은 아닙니다.`, certainty:'후보'});
+      if (web) activities.push({id:'group-vault',kind:'group',title:'레이드·쐐기 주간 금고 비교',reason:'레이드는 처치 가능한 우두머리와 남은 보상을, 쐐기는 안정적으로 완료할 단계와 소요 시간을 비교하세요. 금고 후보는 다음 주에 확인합니다.',certainty:'조건부'});
     }
   }
   const rules = demo ? demoRules : season.upgradeRules;
