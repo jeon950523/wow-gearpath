@@ -5,6 +5,19 @@ const data=readFileSync(new URL('../contracts/examples/hunter-regression.json',i
 const details=readFileSync(new URL('../contracts/examples/details-0.2.1.json',import.meta.url),'utf8');
 const resourceFixture=readFileSync(new URL('../contracts/examples/resources-0.3.0.json',import.meta.url),'utf8');
 
+test('가상 성장 계획만 경로를 표시하고 골드 보존·슬롯 제외 반영',async ({page})=>{
+  await page.route('**/api/realms',route=>route.fulfill({json:{realms:[{slug:'azshara',name:'아즈샤라'}]}}));
+  await page.goto('/');
+  await expect(page.getByRole('option',{name:'아즈샤라'})).toBeAttached();
+  await page.getByRole('button',{name:'샘플 보기'}).click();
+  const growth=page.getByRole('region',{name:'장비 성장 계획'});
+  await expect(growth.getByText('가상 강화 예제')).toBeVisible();
+  await growth.getByLabel('머리 강화에서 제외').check();
+  await expect(growth.getByText('사용자가 이 슬롯을 보존하도록 선택했습니다.')).toBeVisible();
+  await growth.getByLabel('남겨둘 수량').fill('1000');
+  await expect(growth.getByText(/예상 소비 소비 없음/)).toBeVisible();
+});
+
 test('ADDON-003A v0.3.0 생성 예제의 재화 출처와 상태 표시',async ({page})=>{
   await page.clock.setFixedTime(new Date('2026-11-26T12:35:00Z'));
   await page.route('**/api/realms',route=>route.fulfill({json:{realms:[{slug:'azshara',name:'아즈샤라'}]}}));
@@ -19,6 +32,10 @@ test('ADDON-003A v0.3.0 생성 예제의 재화 출처와 상태 표시',async (
   await expect(table.getByRole('row').filter({hasText:'노련가 안개문장'}).getByText(/수집 실패/)).toBeVisible();
   await expect(table.getByRole('row').filter({hasText:'모험가 안개문장'}).getByText(/미수집/)).toBeVisible();
   await expect(table.getByRole('row').filter({hasText:'공허불빛 이회토'}).getByText(/ID 실측 대기/)).toBeVisible();
+  await expect(page.getByRole('heading',{name:'레이드 보상 후보 비교'})).toBeVisible();
+  const growth=page.getByRole('region',{name:'장비 성장 계획'});
+  await growth.getByLabel('목표 평균 아이템 레벨').fill('330');
+  await expect(growth.getByText(/목표 330.*도달 가능 여부 미확인/)).toBeVisible();
   await expect(page.getByRole('heading',{name:'레이드 보상 후보 비교'})).toBeVisible();
 });
 

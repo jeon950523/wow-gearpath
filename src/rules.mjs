@@ -3,10 +3,10 @@ import currencies from './data/expansions/midnight/season-2/currencies.json' wit
 import growth from './data/expansions/midnight/season-2/growth.json' with {type:'json'};
 import world from './data/expansions/midnight/season-2/world.json' with {type:'json'};
 import activities from './data/expansions/midnight/season-2/activities.json' with {type:'json'};
-import {activeSeasonRules,validateSeasonData} from './data/validate-season.mjs';
+import {activeSeasonRules,validateSeasonData,validateResourceDefinitions} from './data/validate-season.mjs';
 
-export const resourceDefinitions = currencies;
-export const resourceByKey = new Map(currencies.map(row=>[row.key,row]));
+export const resourceDefinitions = validateResourceDefinitions(currencies).accepted;
+export const resourceByKey = new Map(resourceDefinitions.map(row=>[row.key,row]));
 export const season = Object.freeze({
   ...manifest, id:manifest.seasonId, validUntil:manifest.reviewDueAt, upgradeRules:[],
 });
@@ -15,7 +15,9 @@ export function rulesAt(now){
   const rows=activeSeasonRules(seasonData,now);
   return {
     byId:new Map(rows.map(row=>[row.ruleId,row])),
-    upgrades:rows.filter(row=>row.category==='upgrade-table').map(row=>row.effect),
+    upgrades:rows.filter(row=>row.category==='upgrade-table').map(row=>({
+      ...row.effect, source:row.source, evidence:row.verificationStatus, discountPolicy:row.conditions.discountPolicy,
+    })),
   };
 }
 

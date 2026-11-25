@@ -27,7 +27,7 @@ test('서버 검색과 장비 화면, 315 경계, 재화 수동 입력 및 최�
   await expect(page.getByText('315.000',{exact:true})).toBeVisible();
   await expect(page.getByRole('heading',{name:'레이드 보상 후보 비교'})).toBeVisible();
   await expect(page.getByRole('heading',{name:'풍요로운 구렁 열쇠 수량 입력'})).toBeVisible();
-  await page.getByLabel('복원된 금고 열쇠').fill('0');
+  await page.getByRole('spinbutton',{name:'복원된 금고 열쇠',exact:true}).fill('0');
   await page.getByRole('button',{name:'진단에 반영'}).click();
   await expect(page.getByRole('heading',{name:'열쇠 획득 경로 확인'})).toBeVisible();
   await page.reload();
