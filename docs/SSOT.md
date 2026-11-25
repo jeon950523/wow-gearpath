@@ -1,5 +1,8 @@
 # WoW GearPath 기준 문서
 
+- 웹 저장소의 [계약 v1](../contracts/snapshot-v1.schema.json)이 애드온 JSON의 정본입니다. [버전 기록](../contracts/CHANGELOG.md) · [로드맵](ROADMAP.md)
+- 애드온 스냅샷은 브라우저 메모리에서 검증하고 장비 세트와 재화의 출처 및 시각을 유지합니다.
+
 - 대상은 한국 리테일입니다. 장착 평균 315 이상에서 레이드와 쐐기 후보를 추가합니다.
 - Next.js App Router와 TypeScript가 웹 입력과 서버 요청을 처리합니다. 추천은 웹과 CLI가 같은 JavaScript 엔진을 사용합니다.
 - Blizzard OAuth 자격증명은 Vercel Production 서버에만 두고 공개 캐릭터 및 게임 데이터 API에 사용합니다.
