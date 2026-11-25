@@ -1,5 +1,7 @@
 # WoW GearPath 인계
 
+TASK-003A는 애드온 0.2.1 상세 필드와 개별 관측 시각을 지원합니다. 웹 교차 테스트가 계약 정본을 검증합니다. Actions는 수동 실행만 지원하며 Vercel은 main 자동 배포를 유지합니다. [검수](reports/TASK-003A-REPORT.md)
+
 TASK-003은 [공통 계약](../contracts/CHANGELOG.md), 브라우저 가져오기·삭제, 장비 충돌 비교, 필드별 수집 상태, 솔플만 추천을 추가했습니다. [검수 결과](reports/TASK-003-REPORT.md)와 [로드맵](ROADMAP.md)을 참고하세요.
 
 한국 리테일의 장착 장비와 재화 입력을 기반으로 솔플·구렁부터 경로를 제시합니다. Next.js, React, TypeScript, Node.js와 기존 CLI·진단 엔진을 사용합니다. 배포 프로바이더는 Vercel입니다.
