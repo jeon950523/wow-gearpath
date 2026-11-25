@@ -1,0 +1,178 @@
+{
+  "addonVersion": "0.1.1",
+  "collectionWarnings": [],
+  "equipment": [
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 295,
+      "itemId": 1001,
+      "name": "장비",
+      "rank": null,
+      "slot": "HEAD",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 305,
+      "itemId": 1002,
+      "name": "장비",
+      "rank": null,
+      "slot": "NECK",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 305,
+      "itemId": 1003,
+      "name": "장비",
+      "rank": null,
+      "slot": "SHOULDER",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 308,
+      "itemId": 1015,
+      "name": "장비",
+      "rank": null,
+      "slot": "BACK",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 308,
+      "itemId": 1005,
+      "name": "장비",
+      "rank": null,
+      "slot": "CHEST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 305,
+      "itemId": 1009,
+      "name": "장비",
+      "rank": null,
+      "slot": "WRIST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 308,
+      "itemId": 1010,
+      "name": "장비",
+      "rank": null,
+      "slot": "HANDS",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 305,
+      "itemId": 1006,
+      "name": "장비",
+      "rank": null,
+      "slot": "WAIST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 295,
+      "itemId": 1007,
+      "name": "장비",
+      "rank": null,
+      "slot": "LEGS",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 321,
+      "itemId": 1008,
+      "name": "장비",
+      "rank": null,
+      "slot": "FEET",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 305,
+      "itemId": 1011,
+      "name": "장비",
+      "rank": null,
+      "slot": "FINGER_1",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 308,
+      "itemId": 1012,
+      "name": "장비",
+      "rank": null,
+      "slot": "FINGER_2",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 321,
+      "itemId": 1013,
+      "name": "장비",
+      "rank": null,
+      "slot": "TRINKET_1",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 308,
+      "itemId": 1014,
+      "name": "장비",
+      "rank": null,
+      "slot": "TRINKET_2",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_RANGED",
+      "ilvl": 321,
+      "itemClassId": 2,
+      "itemId": 272278,
+      "itemLink": "|Hitem:272278|h[테스트 활]|h",
+      "itemSubclassId": 2,
+      "name": "장비",
+      "rank": null,
+      "slot": "MAIN_HAND",
+      "track": null
+    }
+  ],
+  "keystone": null,
+  "name": "테스트",
+  "observedAt": "2026-11-26T12:34:56Z",
+  "progress": null,
+  "realm": "azshara",
+  "realmDisplayName": "아즈샤라",
+  "region": "kr",
+  "reportedEquippedAverage": 308.6875,
+  "resources": {
+    "cofferKey": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "value": null
+    },
+    "cofferKeyShard": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "value": null
+    },
+    "gold": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "value": 1234
+    },
+    "venomstone": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "value": null
+    }
+  },
+  "schemaVersion": 1,
+  "seasonId": "midnight-s2",
+  "source": "addon",
+  "weaponMode": "two-hand"
+}

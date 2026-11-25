@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/jeon950523/wow-gearpath/main/contracts/snapshot-v1.schema.json",
+  "title": "GearPath add-on snapshot v1",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "addonVersion": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "source": {
+      "const": "addon"
+    },
+    "region": {
+      "const": "kr"
+    },
+    "realm": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 24
+    },
+    "realmDisplayName": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "seasonId": {
+      "type": "string"
+    },
+    "patch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "weaponMode": {
+      "enum": [
+        "one-hand",
+        "two-hand",
+        "dual-wield",
+        "unknown"
+      ]
+    },
+    "equipment": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "enum": [
+              "HEAD",
+              "NECK",
+              "SHOULDER",
+              "BACK",
+              "CHEST",
+              "WRIST",
+              "HANDS",
+              "WAIST",
+              "LEGS",
+              "FEET",
+              "FINGER_1",
+              "FINGER_2",
+              "TRINKET_1",
+              "TRINKET_2",
+              "MAIN_HAND",
+              "OFF_HAND"
+            ]
+          },
+          "itemId": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "ilvl": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2000
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "track": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rank": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 20
+          },
+          "equipLoc": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "itemClassId": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "itemSubclassId": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "itemLink": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "slot",
+          "itemId",
+          "ilvl"
+        ]
+      }
+    },
+    "resources": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "const": "addon"
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "value": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "state": {
+            "enum": [
+              "observed",
+              "uncollected",
+              "failed",
+              "incomplete",
+              "locked"
+            ]
+          }
+        },
+        "required": [
+          "source",
+          "observedAt",
+          "value"
+        ]
+      }
+    },
+    "progress": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "source": {
+          "const": "addon"
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "maxDelveTier": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 11
+        },
+        "stableTier": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 11
+        },
+        "venomstoneUnlocked": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "vaultWorld": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 99
+        },
+        "vaultDungeon": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 99
+        },
+        "vaultRaid": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 99
+        }
+      },
+      "required": [
+        "source",
+        "observedAt"
+      ]
+    },
+    "keystone": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "source": {
+          "const": "addon"
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dungeon": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "source",
+        "observedAt",
+        "dungeon",
+        "level"
+      ]
+    },
+    "collectionWarnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "reportedEquippedAverage": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "source",
+    "region",
+    "realm",
+    "name",
+    "seasonId",
+    "observedAt",
+    "weaponMode",
+    "equipment"
+  ]
+}

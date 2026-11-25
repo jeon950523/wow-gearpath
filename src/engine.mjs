@@ -39,7 +39,7 @@ function fresh(at, now) {
   return Number.isFinite(age) && age >= -300000 && age <= 86400000;
 }
 
-export function diagnose(input, { now = new Date(), demo = false, web = false } = {}) {
+export function diagnose(input, { now = new Date(), demo = false, web = false, solo = false } = {}) {
   const p = validate(input), timestamp = +new Date(now);
   if (!Number.isFinite(timestamp)) fail('분석 시각이 올바르지 않습니다.');
   if (demo && p.source !== 'sample') fail('샘플 출처에서만 데모 계산을 사용할 수 있습니다.');
@@ -53,14 +53,15 @@ export function diagnose(input, { now = new Date(), demo = false, web = false } 
   if (!complete) warnings.push('장비 슬롯 또는 무기 방식이 불완전합니다. 평균 및 315 판정을 보류합니다.');
   const rawAverage = complete ? SLOTS.reduce((sum,s) => sum+(bySlot.get(s)?.ilvl ?? bySlot.get('MAIN_HAND').ilvl),0)/16 : null;
   // Never gate on the rounded display value or overall/bag item level.
-  const groupEligible = seasonValid && equipmentFresh && rawAverage !== null && rawAverage >= 315;
+  const groupEligible = !solo && seasonValid && equipmentFresh && rawAverage !== null && rawAverage >= 315;
   const weakSlots = [...p.equipment].sort((a,b)=>a.ilvl-b.ilvl).slice(0,5);
   if (p.equipment.some(x=>!x.track)) warnings.push('강화 트랙 미확인 장비가 있습니다. 아이템 레벨만으로 트랙을 추정하지 않습니다.');
   const resource = key => {
     const o = p.resources?.[key];
     return o && fresh(o.observedAt,timestamp) ? o.value : null;
   };
-  const progress = p.progress && fresh(p.progress.observedAt,timestamp) ? p.progress : {};
+  const progress = p.progress ? Object.fromEntries(Object.entries(p.progress).filter(([key])=>
+    fresh(p.fieldSources?.progress?.[key]?.observedAt ?? p.progress.observedAt,timestamp))) : {};
   const activities = [{id:'weak-slots', kind:'solo', title:'낮은 슬롯부터 교체 후보 확인', reason:weakSlots.map(x=>`${x.slot} ${x.ilvl}`).join(', ') || '장비 입력 필요', certainty:'진단'}];
   if (seasonValid) {
     const keys = resource('cofferKey');
