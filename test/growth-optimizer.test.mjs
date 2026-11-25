@@ -148,3 +148,20 @@ test('재화 충돌 및 단계·할인 규칙 오류 격리',()=>{
     const copy=structuredClone(row);change(copy);assert.equal(validateSeasonData(season,currencies,[copy]).rejected.length,1);
   }
 });
+
+test('전이 한도를 정확히 소진한 경우와 실행 가능한 일부 경로를 구별',()=>{
+  const skip={gainUnits:0,costs:{},actions:[]};
+  const first={gainUnits:16,costs:{gold:2,crest:1},actions:['first']};
+  const second={gainUnits:16,costs:{gold:2,crest:1},actions:['second']};
+  const balances={gold:4,crest:2};
+  const groups=[[skip,first],[skip,second]];
+  const exact=optimizeGrowth(groups,balances,{current:313,target:315,maxTransitions:6});
+  assert.equal(exact.limited,false);
+  assert.equal(exact.status,'reachable');
+  assert.deepEqual(exact.max.actions,['first','second']);
+  const partial=optimizeGrowth(groups,balances,{current:313,target:315,maxTransitions:5});
+  assert.equal(partial.limited,true);
+  assert.equal(partial.status,'undetermined');
+  assert.equal(partial.max.actions.length,1);
+  assert.deepEqual(partial.max.remaining,{gold:2,crest:1});
+});

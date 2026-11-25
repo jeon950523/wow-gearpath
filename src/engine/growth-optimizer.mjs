@@ -18,9 +18,9 @@ export function optimizeGrowth(groups, balances, {current,target=315,reserve={},
   for (const options of indexed) {
     if (transitions>=transitionLimit) {limited=true;break;}
     const next=[];
-    for (const state of states) {
+    visitStates: for (const state of states) {
       for (const option of options) {
-        if(transitions>=transitionLimit){limited=true;break;}
+        if(transitions>=transitionLimit){limited=true;break visitStates;}
         transitions++;
         const cost=state.cost.map((value,index)=>value+option.costVector[index]);
         if(!noMore(cost,budgets))continue;
@@ -32,7 +32,6 @@ export function optimizeGrowth(groups, balances, {current,target=315,reserve={},
           next.sort(compareGain);next.length=stateLimit;limited=true;
         }
       }
-      if(transitions>=transitionLimit){limited=true;break;}
     }
     // Preserve an executable prefix even if the last group was cut short.
     if(next.length) states=next;
