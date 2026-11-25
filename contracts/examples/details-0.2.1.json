@@ -1,0 +1,195 @@
+{
+  "addonVersion": "0.2.1",
+  "classFile": "HUNTER",
+  "classId": 3,
+  "className": "사냥꾼",
+  "collectionWarnings": [],
+  "equipment": [
+    {
+      "bonusIds": [
+        6652,
+        13696,
+        12834
+      ],
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1001,
+      "itemLink": "|cnIQ4:|Hitem:1001::::::::90:253::109:3:6652:13696:12834:1:64:272250:::::|h[테스트]|h|r",
+      "maxRank": 6,
+      "name": "장비",
+      "rank": 3,
+      "setId": 1234,
+      "slot": "HEAD",
+      "track": "hero",
+      "upgradeStatus": "observed",
+      "upgradeText": "강화 단계: 영웅 3/6"
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1002,
+      "name": "장비",
+      "rank": null,
+      "slot": "NECK",
+      "track": null,
+      "upgradeStatus": "unrecognized",
+      "upgradeText": "새로운 트랙 2/6"
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1003,
+      "name": "장비",
+      "rank": null,
+      "slot": "SHOULDER",
+      "track": null,
+      "upgradeStatus": "unavailable"
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1015,
+      "name": "장비",
+      "rank": null,
+      "slot": "BACK",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1005,
+      "name": "장비",
+      "rank": null,
+      "slot": "CHEST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1009,
+      "name": "장비",
+      "rank": null,
+      "slot": "WRIST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1010,
+      "name": "장비",
+      "rank": null,
+      "slot": "HANDS",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1006,
+      "name": "장비",
+      "rank": null,
+      "slot": "WAIST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1007,
+      "name": "장비",
+      "rank": null,
+      "slot": "LEGS",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1008,
+      "name": "장비",
+      "rank": null,
+      "slot": "FEET",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1011,
+      "name": "장비",
+      "rank": null,
+      "slot": "FINGER_1",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1012,
+      "name": "장비",
+      "rank": null,
+      "slot": "FINGER_2",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1013,
+      "name": "장비",
+      "rank": null,
+      "slot": "TRINKET_1",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1014,
+      "name": "장비",
+      "rank": null,
+      "slot": "TRINKET_2",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_2HWEAPON",
+      "ilvl": 315,
+      "itemId": 1016,
+      "name": "장비",
+      "rank": null,
+      "slot": "MAIN_HAND",
+      "track": null
+    }
+  ],
+  "keystone": null,
+  "level": 90,
+  "name": "테스트",
+  "observedAt": "2026-11-26T12:34:56Z",
+  "progress": null,
+  "realm": "azshara",
+  "realmDisplayName": "아즈샤라",
+  "region": "kr",
+  "reportedEquippedAverage": 315,
+  "resources": {
+    "cofferKey": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "value": null
+    },
+    "cofferKeyShard": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "value": null
+    },
+    "gold": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "value": 1234
+    },
+    "venomstone": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "value": null
+    }
+  },
+  "role": "DAMAGER",
+  "schemaVersion": 1,
+  "seasonId": "midnight-s2",
+  "source": "addon",
+  "specializationId": 253,
+  "specializationName": "야수",
+  "weaponMode": "two-hand"
+}

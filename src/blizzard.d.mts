@@ -15,7 +15,7 @@ export interface RetailSnapshot {
   observedAt: string;
   weaponMode: 'one-hand'|'two-hand'|'dual-wield'|'unknown';
   reportedEquippedAverage: number|null;
-  equipment: Array<{slot: string; itemId: number; name: string; ilvl: number; track: null; rank: null; inventoryType: string|null; quality: string|null; icon: string|null}>;
+  equipment: Array<{slot: string; itemId: number; name: string; ilvl: number; track: null; rank: null; inventoryType: string|null; quality: string|null; icon: string|null; bonusIds: number[]|null}>;
   resources: Record<string, never>;
   progress: null;
 }
