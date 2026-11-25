@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "region": "kr",
+  "realm": "azshara",
+  "name": "입력할캐릭터명",
+  "source": "manual",
+  "seasonId": "midnight-s2",
+  "observedAt": "2026-11-26T09:00:00+09:00",
+  "weaponMode": "two-hand",
+  "equipment": [
+    {
+      "slot": "HEAD",
+      "itemId": 900000,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 308,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "NECK",
+      "itemId": 900001,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "SHOULDER",
+      "itemId": 900002,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "BACK",
+      "itemId": 900003,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 308,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "CHEST",
+      "itemId": 900004,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "WRIST",
+      "itemId": 900005,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "HANDS",
+      "itemId": 900006,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 308,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "WAIST",
+      "itemId": 900007,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "LEGS",
+      "itemId": 900008,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "FEET",
+      "itemId": 900009,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 308,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "FINGER_1",
+      "itemId": 900010,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "FINGER_2",
+      "itemId": 900011,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "TRINKET_1",
+      "itemId": 900012,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 308,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "TRINKET_2",
+      "itemId": 900013,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    },
+    {
+      "slot": "MAIN_HAND",
+      "itemId": 900014,
+      "name": "게임에서 확인 후 수정",
+      "ilvl": 315,
+      "track": null,
+      "rank": null
+    }
+  ],
+  "resources": {
+    "cofferKey": {
+      "value": null,
+      "source": "manual",
+      "observedAt": "2026-11-26T09:00:00+09:00"
+    },
+    "cofferKeyShard": {
+      "value": null,
+      "source": "manual",
+      "observedAt": "2026-11-26T09:00:00+09:00"
+    },
+    "gold": {
+      "value": null,
+      "source": "manual",
+      "observedAt": "2026-11-26T09:00:00+09:00"
+    },
+    "venomstone": {
+      "value": null,
+      "source": "manual",
+      "observedAt": "2026-11-26T09:00:00+09:00"
+    }
+  },
+  "progress": {
+    "maxDelveTier": null,
+    "venomstoneUnlocked": null,
+    "source": "manual",
+    "observedAt": "2026-11-26T09:00:00+09:00"
+  },
+  "keystone": null
+}

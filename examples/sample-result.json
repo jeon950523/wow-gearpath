@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-26T01:00:00.000Z",
+  "mode": "sample",
+  "character": {
+    "name": "샘플모험가",
+    "realm": "sample-realm",
+    "region": "kr"
+  },
+  "season": "한밤 2시즌",
+  "rawAverage": 312.8125,
+  "displayAverage": "312.813",
+  "groupEligible": false,
+  "missingSlots": [],
+  "weakSlots": [
+    {
+      "slot": "HEAD",
+      "itemId": 900000,
+      "name": "샘플 HEAD",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "BACK",
+      "itemId": 900003,
+      "name": "샘플 BACK",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "HANDS",
+      "itemId": 900006,
+      "name": "샘플 HANDS",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "FEET",
+      "itemId": 900009,
+      "name": "샘플 FEET",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "TRINKET_1",
+      "itemId": 900012,
+      "name": "샘플 TRINKET_1",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    }
+  ],
+  "equipment": [
+    {
+      "slot": "HEAD",
+      "itemId": 900000,
+      "name": "샘플 HEAD",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "NECK",
+      "itemId": 900001,
+      "name": "샘플 NECK",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "SHOULDER",
+      "itemId": 900002,
+      "name": "샘플 SHOULDER",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "BACK",
+      "itemId": 900003,
+      "name": "샘플 BACK",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "CHEST",
+      "itemId": 900004,
+      "name": "샘플 CHEST",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "WRIST",
+      "itemId": 900005,
+      "name": "샘플 WRIST",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "HANDS",
+      "itemId": 900006,
+      "name": "샘플 HANDS",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "WAIST",
+      "itemId": 900007,
+      "name": "샘플 WAIST",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "LEGS",
+      "itemId": 900008,
+      "name": "샘플 LEGS",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "FEET",
+      "itemId": 900009,
+      "name": "샘플 FEET",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "FINGER_1",
+      "itemId": 900010,
+      "name": "샘플 FINGER_1",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "FINGER_2",
+      "itemId": 900011,
+      "name": "샘플 FINGER_2",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "TRINKET_1",
+      "itemId": 900012,
+      "name": "샘플 TRINKET_1",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "TRINKET_2",
+      "itemId": 900013,
+      "name": "샘플 TRINKET_2",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "MAIN_HAND",
+      "itemId": 900014,
+      "name": "샘플 MAIN_HAND",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    }
+  ],
+  "resources": [
+    {
+      "key": "cofferKey",
+      "value": 3,
+      "source": "sample",
+      "observedAt": "2026-11-26T09:00:00+09:00",
+      "status": "입력됨"
+    },
+    {
+      "key": "demoCrest",
+      "value": 60,
+      "source": "sample",
+      "observedAt": "2026-11-26T09:00:00+09:00",
+      "status": "입력됨"
+    },
+    {
+      "key": "gold",
+      "value": 1000,
+      "source": "sample",
+      "observedAt": "2026-11-26T09:00:00+09:00",
+      "status": "입력됨"
+    },
+    {
+      "key": "venomstone",
+      "value": null,
+      "source": "sample",
+      "observedAt": "2026-11-26T09:00:00+09:00",
+      "status": "미입력"
+    }
+  ],
+  "activities": [
+    {
+      "id": "weak-slots",
+      "kind": "solo",
+      "title": "낮은 슬롯부터 교체 후보 확인",
+      "reason": "HEAD 308, BACK 308, HANDS 308, FEET 308, TRINKET_1 308",
+      "certainty": "진단"
+    },
+    {
+      "id": "delves",
+      "kind": "solo",
+      "title": "안정적으로 완료 가능한 구렁 우선",
+      "reason": "최고 해금 단계와 실제 완료 가능 단계를 확인하세요. 해금 단계는 성공을 보장하지 않습니다.",
+      "certainty": "조건부"
+    },
+    {
+      "id": "bountiful",
+      "kind": "solo",
+      "title": "풍요로운 구렁 보상 비교 후 열쇠 사용 검토",
+      "reason": "관측 열쇠 3개. 보상 미획득 여부와 단계별 보상을 게임에서 확인해야 합니다.",
+      "certainty": "조건부"
+    },
+    {
+      "id": "vault",
+      "kind": "solo",
+      "title": "이번 주 위대한 금고 진행 확인",
+      "reason": "장비 API로 이번 주 구렁 금고 진행·후보를 확정할 수 없습니다. 게임 화면을 대조하세요.",
+      "certainty": "확인 필요"
+    }
+  ],
+  "upgrades": [
+    {
+      "slot": "MAIN_HAND",
+      "from": 315,
+      "to": 318,
+      "averageGain": 0.375,
+      "currency": "demoCrest",
+      "cost": 20,
+      "gold": 100
+    },
+    {
+      "slot": "MAIN_HAND",
+      "from": 318,
+      "to": 321,
+      "averageGain": 0.375,
+      "currency": "demoCrest",
+      "cost": 20,
+      "gold": 100
+    },
+    {
+      "slot": "MAIN_HAND",
+      "from": 321,
+      "to": 324,
+      "averageGain": 0.375,
+      "currency": "demoCrest",
+      "cost": 20,
+      "gold": 100
+    }
+  ],
+  "remaining": {
+    "cofferKey": 3,
+    "demoCrest": 0,
+    "gold": 700,
+    "venomstone": null
+  },
+  "warnings": [
+    "샘플 전용 가상 강화표입니다. 실제 게임의 비용이나 보상으로 사용하지 마세요."
+  ],
+  "sources": [
+    "https://news.blizzard.com/ko-kr/article/24294369/pvp-2",
+    "https://news.blizzard.com/ko-kr/article/24307306/12-1-5"
+  ]
+}

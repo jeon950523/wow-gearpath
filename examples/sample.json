@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "region": "kr",
+  "realm": "sample-realm",
+  "name": "샘플모험가",
+  "source": "sample",
+  "seasonId": "midnight-s2",
+  "observedAt": "2026-11-26T09:00:00+09:00",
+  "weaponMode": "two-hand",
+  "equipment": [
+    {
+      "slot": "HEAD",
+      "itemId": 900000,
+      "name": "샘플 HEAD",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "NECK",
+      "itemId": 900001,
+      "name": "샘플 NECK",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "SHOULDER",
+      "itemId": 900002,
+      "name": "샘플 SHOULDER",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "BACK",
+      "itemId": 900003,
+      "name": "샘플 BACK",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "CHEST",
+      "itemId": 900004,
+      "name": "샘플 CHEST",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "WRIST",
+      "itemId": 900005,
+      "name": "샘플 WRIST",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "HANDS",
+      "itemId": 900006,
+      "name": "샘플 HANDS",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "WAIST",
+      "itemId": 900007,
+      "name": "샘플 WAIST",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "LEGS",
+      "itemId": 900008,
+      "name": "샘플 LEGS",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "FEET",
+      "itemId": 900009,
+      "name": "샘플 FEET",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "FINGER_1",
+      "itemId": 900010,
+      "name": "샘플 FINGER_1",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "FINGER_2",
+      "itemId": 900011,
+      "name": "샘플 FINGER_2",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "TRINKET_1",
+      "itemId": 900012,
+      "name": "샘플 TRINKET_1",
+      "ilvl": 308,
+      "track": "DEMO",
+      "rank": 1
+    },
+    {
+      "slot": "TRINKET_2",
+      "itemId": 900013,
+      "name": "샘플 TRINKET_2",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    },
+    {
+      "slot": "MAIN_HAND",
+      "itemId": 900014,
+      "name": "샘플 MAIN_HAND",
+      "ilvl": 315,
+      "track": "DEMO",
+      "rank": 3
+    }
+  ],
+  "resources": {
+    "cofferKey": {
+      "value": 3,
+      "source": "sample",
+      "observedAt": "2026-11-26T09:00:00+09:00"
+    },
+    "demoCrest": {
+      "value": 60,
+      "source": "sample",
+      "observedAt": "2026-11-26T09:00:00+09:00"
+    },
+    "gold": {
+      "value": 1000,
+      "source": "sample",
+      "observedAt": "2026-11-26T09:00:00+09:00"
+    },
+    "venomstone": {
+      "value": null,
+      "source": "sample",
+      "observedAt": "2026-11-26T09:00:00+09:00"
+    }
+  },
+  "progress": {
+    "maxDelveTier": 8,
+    "venomstoneUnlocked": null,
+    "source": "sample",
+    "observedAt": "2026-11-26T09:00:00+09:00"
+  }
+}
