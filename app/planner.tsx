@@ -3,13 +3,16 @@
 import {useEffect, useRef, useState, type FormEvent} from 'react';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
-import {season,resourceDefinitions} from '../src/rules.mjs';
+import {season,resourceDefinitions as runtimeResources} from '../src/rules.mjs';
 import {parseAddon,mergeSnapshots,maxImportBytes,type AddonEquipmentDetails} from '../src/addon-import.mjs';
 
 type Snapshot = Parameters<typeof diagnose>[0];
 type Realm = {slug: string; name: string};
 type Search = {realm: string; name: string};
 type Gear = AddonEquipmentDetails & {slot:string; name?:string; itemId:number; ilvl:number; icon?:string|null; quality?:string|null; track?:string|null; rank?:number|null};
+type GrowthAction = {actionId:string;slot:string;from:number;to:number;averageGain:number;costs:Record<string,number>;discount:string};
+type GrowthSlot = {slot:string;ilvl:number;maxIlvl:number|null;rank:number|null;maxRank:number|null;source:string;observedAt:string;next:GrowthAction|null;maxCosts:Record<string,number>|null;decision:string;reason:string};
+const resourceDefinitions: Array<{key:string;label:string;use:string;collection:string}>=runtimeResources;
 
 const slots: Record<string,string> = {
   HEAD:'머리',NECK:'목',SHOULDER:'어깨',BACK:'등',CHEST:'가슴',WRIST:'손목',HANDS:'손',WAIST:'허리',
@@ -20,6 +23,10 @@ const tracks: Record<string,string> = {explorer:'탐험가',adventurer:'모험�
 const roles: Record<string,string> = {TANK:'방어',HEALER:'치유',DAMAGER:'공격'};
 const balanceStates: Record<string,string> = {observed:'관측',failed:'수집 실패',locked:'미해금',incomplete:'불완전',uncollected:'미수집'};
 const scopeNames: Record<string,string> = {character:'캐릭터',warband:'전투부대',unknown:'범위 미확인'};
+const decisions:Record<string,string>={upgrade:'강화 비교',replace:'교체 비교',preserve:'보존',hold:'판단 보류'};
+const goalStatuses:Record<string,string>={'already-met':'현재 장비로 달성',reachable:'확인된 강화로 도달',unreachable:'확인된 강화와 예산으로 부족',undetermined:'도달 가능 여부 미확인'};
+const costLabel=(key:string)=>resourceDefinitions.find(x=>x.key===key)?.label??(key==='demoCrest'?'가상 문장':key);
+const costText=(costs?:Record<string,number|null>|null)=>costs ? Object.entries(costs).map(([key,value])=>`${costLabel(key)} ${value??'미확인'}`).join(' · ') || '소비 없음':'미확인';
 const progressFields = [['maxDelveTier','최고 해금 구렁 단계',11],['stableTier','안정적으로 완료할 구렁 단계',11],
   ['vaultWorld','야외/구렁 금고 진행 횟수',99],['vaultDungeon','던전 금고 진행 횟수',99],['vaultRaid','레이드 금고 진행 횟수',99]] as const;
 
@@ -41,6 +48,10 @@ export default function Planner() {
   const [importStatus, setImportStatus] = useState('');
   const [prefer, setPrefer] = useState<'auto'|'base'|'addon'>('auto');
   const [solo, setSolo] = useState(false);
+  const [growthTarget,setGrowthTarget]=useState('315');
+  const [reserveKey,setReserveKey]=useState('gold');
+  const [reserveValue,setReserveValue]=useState('');
+  const [excludeSlots,setExcludeSlots]=useState<string[]>([]);
   const importRevision = useRef(0);
   const combined = addon ? mergeSnapshots(base,addon,{prefer}) : base;
   const snapshot = combined && overlay ? {...combined,
@@ -150,7 +161,10 @@ export default function Planner() {
     setSaved('재화와 진행 상황을 반영했습니다.');
   }
 
-  const result = snapshot ? diagnose(snapshot, isSample ? {demo:!savedAt,now:new Date(savedAt || '2026-11-26T10:00:00+09:00'),web:true,solo} : {web:true,solo}) : null;
+  const enteredTarget=Number(growthTarget), enteredReserve=Number(reserveValue);
+  const growthSettings={target:enteredTarget>=1&&enteredTarget<=2000?enteredTarget:315,
+    reserve:{[reserveKey]:Number.isSafeInteger(enteredReserve)&&enteredReserve>=0?enteredReserve:0},excludeSlots,priority:reserveKey};
+  const result = snapshot ? diagnose(snapshot, isSample ? {demo:!savedAt,now:new Date(savedAt || '2026-11-26T10:00:00+09:00'),web:true,solo,...growthSettings} : {web:true,solo,...growthSettings}) : null;
   const nextGoal = !result || result.rawAverage === null || result.rawAverage >= 315 ? null : 315;
   const profile = snapshot?.profile;
   const balanceRows = new Map(result?.resources.map(row=>[row.key,row]));
@@ -224,6 +238,39 @@ export default function Planner() {
           <details><summary>진단 범위 및 공식 출처</summary><ul>{result.warnings.map(w=><li key={w}>{w}</li>)}</ul><a href={season.source}>한국 시즌 공지</a> · <a href={season.updateSource}>12.1.5 공지</a></details>
         </section>
       </div>
+      <section className="panel resources" aria-label="장비 성장 계획">
+        <div className="section-title"><h2>장비 성장 계획</h2><span>{result.growth.scope==='synthetic'?'가상 강화 예제':'검증된 강화만 계산'}</span></div>
+        <div className="growth-controls">
+          <label>목표 평균 아이템 레벨<input type="number" min={1} max={2000} step="0.001" value={growthTarget} onChange={e=>setGrowthTarget(e.target.value)} /></label>
+          <label>보존·우선 최소화 재화<select aria-label="보존·우선 최소화 재화" value={reserveKey} onChange={e=>setReserveKey(e.target.value)}>
+            {resourceDefinitions.map(row=><option key={row.key} value={row.key}>{row.label}</option>)}<option value="demoCrest" hidden={!isSample}>가상 문장</option>
+          </select></label>
+          <label>남겨둘 수량<input type="number" min={0} step={1} value={reserveValue} onChange={e=>setReserveValue(e.target.value)} placeholder="0" /></label>
+        </div>
+        <p className="growth-summary">현재 {result.displayAverage??'미확인'} · 목표 {result.growth.target} · 보유 재화로 가능한 확인 범위 {result.growth.plan?.max.average.toFixed(3)??'미확인'} · {goalStatuses[result.growth.status]}</p>
+        {result.growth.plan ? <div className="growth-summary">
+          {result.growth.plan.limited&&<p>탐색 한도에 도달했습니다. 표시된 경로는 실행 가능한 후보이며 전체 최적값은 미확인입니다.</p>}
+          {result.growth.plan.missing.length>0&&<p>잔액 미확인 또는 오래됨: {result.growth.plan.missing.map(costLabel).join(', ')}</p>}
+          {result.growth.gap!==null&&result.growth.gap>0&&<p>표시된 경로 기준 목표까지 평균 {result.growth.gap.toFixed(3)} 차이가 남습니다. 진단의 파밍 후보에서 교체 장비를 확인하세요.</p>}
+          <details open><summary>현재 예산에서 평균을 가장 높인 경로</summary>
+            <p>예상 소비 {costText(result.growth.plan.max.costs)} · 사용 재화 잔액 {costText(Object.fromEntries(Object.keys(result.growth.plan.max.costs).map(key=>[key,result.growth.plan!.max.remaining[key]])))}</p>
+            <ol>{result.growth.plan.max.actions.map((action:GrowthAction)=><li key={action.actionId}>{slots[action.slot]} {action.from} → {action.to} · {costText(action.costs)}</li>)}</ol>
+          </details>
+          {result.growth.plan.targetPlans.length>0&&<details><summary>목표를 충족하는 비용 비교 ({result.growth.plan.targetPlans.length}/{result.growth.plan.targetPlanCount})</summary>
+            <ul>{result.growth.plan.targetPlans.map((path,index)=><li key={index}>평균 {path.average.toFixed(3)} · {costText(path.costs)}
+              <ol>{path.actions.map((action:GrowthAction)=><li key={action.actionId}>{slots[action.slot]} {action.from} → {action.to}</li>)}</ol>
+            </li>)}</ul>
+          </details>}
+        </div>:<p className="growth-summary">검증된 비용·할인과 최신 장비 정보가 갖춰지면 강화 경로를 표시합니다. 교체 확률과 DPS는 별도 확인이 필요합니다.</p>}
+        <div className="table-scroll"><table aria-label="슬롯별 성장 분석"><thead><tr><th>부위</th><th>현재 / 상한</th><th>다음 비용 / 평균 증가</th><th>판단</th><th>제외</th></tr></thead>
+          <tbody>{result.gearAnalysis.map((row:GrowthSlot)=><tr key={row.slot}><th scope="row">{slots[row.slot]}</th>
+            <td>{row.ilvl} / {row.maxIlvl??'미확인'}<small className="upgrade-note">단계 {row.rank??'—'}/{row.maxRank??'—'} · {row.source==='addon'?'애드온':row.source==='blizzard'?'Blizzard':'입력'} · {presentTime(row.observedAt)}</small></td>
+            <td>{row.next ? <>{costText(row.next.costs)} · +{row.next.averageGain.toFixed(3)}{row.next.discount==='unknown'&&<small className="upgrade-note">기본 비용 · 할인 미확인</small>}
+              {row.maxCosts&&<small className="upgrade-note">최대 단계까지 {costText(row.maxCosts)}</small>}</>:'미확인'}</td>
+            <td>{decisions[row.decision]}<small className="upgrade-note">{row.reason}</small></td>
+            <td><input type="checkbox" aria-label={`${slots[row.slot]} 강화에서 제외`} checked={excludeSlots.includes(row.slot)} onChange={e=>setExcludeSlots(e.target.checked?[...excludeSlots,row.slot]:excludeSlots.filter(slot=>slot!==row.slot))} /></td>
+          </tr>)}</tbody></table></div>
+      </section>
       <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>빈칸은 미입력, 0은 보유 없음</span></div>
       <form onSubmit={applyResources}>
         <div className="table-scroll"><table aria-label="보유 재화"><thead><tr><th>재화</th><th>보유량</th><th>출처와 수집 상태</th><th>용도 및 검증</th><th>수동 입력</th></tr></thead><tbody>

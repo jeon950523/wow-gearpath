@@ -47,3 +47,5 @@ TASK-004는 시즌 팩에 검증된 사실과 조사 대상을 따로 저장합�
 11월 24일 영문 [공식 긴급 수정](https://news.blizzard.com/en-us/article/24307310/hotfixes-november-24-2026)에서 11단 풍요로운 금고의 맹독석 1개를 확인했습니다. 한국 점검의 분 단위 발효 시각을 확인하지 못해 해당 행은 11월 26일 재확인일을 시작으로 사용합니다. [한국 12.1.5 공지](https://news.blizzard.com/ko-kr/article/24307306/12-1-5)의 해금 및 소비 조건을 함께 적용합니다. [2시즌 업데이트 노트](https://news.blizzard.com/en-gb/article/24293281/curse-of-ula-tek-content-update-notes)는 금고 공허핵, 의식 지점과 구렁 1~6단 보상 대응, 영웅 공격대의 금고 신화 1/6을 뒷받침합니다.
 
 커뮤니티 자료는 ID 후보 및 차이점 대조에 사용합니다. 게임 내 강화 창, 구렁 보상과 금고의 실제 횟수·레벨 검증이 남았습니다. 외부 사이트의 표나 자산을 운영 데이터로 복제하지 않았습니다. [화폐 계약 및 증거](contracts/ADDON-003B-HANDOFF.md)
+
+TASK-005에서 한국 공지, 12.1.5 게시 노트, 11월 24일 긴급 수정을 재대조했습니다. 현재 한밤 2시즌 12.1.5를 유지합니다. 공식 맹독석 비용·대상은 확인한 사실로 유지하며 추가 적용 횟수와 최종 레벨은 한국 UI 실측 전까지 보류합니다. [라이브 Wowhead 강화 가이드](https://www.wowhead.com/guide/midnight/item-level-gear-upgrades-dawncrests)는 교차 참고이며 표를 재배포하거나 운영 비용으로 가져오지 않았습니다. 1시즌과 PTR 수치는 사용하지 않습니다. [강화 실측 항목](contracts/UPGRADE-OBSERVATIONS-PROPOSAL.md)

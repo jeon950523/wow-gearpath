@@ -1,5 +1,7 @@
 # WoW GearPath 인계
 
+TASK-005에서 성장 목표와 슬롯별 강화 분석, 다중 재화 최적화를 추가했습니다. 일반 강화·할인 실측이 없어 운영 소비안은 보류합니다. 최신 애드온 fixture와 웹 CLI/화면을 대조했습니다. [검수](reports/TASK-005-REPORT.md) · [실측 요청](contracts/UPGRADE-OBSERVATIONS-PROPOSAL.md)
+
 현행 기준은 TASK-004입니다. 시즌 팩과 애드온 v0.3.0 수신을 검증했고, 새 화폐 세 종의 계약을 문서화했습니다. 다음은 애드온 담당자의 003B 게임 대조와 일반 강화·구렁·금고 표의 실측 검증입니다. [검수](reports/TASK-004-REPORT.md) · [계약](contracts/ADDON-003B-HANDOFF.md)
 
 TASK-003A는 애드온 0.2.1 상세 필드와 개별 관측 시각을 지원합니다. 웹 교차 테스트가 계약 정본을 검증합니다. Actions는 수동 실행만 지원하며 Vercel은 main 자동 배포를 유지합니다. [검수](reports/TASK-003A-REPORT.md)

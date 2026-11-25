@@ -1,4 +1,6 @@
 import { season, demoRules, rulesAt } from './rules.mjs';
+import { analyzeGear, slotWeight } from './engine/gear-growth.mjs';
+import { optimizeGrowth } from './engine/growth-optimizer.mjs';
 
 export const SLOTS = ['HEAD','NECK','SHOULDER','BACK','CHEST','WRIST','HANDS','WAIST','LEGS','FEET','FINGER_1','FINGER_2','TRINKET_1','TRINKET_2','MAIN_HAND','OFF_HAND'];
 const SOURCES = ['manual','addon','blizzard','sample'];
@@ -41,10 +43,13 @@ function fresh(at, now) {
   return Number.isFinite(age) && age >= -300000 && age <= 86400000;
 }
 
-export function diagnose(input, { now = new Date(), demo = false, web = false, solo = false } = {}) {
+const emptySlots = () => SLOTS.filter(()=>false);
+export function diagnose(input, { now = new Date(), demo = false, web = false, solo = false, target = 315, reserve = {}, excludeSlots = emptySlots(), priority = '' } = {}) {
   const p = validate(input), timestamp = +new Date(now);
   if (!Number.isFinite(timestamp)) fail('분석 시각이 올바르지 않습니다.');
   if (demo && p.source !== 'sample') fail('샘플 출처에서만 데모 계산을 사용할 수 있습니다.');
+  if (!Number.isFinite(target) || target<1 || target>2000) fail('목표 레벨은 1~2000이어야 합니다.');
+  if (!reserve || Object.values(reserve).some(value=>!Number.isSafeInteger(value)||value<0) || !Array.isArray(excludeSlots) || excludeSlots.some(slot=>!SLOTS.includes(slot))) fail('보존 재화와 제외 슬롯을 확인하세요.');
   const warnings = [], bySlot = new Map(p.equipment.map(x => [x.slot, x]));
   const equipmentFresh = fresh(p.observedAt, timestamp);
   const seasonValid = p.seasonId === season.id && (p.patch==null || p.patch===season.patch) &&
@@ -56,7 +61,7 @@ export function diagnose(input, { now = new Date(), demo = false, web = false, s
   const missingSlots = SLOTS.filter(s => !bySlot.has(s) && !(s === 'OFF_HAND' && p.weaponMode === 'two-hand'));
   const complete = missingSlots.length === 0 && p.weaponMode !== 'unknown' && !(p.weaponMode === 'two-hand' && bySlot.has('OFF_HAND'));
   if (!complete) warnings.push('장비 슬롯 또는 무기 방식이 불완전합니다. 평균 및 315 판정을 보류합니다.');
-  const rawAverage = complete ? SLOTS.reduce((sum,s) => sum+(bySlot.get(s)?.ilvl ?? bySlot.get('MAIN_HAND').ilvl),0)/16 : null;
+  const rawAverage = complete ? p.equipment.reduce((sum,item)=>sum+item.ilvl*slotWeight(item.slot,p.weaponMode),0)/16 : null;
   // Never gate on the rounded display value or overall/bag item level.
   const groupEligible = !solo && seasonValid && equipmentFresh && rawAverage !== null && rawAverage >= 315;
   const weakSlots = [...p.equipment].sort((a,b)=>a.ilvl-b.ilvl).slice(0,5);
@@ -97,25 +102,23 @@ export function diagnose(input, { now = new Date(), demo = false, web = false, s
   const rules = demo ? demoRules : active.upgrades;
   if (!demo && !rules.length) warnings.push('공식 출처로 단계별 비용·할인까지 검증한 강화표가 없어 재화 소비안은 계산하지 않습니다.');
   if (demo) warnings.push('샘플 전용 가상 강화표입니다. 실제 게임의 비용이나 보상으로 사용하지 마세요.');
-  const remaining = Object.fromEntries(Object.keys(p.resources ?? {}).map(k=>[k,resource(k)]));
-  const working = structuredClone(p.equipment), upgrades = [];
-  // Greedy next-step comparison, NOT a global/time-optimal planner.
-  if (equipmentFresh && seasonValid && complete) {
-    for (let iteration=0; iteration<100; iteration++) {
-      const candidates = working.flatMap(item=>{
-        const r = rules.find(x=>x.track===item.track);
-        if (!r || item.rank >= r.levels.length || item.ilvl !== r.levels[item.rank-1]) return [];
-        if (remaining[r.currency] == null || remaining.gold == null || remaining[r.currency] < r.crestPerStep || remaining.gold < r.goldPerStep) return [];
-        const next = r.levels[item.rank], weight = item.slot==='MAIN_HAND' && p.weaponMode==='two-hand' ? 2 : 1;
-        return [{ item, r, next, gain:(next-item.ilvl)*weight/16 }];
-      }).sort((a,b)=>b.gain/b.r.crestPerStep-a.gain/a.r.crestPerStep || a.item.slot.localeCompare(b.item.slot));
-      const c = candidates[0];
-      if (!c) break;
-      upgrades.push({slot:c.item.slot, from:c.item.ilvl, to:c.next, averageGain:c.gain, currency:c.r.currency, cost:c.r.crestPerStep, gold:c.r.goldPerStep});
-      remaining[c.r.currency] -= c.r.crestPerStep; remaining.gold -= c.r.goldPerStep;
-      c.item.ilvl=c.next; c.item.rank++;
-    }
-  }
+  const balances = Object.fromEntries(Object.keys(p.resources ?? {}).map(k=>[k,resource(k)]));
+  const gearAnalysis=analyzeGear(p,seasonValid?rules:[],{excludeSlots});
+  const groups=gearAnalysis.filter(row=>row.options.length>1).map(row=>row.options);
+  const hasVerifiedRange=gearAnalysis.some(row=>row.maxIlvl!==null && row.next?.discount!=='unknown');
+  const plan=equipmentFresh && seasonValid && complete && (groups.length>0 || hasVerifiedRange)
+    ? optimizeGrowth(groups,balances,{current:rawAverage,target,reserve,priority}) : null;
+  const partial=gearAnalysis.some(row=>row.verification==='unknown'||row.next?.discount==='unknown');
+  const growth={target,current:rawAverage,status:rawAverage!==null && rawAverage>=target?'already-met':
+    (partial&&plan?.status==='unreachable'?'undetermined':plan?.status??'undetermined'),
+    scope:demo?'synthetic':'verified-upgrades-only',plan,
+    gap:plan?Math.max(0,target-plan.max.average):null,
+    performance:{status:'unmeasured'}};
+  const remaining=plan?.max.remaining??balances;
+  const upgrades=(plan?.max.actions??[]).map(action=>{
+    const currency=Object.keys(action.costs).find(key=>key!=='gold')??null;
+    return {...action,currency,cost:currency?action.costs[currency]:0,gold:action.costs.gold??0};
+  });
   const resources = Object.entries(p.resources ?? {}).map(([key,o])=>({key,...o,status:!fresh(o.observedAt,timestamp)?'오래됨':o.value===null?'미입력':'입력됨'}));
-  return {schemaVersion:1, generatedAt:new Date(timestamp).toISOString(), mode:demo?'sample':'conservative', character:{name:p.name,realm:p.realm,region:p.region}, season:season.name, rawAverage, displayAverage:rawAverage===null?null:rawAverage.toFixed(3), groupEligible, missingSlots, weakSlots, equipment:p.equipment, resources, activities, upgrades, remaining, warnings, sources:[season.source,season.updateSource]};
+  return {schemaVersion:1, generatedAt:new Date(timestamp).toISOString(), mode:demo?'sample':'conservative', character:{name:p.name,realm:p.realm,region:p.region}, season:season.name, rawAverage, displayAverage:rawAverage===null?null:rawAverage.toFixed(3), groupEligible, missingSlots, weakSlots, equipment:p.equipment, resources, activities, upgrades, remaining, growth, gearAnalysis, warnings, sources:[season.source,season.updateSource]};
 }
