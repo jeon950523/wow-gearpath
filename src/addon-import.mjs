@@ -33,6 +33,27 @@ const itemFields = {
 };
 const pick = (row,fields) => Object.assign({},...Object.entries(fields).map(([key,valid])=>optional(row,key,valid)));
 const provenance = row => row ? {source:row.source,observedAt:row.observedAt}:null;
+const legacyVoidcoreId = 3513;
+const oldVoidcoreVersion = version => {
+  if (version == null) return true;
+  const [major, minor, patch] = version.split('.').map(Number);
+  return major === 0 && (minor < 3 || (minor === 3 && patch <= 1));
+};
+const needsVoidcoreRefresh = (row, version) => row?.source === 'addon' &&
+  ((row.currencyId === legacyVoidcoreId && oldVoidcoreVersion(version)) ||
+    (row.currencyId == null && row.value != null));
+const voidcoreWarning = '성운의 공허핵 잔액을 확인할 수 없습니다. 애드온 v0.3.2 이상에서 다시 수집하세요.';
+const unverifiedVoidcore = row => ({
+  source:row.source, observedAt:row.observedAt, value:null,
+  state:row.value !== null ? 'uncollected' : row.state ?? 'uncollected',
+  ...(row.scope == null ? {} : {scope:row.scope}),
+});
+const refreshVoidcore = snapshot => {
+  const row=snapshot?.resources?.nebulousVoidcore;
+  if (!needsVoidcoreRefresh(row,snapshot?.addonVersion)) return snapshot;
+  return {...snapshot,resources:{...snapshot.resources,nebulousVoidcore:unverifiedVoidcore(row)},
+    collectionWarnings:[...(snapshot.collectionWarnings??[]),voidcoreWarning]};
+};
 const observedProgress = (snapshot,key) => snapshot.fieldSources?.progress?.[key] ?? provenance(snapshot.progress);
 
 export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
@@ -70,6 +91,7 @@ export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
   }
   ensure(data.resources==null || isRecord(data.resources),'재화 목록 형식이 올바르지 않습니다.');
   const resources={};
+  let voidcoreRefresh=false;
   for(const definition of resourceDefinitions){
     const {key,kind,id}=definition;
     const row=data.resources?.[key];
@@ -77,9 +99,10 @@ export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
     ensure(isRecord(row) && row.source==='addon' && iso(row.observedAt) && Date.parse(row.observedAt)<=+now+300000,'재화 출처 또는 수집 시각을 확인하세요.');
     const state=row.state??(row.value===null?'uncollected':'observed');
     ensure(statusNames.includes(state) && (state==='observed'?Number.isSafeInteger(row.value)&&row.value>=0:row.value===null),'재화 수량 또는 수집 상태가 올바르지 않습니다.');
+    const legacy = key==='nebulousVoidcore' && needsVoidcoreRefresh(row,data.addonVersion);
     const metadata=pick(row,{
       kind:value=>kind!=='unspecified' && value===kind,
-      currencyId:value=>kind==='currency' && value===id,
+      currencyId:value=>kind==='currency' && (value===id || (legacy && value===legacyVoidcoreId)),
       itemId:value=>kind==='item' && value===id,
       scope:value=>['character','warband','unknown'].includes(value) && (kind!=='money' || value!=='warband'),
       name:boundedText(80),
@@ -87,7 +110,9 @@ export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
       weeklyEarned:value=>Number.isSafeInteger(value)&&value>=0,
       weeklyLimit:value=>Number.isSafeInteger(value)&&value>=0,
     });
-    resources[key]={source:'addon',observedAt:row.observedAt,value:row.value,state,...metadata};
+    const resource={source:'addon',observedAt:row.observedAt,value:row.value,state,...metadata};
+    resources[key]=legacy ? unverifiedVoidcore(resource) : resource;
+    if (legacy) voidcoreRefresh=true;
   }
   const capture=(row,keys)=>{
     if(row==null)return null;
@@ -95,6 +120,7 @@ export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
     return {...Object.fromEntries(keys.filter(key=>Object.hasOwn(row,key)).map(key=>[key,row[key]])),source:'addon',observedAt:row.observedAt};
   };
   const warnings=Array.isArray(data.collectionWarnings)?data.collectionWarnings.slice(0,24).map(w=>text(w,240)).filter(Boolean):[];
+  if (voidcoreRefresh) warnings.push(voidcoreWarning);
   const progress=capture(data.progress,progressKeys);
   const progressSources={};
   for(const key of progressKeys){
@@ -119,6 +145,8 @@ export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
 }
 
 export function mergeSnapshots(base,addon,{prefer='auto'}={}){
+  base=refreshVoidcore(base);
+  addon=refreshVoidcore(addon);
   if(!base || base.source==='sample'){
     const progress=Object.fromEntries(progressKeys.filter(key=>addon.progress?.[key]!=null).map(key=>[key,observedProgress(addon,key)]));
     return {...addon,equipmentSource:'addon',fieldSources:{equipment:provenance(addon),profile:provenance(addon),progress,keystone:provenance(addon.keystone)}};
@@ -159,6 +187,6 @@ export function mergeSnapshots(base,addon,{prefer='auto'}={}){
     if(selected){progressValues[key]=selected[key];progressSources[key]=provenance(selected);}
   }
   return {...base,...details,profile,observedAt:equipment.observedAt,equipment:displayedGear,weaponMode:equipment.weaponMode,
-    equipmentSource:equipment.source,resources,progress:progress?{...progress,...progressValues}:null,keystone,collectionWarnings:addon.collectionWarnings,
+    equipmentSource:equipment.source,resources,progress:progress?{...progress,...progressValues}:null,keystone,collectionWarnings:[...new Set([...(addon.collectionWarnings??[]),...(base.collectionWarnings?.includes(voidcoreWarning) && resources.nebulousVoidcore?.currencyId==null ? [voidcoreWarning] : [])])],
     fieldSources:{equipment:provenance(equipment),addonProfile:provenance(addon),progress:progressSources,keystone:provenance(keystone)}};
 }

@@ -26,7 +26,7 @@ test('ADDON-003A PR 실생성 fixture의 v1, 패치, 9종 재화 및 315 정책'
 test('신규 화폐는 ID와 유형을 검증하며 메타데이터는 선택 사항',()=>{
   const input=fixture();
   input.resources.undercoin=field(2,{currencyId:2803,scope:'warband',kind:'currency',maxQuantity:100,weeklyEarned:0,weeklyLimit:20});
-  input.resources.nebulousVoidcore=field(0,{currencyId:3513});
+  input.resources.nebulousVoidcore=field(0,{currencyId:3418});
   input.resources.voidlightMarl=field(null,{state:'locked',currencyId:3316,name:'공허불빛 이회토'});
   input.resources.futureSecret={secret:'private-fixture'};
   assert.deepEqual(parse(input).resources.undercoin,input.resources.undercoin);
@@ -34,7 +34,7 @@ test('신규 화폐는 ID와 유형을 검증하며 메타데이터는 선택 �
   assert.equal(parse(input).resources.voidlightMarl.state,'locked');
   assert.equal(parse(input).resources.futureSecret,undefined);
   for (const variant of [
-    x=>x.resources.nebulousVoidcore.currencyId=3418,
+    x=>x.resources.nebulousVoidcore.currencyId=9999,
     x=>x.resources.venomstone.itemId=285065,
     x=>x.resources.undercoin.itemId=2803,
     x=>x.resources.undercoin.weeklyEarned=-1,

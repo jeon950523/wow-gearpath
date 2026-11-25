@@ -12,7 +12,7 @@ type Search = {realm: string; name: string};
 type Gear = AddonEquipmentDetails & {slot:string; name?:string; itemId:number; ilvl:number; icon?:string|null; quality?:string|null; track?:string|null; rank?:number|null};
 type GrowthAction = {actionId:string;slot:string;from:number;to:number;averageGain:number;costs:Record<string,number>;discount:string};
 type GrowthSlot = {slot:string;ilvl:number;maxIlvl:number|null;rank:number|null;maxRank:number|null;source:string;observedAt:string;next:GrowthAction|null;maxCosts:Record<string,number>|null;decision:string;reason:string};
-const resourceDefinitions: Array<{key:string;label:string;use:string;collection:string}>=runtimeResources;
+const resourceDefinitions: Array<{key:string;label:string;use:string;collection:string;identityStatus?:string}>=runtimeResources;
 
 const slots: Record<string,string> = {
   HEAD:'머리',NECK:'목',SHOULDER:'어깨',BACK:'등',CHEST:'가슴',WRIST:'손목',HANDS:'손',WAIST:'허리',
@@ -274,13 +274,13 @@ export default function Planner() {
       <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>빈칸은 미입력, 0은 보유 없음</span></div>
       <form onSubmit={applyResources}>
         <div className="table-scroll"><table aria-label="보유 재화"><thead><tr><th>재화</th><th>보유량</th><th>출처와 수집 상태</th><th>용도 및 검증</th><th>수동 입력</th></tr></thead><tbody>
-        {resourceDefinitions.map(({key,label,use,collection})=>{
+        {resourceDefinitions.map(({key,label,use,collection,identityStatus})=>{
           const row=balanceRows.get(key);
           return <tr key={key}><th scope="row">{label}</th><td className="number">{row?.value??'—'}</td>
             <td>{row ? <>{row.source==='addon'?'애드온':'수동'} · {balanceStates[row.state]??(row.value===null?'미입력':'입력됨')}{row.status==='오래됨'?' · 오래됨':''}
               <small className="upgrade-note">{presentTime(row.observedAt)} · {scopeNames[row.scope]??'범위 미확인'}</small>
               {(row.maxQuantity!=null || row.weeklyEarned!=null || row.weeklyLimit!=null) && <small className="upgrade-note">관측 상한 {row.maxQuantity??'—'} · 주간 {row.weeklyEarned??'—'}/{row.weeklyLimit??'—'}</small>}</>:'미입력'}</td>
-            <td>{use}<small className="upgrade-note">{collection==='contract-only'?'계약 지원 · ID 실측 대기':'소비 계산 보류'}</small></td>
+            <td>{use}<small className="upgrade-note">{identityStatus==='kr-client-observed'?'한국 12.1.5 실측 · 소비 검증 대기':collection==='contract-only'?'계약 지원 · ID 실측 대기':'소비 계산 보류'}</small></td>
             <td><input type="number" aria-label={label} min={0} max={999999999} step={1} placeholder="미입력" value={manual[key]??''} onChange={e=>setManual({...manual,[key]:e.target.value})} /></td></tr>;
         })}</tbody></table></div><div className="inputs">
         {progressFields.map(([id,label,max])=><label key={id}>{label}<input type="number" min={id.includes('Tier')?1:0} max={max} step={1} placeholder="미입력" value={manual[id]??''} onChange={e=>setManual({...manual,[id]:e.target.value})} /></label>)}
