@@ -81,3 +81,27 @@ test('JSON 붙여넣기와 파일, 실패 시 유지, 삭제 및 스냅샷 미�
   await expect(page.getByText('최근 검색',{exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:'가져온 데이터 삭제'})).toBeVisible();
 });
+
+test('v0.3.2 성운의 공허핵 0과 과거 3513 재수집 경고 표시',async ({page})=>{
+  const snapshot=JSON.parse(readFileSync(new URL('../contracts/examples/resources-0.3.2.json',import.meta.url),'utf8'));
+  await page.clock.setFixedTime(new Date('2026-11-26T12:35:00Z'));
+  await page.route('**/api/realms',route=>route.fulfill({json:{realms:[{slug:'azshara',name:'아즈샤라'}]}}));
+  await page.goto('/');
+  await expect(page.getByRole('option',{name:'아즈샤라'})).toBeAttached();
+  const textbox=page.getByRole('textbox',{name:'애드온 JSON'});
+  const importButton=page.getByRole('button',{name:'JSON 가져오기'});
+  const table=page.getByRole('table',{name:'보유 재화'});
+  const voidcore=table.getByRole('row').filter({hasText:'성운의 공허핵'});
+  await textbox.fill(JSON.stringify(snapshot));
+  await importButton.click();
+  await expect(voidcore.getByRole('cell',{name:'0',exact:true})).toBeVisible();
+  await expect(voidcore.getByText(/애드온 · 관측/)).toBeVisible();
+  await expect(voidcore.getByText(/한국 12.1.5 실측/)).toBeVisible();
+  snapshot.addonVersion='0.3.1';
+  Object.assign(snapshot.resources.nebulousVoidcore,{currencyId:3513,value:987});
+  await textbox.fill(JSON.stringify(snapshot));
+  await importButton.click();
+  await expect(voidcore.getByText(/미수집/)).toBeVisible();
+  await expect(page.getByText(/성운의 공허핵 잔액을 확인할 수 없습니다/)).toBeVisible();
+  await expect(table.getByRole('row').filter({hasText:'지하의 주화'}).getByRole('cell',{name:'42',exact:true})).toBeVisible();
+});

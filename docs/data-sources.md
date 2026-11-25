@@ -49,3 +49,7 @@ TASK-004는 시즌 팩에 검증된 사실과 조사 대상을 따로 저장합�
 커뮤니티 자료는 ID 후보 및 차이점 대조에 사용합니다. 게임 내 강화 창, 구렁 보상과 금고의 실제 횟수·레벨 검증이 남았습니다. 외부 사이트의 표나 자산을 운영 데이터로 복제하지 않았습니다. [화폐 계약 및 증거](contracts/ADDON-003B-HANDOFF.md)
 
 TASK-005에서 한국 공지, 12.1.5 게시 노트, 11월 24일 긴급 수정을 재대조했습니다. 현재 한밤 2시즌 12.1.5를 유지합니다. 공식 맹독석 비용·대상은 확인한 사실로 유지하며 추가 적용 횟수와 최종 레벨은 한국 UI 실측 전까지 보류합니다. [라이브 Wowhead 강화 가이드](https://www.wowhead.com/guide/midnight/item-level-gear-upgrades-dawncrests)는 교차 참고이며 표를 재배포하거나 운영 비용으로 가져오지 않았습니다. 1시즌과 PTR 수치는 사용하지 않습니다. [강화 실측 항목](contracts/UPGRADE-OBSERVATIONS-PROPOSAL.md)
+
+## 한국 12.1.5 공허핵 ID 정정
+
+[애드온 실측 보고서](https://github.com/jeon950523/wow-gearpath-addon/blob/2066683ad86ecd3a5c76bb1084bf1b7191747798/docs/reports/VOIDCORE-CONTRACT-CORRECTION.md)에서 3418의 발견 상태와 현재 캐릭터 UI 수량 일치를 확인했습니다. 동일한 표시명의 3513은 해당 관측에서 미발견이었으며 용도는 미확인입니다. 근거 범위는 해당 클라이언트 관측으로 한정합니다. 보상·상인·소비 규칙은 별도 검증을 기다립니다.

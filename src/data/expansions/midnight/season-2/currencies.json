@@ -135,12 +135,12 @@
     "key": "nebulousVoidcore",
     "label": "성운의 공허핵",
     "kind": "currency",
-    "id": 3513,
+    "id": 3418,
     "use": "추가 전리품",
     "collection": "contract-only",
-    "identityStatus": "candidate",
+    "identityStatus": "kr-client-observed",
     "spendingStatus": "pending",
-    "source": "https://github.com/Madchristian/weekly-alt-tracker/blob/main/README.en.md"
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/2066683ad86ecd3a5c76bb1084bf1b7191747798/docs/reports/VOIDCORE-CONTRACT-CORRECTION.md"
   },
   {
     "key": "voidlightMarl",

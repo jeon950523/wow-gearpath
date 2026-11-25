@@ -546,7 +546,7 @@
               "properties": {
                 "currencyId": {
                   "enum": [
-                    3513,
+                    3418,
                     null
                   ]
                 },
@@ -561,6 +561,19 @@
                     null
                   ]
                 }
+              }
+            },
+            {
+              "if": {
+                "required": ["source", "value"],
+                "properties": {
+                  "source": { "const": "addon" },
+                  "value": { "type": "integer" }
+                }
+              },
+              "then": {
+                "required": ["currencyId"],
+                "properties": { "currencyId": { "const": 3418 } }
               }
             }
           ]

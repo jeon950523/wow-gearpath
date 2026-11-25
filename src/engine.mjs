@@ -1,8 +1,9 @@
-import { season, demoRules, rulesAt } from './rules.mjs';
+import { season, demoRules, rulesAt, resourceDefinitions } from './rules.mjs';
 import { analyzeGear, slotWeight } from './engine/gear-growth.mjs';
 import { optimizeGrowth } from './engine/growth-optimizer.mjs';
 
 export const SLOTS = ['HEAD','NECK','SHOULDER','BACK','CHEST','WRIST','HANDS','WAIST','LEGS','FEET','FINGER_1','FINGER_2','TRINKET_1','TRINKET_2','MAIN_HAND','OFF_HAND'];
+const voidcoreId = resourceDefinitions.find(row=>row.key==='nebulousVoidcore').id;
 const SOURCES = ['manual','addon','blizzard','sample'];
 const validNumber = x => typeof x === 'number' && Number.isFinite(x) && x >= 0;
 const fail = message => { throw new Error(message); };
@@ -23,6 +24,9 @@ export function validate(p) {
     if (!o || (o.value !== null && (!validNumber(o.value) || !Number.isSafeInteger(o.value))) ||
       (o.state!==undefined && !(['observed','uncollected','failed','incomplete','locked'].includes(o.state) && (o.state==='observed')===(o.value!==null))) ||
       !SOURCES.includes(o.source) || !Number.isFinite(Date.parse(o.observedAt))) fail(`재화 ${key}: 수량, 상태, 출처, 시각을 확인하세요.`);
+    if (key==='nebulousVoidcore' && ((o.currencyId!=null && o.currencyId!==voidcoreId) ||
+      o.itemId!=null || (o.kind!=null && o.kind!=='currency') ||
+      (o.source==='addon' && o.value!==null && o.currencyId!==voidcoreId))) fail('성운의 공허핵 화폐 ID를 확인하세요.');
   }
   if (p.progress != null) {
     if (!SOURCES.includes(p.progress.source) || !Number.isFinite(Date.parse(p.progress.observedAt))) fail('진행 정보의 출처와 시각이 필요합니다.');
@@ -68,6 +72,7 @@ export function diagnose(input, { now = new Date(), demo = false, web = false, s
   if (p.equipment.some(x=>!x.track)) warnings.push('강화 트랙 미확인 장비가 있습니다. 아이템 레벨만으로 트랙을 추정하지 않습니다.');
   const resource = key => {
     const o = p.resources?.[key];
+    if (key==='nebulousVoidcore' && (o?.source!=='addon' || o.currencyId!==voidcoreId)) return null;
     return o && fresh(o.observedAt,timestamp) ? o.value : null;
   };
   const progress = p.progress ? Object.fromEntries(Object.entries(p.progress).filter(([key])=>
