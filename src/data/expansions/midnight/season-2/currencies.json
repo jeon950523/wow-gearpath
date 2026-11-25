@@ -1,0 +1,156 @@
+[
+  {
+    "key": "cofferKey",
+    "label": "복원된 금고 열쇠",
+    "kind": "currency",
+    "id": 3028,
+    "use": "풍요로운 구렁",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "cofferKeyShard",
+    "label": "금고 열쇠 파편",
+    "kind": "currency",
+    "id": 3310,
+    "use": "금고 열쇠 재료",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "adventurerCrest",
+    "label": "모험가 안개문장",
+    "kind": "currency",
+    "id": 3442,
+    "use": "장비 강화",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "veteranCrest",
+    "label": "노련가 안개문장",
+    "kind": "currency",
+    "id": 3443,
+    "use": "장비 강화 · 추가 공허핵 구매",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "championCrest",
+    "label": "용사 안개문장",
+    "kind": "currency",
+    "id": 3444,
+    "use": "장비 강화",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "heroCrest",
+    "label": "영웅 안개문장",
+    "kind": "currency",
+    "id": 3445,
+    "use": "장비 강화",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "mythCrest",
+    "label": "신화 안개문장",
+    "kind": "currency",
+    "id": 3446,
+    "use": "장비 강화",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "venomstone",
+    "label": "승천의 맹독석",
+    "kind": "item",
+    "id": 280562,
+    "use": "조건을 충족한 2시즌 장비 추가 강화",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "gold",
+    "label": "골드",
+    "kind": "money",
+    "id": null,
+    "use": "강화 및 상인",
+    "collection": "addon-0.3.0",
+    "identityStatus": "observed-contract",
+    "spendingStatus": "pending",
+    "source": "https://github.com/jeon950523/wow-gearpath-addon/blob/0008af489641305eeaea86da1504876ed6b5b6ba/addon/WowGearPath/Resources.lua"
+  },
+  {
+    "key": "spark",
+    "label": "제작용 불꽃",
+    "kind": "unspecified",
+    "id": null,
+    "use": "제작",
+    "collection": "manual",
+    "identityStatus": "candidate",
+    "spendingStatus": "pending",
+    "source": "https://github.com/Madchristian/weekly-alt-tracker/blob/main/README.en.md"
+  },
+  {
+    "key": "craftingReagent",
+    "label": "기타 제작 재료",
+    "kind": "unspecified",
+    "id": null,
+    "use": "제작",
+    "collection": "manual",
+    "identityStatus": "candidate",
+    "spendingStatus": "pending",
+    "source": "https://github.com/Madchristian/weekly-alt-tracker/blob/main/README.en.md"
+  },
+  {
+    "key": "undercoin",
+    "label": "지하의 주화",
+    "kind": "currency",
+    "id": 2803,
+    "use": "구렁 상인",
+    "collection": "contract-only",
+    "identityStatus": "candidate",
+    "spendingStatus": "pending",
+    "source": "https://github.com/Madchristian/weekly-alt-tracker/blob/main/README.en.md"
+  },
+  {
+    "key": "nebulousVoidcore",
+    "label": "성운의 공허핵",
+    "kind": "currency",
+    "id": 3513,
+    "use": "추가 전리품",
+    "collection": "contract-only",
+    "identityStatus": "candidate",
+    "spendingStatus": "pending",
+    "source": "https://github.com/Madchristian/weekly-alt-tracker/blob/main/README.en.md"
+  },
+  {
+    "key": "voidlightMarl",
+    "label": "공허불빛 이회토",
+    "kind": "currency",
+    "id": 3316,
+    "use": "상인 · 추가 공허핵 구매",
+    "collection": "contract-only",
+    "identityStatus": "candidate",
+    "spendingStatus": "pending",
+    "source": "https://github.com/Madchristian/weekly-alt-tracker/blob/main/README.en.md"
+  }
+]

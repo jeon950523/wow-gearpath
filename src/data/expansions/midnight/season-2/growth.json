@@ -1,0 +1,118 @@
+[
+  {
+    "ruleId": "crest-cap-removed",
+    "key": "crest-cap-removed",
+    "category": "upgrade-costs",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-10-21T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/ko-kr/article/24307306/12-1-5",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {
+      "crestCapRemoved": true
+    }
+  },
+  {
+    "ruleId": "venomstone-upgrade",
+    "key": "venomstone-upgrade",
+    "category": "special-upgrade",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-10-21T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/ko-kr/article/24307306/12-1-5",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {
+      "unlock": "맹독석과 승천",
+      "tracks": [
+        "hero",
+        "myth"
+      ],
+      "slots": [
+        "weapon",
+        "trinket",
+        "neck"
+      ],
+      "maximumRank": true,
+      "also": "최고급 해일제작"
+    },
+    "effect": {
+      "currency": "venomstone",
+      "quantity": 10
+    }
+  },
+  {
+    "ruleId": "regular-upgrade-table",
+    "key": "regular-upgrade-table",
+    "category": "upgrade-tracks",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/en-gb/article/24293281/curse-of-ula-tek-content-update-notes",
+    "sourceType": "pending",
+    "verificationStatus": "pending",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {},
+    "missing": "전 단계별 아이템 레벨과 공식 또는 실측 근거"
+  },
+  {
+    "ruleId": "regular-upgrade-price",
+    "key": "regular-upgrade-price",
+    "category": "upgrade-costs",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/en-gb/article/24293281/curse-of-ula-tek-content-update-notes",
+    "sourceType": "pending",
+    "verificationStatus": "pending",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {},
+    "missing": "단계별 문장과 골드 비용, 최대 강화 조건"
+  },
+  {
+    "ruleId": "warband-watermark",
+    "key": "warband-watermark",
+    "category": "upgrade-discounts",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/en-gb/article/24293281/curse-of-ula-tek-content-update-notes",
+    "sourceType": "pending",
+    "verificationStatus": "pending",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {},
+    "missing": "전투부대와 슬롯 최고 기록 할인, 예외"
+  }
+]

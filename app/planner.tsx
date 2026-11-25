@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState, type FormEvent} from 'react';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
-import {season} from '../src/rules.mjs';
+import {season,resourceDefinitions} from '../src/rules.mjs';
 import {parseAddon,mergeSnapshots,maxImportBytes,type AddonEquipmentDetails} from '../src/addon-import.mjs';
 
 type Snapshot = Parameters<typeof diagnose>[0];
@@ -18,11 +18,8 @@ const slots: Record<string,string> = {
 const qualities: Record<string,string> = {POOR:'하급',COMMON:'일반',UNCOMMON:'고급',RARE:'희귀',EPIC:'영웅',LEGENDARY:'전설',ARTIFACT:'유물'};
 const tracks: Record<string,string> = {explorer:'탐험가',adventurer:'모험가',veteran:'노련가',champion:'챔피언',hero:'영웅',myth:'신화'};
 const roles: Record<string,string> = {TANK:'방어',HEALER:'치유',DAMAGER:'공격'};
-const balances = [
-  ['cofferKey','복원된 금고 열쇠'],['cofferKeyShard','열쇠 조각'],['adventurerCrest','모험가 안개문장'],
-  ['veteranCrest','노련가 안개문장'],['championCrest','용사 안개문장'],['heroCrest','영웅 안개문장'],
-  ['mythCrest','신화 안개문장'],['venomstone','승천의 맹독석'],['gold','골드'],['spark','제작용 불꽃'],['craftingReagent','기타 제작 재료 수량'],
-];
+const balanceStates: Record<string,string> = {observed:'관측',failed:'수집 실패',locked:'미해금',incomplete:'불완전',uncollected:'미수집'};
+const scopeNames: Record<string,string> = {character:'캐릭터',warband:'전투부대',unknown:'범위 미확인'};
 const progressFields = [['maxDelveTier','최고 해금 구렁 단계',11],['stableTier','안정적으로 완료할 구렁 단계',11],
   ['vaultWorld','야외/구렁 금고 진행 횟수',99],['vaultDungeon','던전 금고 진행 횟수',99],['vaultRaid','레이드 금고 진행 횟수',99]] as const;
 
@@ -136,7 +133,7 @@ export default function Planner() {
     if (!snapshot) return;
     const observedAt = isSample ? '2026-11-26T10:00:00+09:00' : new Date().toISOString();
     const value = (id:string) => manual[id] === undefined || manual[id] === '' ? null : Number(manual[id]);
-    const resources = Object.fromEntries(balances.map(([id])=>[id,{value:value(id), source:'manual', observedAt}]));
+    const resources = Object.fromEntries(resourceDefinitions.map(({key})=>[key,{value:value(key), source:'manual', observedAt}]));
     const dungeon = manual.dungeon?.trim();
     const keyLevel = value('keyLevel');
     if ((!dungeon) !== (keyLevel === null)) {
@@ -156,6 +153,7 @@ export default function Planner() {
   const result = snapshot ? diagnose(snapshot, isSample ? {demo:!savedAt,now:new Date(savedAt || '2026-11-26T10:00:00+09:00'),web:true,solo} : {web:true,solo}) : null;
   const nextGoal = !result || result.rawAverage === null || result.rawAverage >= 315 ? null : 315;
   const profile = snapshot?.profile;
+  const balanceRows = new Map(result?.resources.map(row=>[row.key,row]));
   const gear: Gear[] = snapshot?.equipment ?? [];
   const weak = new Set(result?.weakSlots.map((row:Gear)=>row.slot));
 
@@ -205,7 +203,7 @@ export default function Planner() {
       </section>
       <div className="columns">
         <section className="panel"><div className="section-title"><h2>장착 장비</h2><span>교체 후보 표시</span></div>
-          <div className="table-scroll"><table><thead><tr><th>부위</th><th>아이템</th><th>레벨</th><th>강화</th></tr></thead><tbody>
+          <div className="table-scroll"><table aria-label="장착 장비"><thead><tr><th>부위</th><th>아이템</th><th>레벨</th><th>강화</th></tr></thead><tbody>
             {Object.entries(slots).map(([slot,label])=>{
               const item = gear.find(x=>x.slot===slot);
               return <tr className={weak.has(slot)?'weak':''} key={slot}>
@@ -227,8 +225,17 @@ export default function Planner() {
         </section>
       </div>
       <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>빈칸은 미입력, 0은 보유 없음</span></div>
-      <form onSubmit={applyResources}><div className="inputs">
-        {balances.map(([id,label])=>{const row=snapshot.resources?.[id];return <label key={id}>{label}<input type="number" min={0} max={999999999} step={1} placeholder="미입력" value={manual[id]??''} onChange={e=>setManual({...manual,[id]:e.target.value})} />{row && <small>{row.value ?? ({failed:'수집 실패',locked:'미해금',incomplete:'미완료'} as Record<string,string>)[row.state] ?? '미수집'} · {row.source==='addon'?'애드온':'수동'} · {presentTime(row.observedAt)}</small>}</label>;})}
+      <form onSubmit={applyResources}>
+        <div className="table-scroll"><table aria-label="보유 재화"><thead><tr><th>재화</th><th>보유량</th><th>출처와 수집 상태</th><th>용도 및 검증</th><th>수동 입력</th></tr></thead><tbody>
+        {resourceDefinitions.map(({key,label,use,collection})=>{
+          const row=balanceRows.get(key);
+          return <tr key={key}><th scope="row">{label}</th><td className="number">{row?.value??'—'}</td>
+            <td>{row ? <>{row.source==='addon'?'애드온':'수동'} · {balanceStates[row.state]??(row.value===null?'미입력':'입력됨')}{row.status==='오래됨'?' · 오래됨':''}
+              <small className="upgrade-note">{presentTime(row.observedAt)} · {scopeNames[row.scope]??'범위 미확인'}</small>
+              {(row.maxQuantity!=null || row.weeklyEarned!=null || row.weeklyLimit!=null) && <small className="upgrade-note">관측 상한 {row.maxQuantity??'—'} · 주간 {row.weeklyEarned??'—'}/{row.weeklyLimit??'—'}</small>}</>:'미입력'}</td>
+            <td>{use}<small className="upgrade-note">{collection==='contract-only'?'계약 지원 · ID 실측 대기':'소비 계산 보류'}</small></td>
+            <td><input type="number" aria-label={label} min={0} max={999999999} step={1} placeholder="미입력" value={manual[key]??''} onChange={e=>setManual({...manual,[key]:e.target.value})} /></td></tr>;
+        })}</tbody></table></div><div className="inputs">
         {progressFields.map(([id,label,max])=><label key={id}>{label}<input type="number" min={id.includes('Tier')?1:0} max={max} step={1} placeholder="미입력" value={manual[id]??''} onChange={e=>setManual({...manual,[id]:e.target.value})} /></label>)}
         <label>승천의 맹독석 해금<select value={manual.venomstoneUnlocked??''} onChange={e=>setManual({...manual,venomstoneUnlocked:e.target.value})}><option value="">미입력</option><option value="yes">해금</option><option value="no">미해금</option></select></label>
         <label>보유 쐐기돌 던전<input maxLength={80} value={manual.dungeon??''} onChange={e=>setManual({...manual,dungeon:e.target.value})} placeholder="미입력" /></label>

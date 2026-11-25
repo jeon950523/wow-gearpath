@@ -196,38 +196,403 @@
         "null"
       ],
       "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "source": {
-            "const": "addon"
-          },
-          "observedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "value": {
-            "type": [
-              "integer",
-              "null"
-            ],
-            "minimum": 0,
-            "maximum": 9007199254740991
-          },
-          "state": {
-            "enum": [
-              "observed",
-              "uncollected",
-              "failed",
-              "incomplete",
-              "locked"
-            ]
-          }
+        "$ref": "#/$defs/resource"
+      },
+      "properties": {
+        "cofferKey": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3028,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
         },
-        "required": [
-          "source",
-          "observedAt",
-          "value"
-        ]
+        "cofferKeyShard": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3310,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "adventurerCrest": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3442,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "veteranCrest": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3443,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "championCrest": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3444,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "heroCrest": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3445,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "mythCrest": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3446,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "venomstone": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    280562,
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "item",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "gold": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "money",
+                    null
+                  ]
+                },
+                "scope": {
+                  "enum": [
+                    "character",
+                    "unknown",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "spark": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "craftingReagent": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "undercoin": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    2803,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "nebulousVoidcore": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3513,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "voidlightMarl": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/resource"
+            },
+            {
+              "properties": {
+                "currencyId": {
+                  "enum": [
+                    3316,
+                    null
+                  ]
+                },
+                "itemId": {
+                  "enum": [
+                    null
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "currency",
+                    null
+                  ]
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "progress": {
@@ -514,5 +879,150 @@
     "observedAt",
     "weaponMode",
     "equipment"
-  ]
+  ],
+  "$defs": {
+    "resource": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "const": "addon"
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "value": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "state": {
+          "enum": [
+            "observed",
+            "uncollected",
+            "failed",
+            "incomplete",
+            "locked"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "currency",
+            "item",
+            "money",
+            null
+          ]
+        },
+        "scope": {
+          "enum": [
+            "character",
+            "warband",
+            "unknown",
+            null
+          ]
+        },
+        "currencyId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "itemId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "maxQuantity": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "weeklyEarned": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "weeklyLimit": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "source",
+        "observedAt",
+        "value"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "state"
+            ],
+            "properties": {
+              "state": {
+                "const": "observed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "state"
+            ],
+            "properties": {
+              "state": {
+                "enum": [
+                  "uncollected",
+                  "failed",
+                  "incomplete",
+                  "locked"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
 }

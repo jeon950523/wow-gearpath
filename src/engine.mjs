@@ -1,4 +1,4 @@
-import { season, demoRules, ruleCatalog } from './rules.mjs';
+import { season, demoRules, rulesAt } from './rules.mjs';
 
 export const SLOTS = ['HEAD','NECK','SHOULDER','BACK','CHEST','WRIST','HANDS','WAIST','LEGS','FEET','FINGER_1','FINGER_2','TRINKET_1','TRINKET_2','MAIN_HAND','OFF_HAND'];
 const SOURCES = ['manual','addon','blizzard','sample'];
@@ -18,7 +18,9 @@ export function validate(p) {
     if (item.track != null && (typeof item.track !== 'string' || !Number.isInteger(item.rank) || item.rank < 1 || item.rank > 20)) fail('강화 트랙에는 유효한 단계가 필요합니다.');
   }
   for (const [key, o] of Object.entries(p.resources ?? {})) {
-    if (!o || (o.value !== null && (!validNumber(o.value) || !Number.isInteger(o.value))) || !SOURCES.includes(o.source) || !Number.isFinite(Date.parse(o.observedAt))) fail(`재화 ${key}: 수량, 출처, 시각을 확인하세요.`);
+    if (!o || (o.value !== null && (!validNumber(o.value) || !Number.isSafeInteger(o.value))) ||
+      (o.state!==undefined && !(['observed','uncollected','failed','incomplete','locked'].includes(o.state) && (o.state==='observed')===(o.value!==null))) ||
+      !SOURCES.includes(o.source) || !Number.isFinite(Date.parse(o.observedAt))) fail(`재화 ${key}: 수량, 상태, 출처, 시각을 확인하세요.`);
   }
   if (p.progress != null) {
     if (!SOURCES.includes(p.progress.source) || !Number.isFinite(Date.parse(p.progress.observedAt))) fail('진행 정보의 출처와 시각이 필요합니다.');
@@ -45,7 +47,10 @@ export function diagnose(input, { now = new Date(), demo = false, web = false, s
   if (demo && p.source !== 'sample') fail('샘플 출처에서만 데모 계산을 사용할 수 있습니다.');
   const warnings = [], bySlot = new Map(p.equipment.map(x => [x.slot, x]));
   const equipmentFresh = fresh(p.observedAt, timestamp);
-  const seasonValid = p.seasonId === season.id && timestamp <= Date.parse(season.validUntil) && timestamp >= Date.parse(season.checkedAt+'T00:00:00+09:00');
+  const seasonValid = p.seasonId === season.id && (p.patch==null || p.patch===season.patch) &&
+    (season.effectiveUntil===null || timestamp<Date.parse(season.effectiveUntil)) &&
+    timestamp <= Date.parse(season.validUntil) && timestamp >= Date.parse(season.checkedAt+'T00:00:00+09:00');
+  const active = rulesAt(timestamp);
   if (!equipmentFresh) warnings.push('장비 정보가 24시간 이상 지났거나 시각이 잘못되어 소비 및 그룹 추천을 보류합니다.');
   if (!seasonValid) warnings.push('시즌이 다르거나 규칙 재검토 기한이 지나 시즌별 추천과 소비 계산을 보류합니다.');
   const missingSlots = SLOTS.filter(s => !bySlot.has(s) && !(s === 'OFF_HAND' && p.weaponMode === 'two-hand'));
@@ -66,16 +71,22 @@ export function diagnose(input, { now = new Date(), demo = false, web = false, s
   if (seasonValid) {
     const keys = resource('cofferKey');
     activities.push({id:'delves', kind:'solo', title:'안정적으로 완료 가능한 구렁 우선', reason:progress.stableTier != null ? `입력한 안정 완료 단계는 ${progress.stableTier}단입니다. 실제 해금 단계와 풍요 보상을 확인하세요.` : '최고 해금 단계와 실제 완료 가능 단계를 확인하세요. 해금 단계는 성공을 보장하지 않습니다.', certainty:'조건부'});
-    activities.push({id:'bountiful', kind:'solo', title:keys === null ? '풍요로운 구렁 열쇠 수량 입력' : keys === 0 ? '열쇠 획득 경로 확인' : '풍요로운 구렁 보상 비교 후 열쇠 사용 검토', reason:keys === null ? '미입력·오래된 값은 0개와 구분합니다.' : `관측 열쇠 ${keys}개. 보상 미획득 여부와 단계별 보상을 게임에서 확인해야 합니다.`, certainty:'조건부'});
-    activities.push({id:'vault', kind:'solo', title:'이번 주 위대한 금고 진행 확인', reason:'장비 API로 이번 주 구렁 금고 진행·후보를 확정할 수 없습니다. 게임 화면을 대조하세요.', certainty:'확인 필요'});
+    if (active.byId.has('bountiful-delve-open')) activities.push({id:'bountiful', kind:'solo', title:keys === null ? '풍요로운 구렁 열쇠 수량 입력' : keys === 0 ? '열쇠 획득 경로 확인' : '풍요로운 구렁 보상 비교 후 열쇠 사용 검토', reason:keys === null ? '미입력·오래된 값은 0개와 구분합니다.' : `관측 열쇠 ${keys}개. 보상 미획득 여부와 단계별 보상을 게임에서 확인해야 합니다.`, certainty:'조건부'});
+    if (active.byId.has('season-vault-open')) activities.push({id:'vault', kind:'solo', title:'이번 주 위대한 금고 진행 확인', reason:active.byId.has('vault-voidcore')?'공식 시즌 공지에는 성운의 공허핵 보상 선택지가 포함됩니다. 이번 주 해금 조건과 실제 후보는 게임에서 확인하세요.':'이번 주 구렁 금고 진행과 보상 후보는 게임에서 확인하세요.', certainty:'확인 필요'});
     if (web) {
       activities.push(
         {id:'world',kind:'solo',title:'필드 보상과 주간 퀘스트 확인',reason:'현재 보상 미리보기에서 교체할 부위를 찾으세요. 획득 완료와 주간 초기화는 게임에 표시된 상태를 따릅니다.',certainty:'확인 필요'},
         {id:'spend',kind:'solo',title:'교체 기회 확인 후 강화·제작 비교',reason:'이번 주 금고와 파밍 보상으로 교체할 가능성이 있는 부위는 소비를 보류하고, 계속 장착할 부위의 강화 비용·제작 주문을 게임에서 비교하세요.',certainty:'조건부'},
       );
     }
-    const venomTier = ruleCatalog.venomstones.bountifulTier;
-    if (resource('cofferKey') > 0 && progress.maxDelveTier === venomTier && (progress.stableTier == null || progress.stableTier >= venomTier) && progress.venomstoneUnlocked === true) activities.push({id:'venomstone', kind:'solo', title:`${venomTier}단 풍요로운 구렁의 추가 강화 재료 검토`, reason:'공식 12.1.5 공지의 해금 조건을 충족한 경우 후보입니다. 성공 가능성과 실제 획득 조건을 확인하세요.', certainty:'조건부'});
+    const venomTier = active.byId.get('venomstone-bountiful-tier')?.effect.tier;
+    const venomCost = active.byId.get('venomstone-upgrade')?.effect.quantity;
+    const venomQuantity = active.byId.get('venomstone-bountiful-quantity')?.effect.quantity;
+    if (venomTier && resource('cofferKey') > 0 && progress.maxDelveTier === venomTier && (progress.stableTier == null || progress.stableTier >= venomTier) && progress.venomstoneUnlocked === true) {
+      const reward = venomQuantity ? `공식 긴급 수정 기준 풍요로운 금고에서 ${venomQuantity}개를 획득합니다. ` : '';
+      activities.push({id:'venomstone', kind:'solo', title:`${venomTier}단 풍요로운 구렁의 추가 강화 재료 검토`,
+        reason:reward+(venomCost?`추가 강화의 기준 비용은 맹독석 ${venomCost}개입니다. 최대 강화 및 대상 슬롯 조건을 게임에서 확인하세요.`:'실제 획득 조건을 게임에서 확인하세요.'), certainty:'조건부'});
+    }
     if (groupEligible) {
       activities.push({id:'raid', kind:'group', title:'레이드 보상 후보 비교', reason:'315 기준 충족. 일반 난이도부터 공략 숙련도·역할·모집 조건과 교체 가능한 보상을 확인하세요.', certainty:'후보'});
       const key = p.keystone && fresh(p.keystone.observedAt,timestamp) ? p.keystone : null;
@@ -83,8 +94,8 @@ export function diagnose(input, { now = new Date(), demo = false, web = false, s
       if (web) activities.push({id:'group-vault',kind:'group',title:'레이드·쐐기 주간 금고 비교',reason:'레이드는 처치 가능한 우두머리와 남은 보상을, 쐐기는 안정적으로 완료할 단계와 소요 시간을 비교하세요. 금고 후보는 다음 주에 확인합니다.',certainty:'조건부'});
     }
   }
-  const rules = demo ? demoRules : season.upgradeRules;
-  if (!demo) warnings.push('공식 출처로 단계별 비용·할인까지 검증한 강화표가 없어 재화 소비안은 계산하지 않습니다.');
+  const rules = demo ? demoRules : active.upgrades;
+  if (!demo && !rules.length) warnings.push('공식 출처로 단계별 비용·할인까지 검증한 강화표가 없어 재화 소비안은 계산하지 않습니다.');
   if (demo) warnings.push('샘플 전용 가상 강화표입니다. 실제 게임의 비용이나 보상으로 사용하지 마세요.');
   const remaining = Object.fromEntries(Object.keys(p.resources ?? {}).map(k=>[k,resource(k)]));
   const working = structuredClone(p.equipment), upgrades = [];

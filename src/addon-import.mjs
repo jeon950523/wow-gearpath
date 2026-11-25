@@ -1,5 +1,5 @@
 import {validate, SLOTS} from './engine.mjs';
-import {season} from './rules.mjs';
+import {season,resourceDefinitions} from './rules.mjs';
 
 export const maxImportBytes = 256 * 1024;
 const sameName = (a,b) => a.normalize('NFC').toLowerCase() === b.normalize('NFC').toLowerCase();
@@ -7,7 +7,6 @@ const isRecord = value => value !== null && typeof value === 'object' && !Array.
 const text = (value,max=120) => typeof value === 'string' && value.length <= max ? value : null;
 const iso = value => typeof value === 'string' && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$/.test(value) && Number.isFinite(Date.parse(value));
 const statusNames = ['observed','uncollected','failed','incomplete','locked'];
-const resourceKeys = ['cofferKey','cofferKeyShard','gold','venomstone','adventurerCrest','veteranCrest','championCrest','heroCrest','mythCrest','spark','craftingReagent'];
 const progressKeys = ['maxDelveTier','stableTier','vaultWorld','vaultDungeon','vaultRaid','venomstoneUnlocked'];
 const ensure = (condition,message) => { if (!condition) throw new Error(message); };
 const tracks = new Set(['explorer','adventurer','veteran','champion','hero','myth']);
@@ -71,13 +70,24 @@ export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
   }
   ensure(data.resources==null || isRecord(data.resources),'재화 목록 형식이 올바르지 않습니다.');
   const resources={};
-  for(const key of resourceKeys){
+  for(const definition of resourceDefinitions){
+    const {key,kind,id}=definition;
     const row=data.resources?.[key];
     if(row===undefined) continue;
     ensure(isRecord(row) && row.source==='addon' && iso(row.observedAt) && Date.parse(row.observedAt)<=+now+300000,'재화 출처 또는 수집 시각을 확인하세요.');
     const state=row.state??(row.value===null?'uncollected':'observed');
     ensure(statusNames.includes(state) && (state==='observed'?Number.isSafeInteger(row.value)&&row.value>=0:row.value===null),'재화 수량 또는 수집 상태가 올바르지 않습니다.');
-    resources[key]={source:'addon',observedAt:row.observedAt,value:row.value,state};
+    const metadata=pick(row,{
+      kind:value=>kind!=='unspecified' && value===kind,
+      currencyId:value=>kind==='currency' && value===id,
+      itemId:value=>kind==='item' && value===id,
+      scope:value=>['character','warband','unknown'].includes(value) && (kind!=='money' || value!=='warband'),
+      name:boundedText(80),
+      maxQuantity:value=>Number.isSafeInteger(value)&&value>=0,
+      weeklyEarned:value=>Number.isSafeInteger(value)&&value>=0,
+      weeklyLimit:value=>Number.isSafeInteger(value)&&value>=0,
+    });
+    resources[key]={source:'addon',observedAt:row.observedAt,value:row.value,state,...metadata};
   }
   const capture=(row,keys)=>{
     if(row==null)return null;
