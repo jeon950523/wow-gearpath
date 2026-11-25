@@ -2,6 +2,10 @@
 
 검증일: 2026-11-26 (Asia/Seoul). 검색 결과의 상대 날짜 대신 공지 본문의 한국 지역 일정을 우선했습니다. 베타·PTR·과거 시즌 수치를 운영 규칙으로 채택하지 않았습니다.
 
+TASK-002에서 한국 12.1.5 공지와 이후 시즌 3 예고를 다시 대조했습니다. 브라우저의 비교 UI는 [와우헤드 강화 가이드](https://www.wowhead.com/guide/midnight/item-level-gear-upgrades-dawncrests)의 아이템 정보 구조와 [Method 비교표](https://www.method.gg/guides/mistcrests-from-mythic-dungeons-and-raid-bosses-in-wow-midnight-season-2)를 참고했습니다. 운영 규칙의 수치 근거는 공식 출처만 사용합니다.
+
+웹 어댑터는 `dynamic-kr`의 realm index와 `static-kr`의 item media를 추가했습니다. 종족·직업·전문화·레벨·품질은 공개 프로필과 장비 응답에 있을 때 표시합니다. 미디어는 검증된 Blizzard 이미지 호스트만 허용하고 실패 시 장비 조회를 유지합니다. 트랙·단계, 보유 재화, 열쇠, 금고 진행은 미확인 또는 수동 입력입니다. 실제 응답 검증 상태는 TASK-002 보고서를 참조하세요.
+
 ## 확인된 공식 사실
 
 | 근거 | 확인한 범위 | 적용 |
