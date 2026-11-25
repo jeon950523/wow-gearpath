@@ -19,3 +19,13 @@
 | [Method 2시즌 가이드](https://www.method.gg/guides/mistcrests-from-mythic-dungeons-and-raid-bosses-in-wow-midnight-season-2) | 한밤 2시즌 참고 후보입니다. 일괄 데이터 재사용 허가는 확인하지 못했습니다. |
 | [Icy Veins 약관](https://www.icy-veins.com/terms) | 사이트 약관은 확인했습니다. 사용할 표와 재배포 권한을 개별 확인해야 합니다. |
 | [Warcraft Wiki 저작권](https://warcraft.wiki.gg/wiki/Warcraft_Wiki:Copyrights) | 위키가 라이선스할 수 있는 내용은 CC BY-SA 4.0입니다. Blizzard 소유 자료 및 개별 파일은 별도로 확인합니다. |
+
+## 심크 통합 로드맵 (승인된 후속 범위)
+
+### 웹 책임 및 단계
+- SIM-001: 기존 /simc 프로필 텍스트 입력/검증, GearPath JSON 및 API와 안전하게 매칭. 지원하는 SimC 입력 문법의 범위를 정의하고 알 수 없는 지시문은 실행하지 않는다.
+- SIM-002: 사용자가 내보낸 실제 SimC/Raidbots 결과의 지원 형식·비교 UI, 기준 DPS 대비 차이·불확실성·장비 레벨을 함께 표시. 외부 서비스 결과 접근/이용 조건 검증 전 자동 연동 금지.
+- SIM-003: 사용자 PC의 버전 고정 SimC 실행 연동 검토. 별도 로컬 실행 모듈, 안전한 입력, 취소/시간 제한 및 결과 검증. 서비스 서버의 자동 실행은 승인 범위 외.
+- SIM-004: Quick Sim, Top Gear, Droptimizer, Upgrade Sim, 특성·장신구·티어·보석/마법부여 비교. 후보 선별, 조합 상한, 캐시 키(버전/패치/프로필/시나리오), 통계 오차 비교를 먼저 설계한다.
+- TASK-009 이후 통합: 실제 시뮬레이션 결과를 재화 기회비용·획득 가능성·시간·주간 제한과 결합한다. 미검증 보상 규칙이나 가상의 DPS를 실제 추천 근거로 사용하지 않는다.
+- 현재 TASK-004 시즌/재화 계약과 ADDON-003A 검증을 우선 유지한다. SIM-001/002는 장비/강화 엔진 기반 확보 후, SIM-003/004는 별도 단계로 진행한다. 이 변경은 계획/문서만이며 계약의 실제 신규 필드, 런타임, 배포 기능 및 엔진은 아직 구현하지 않는다.
