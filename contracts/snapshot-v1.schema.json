@@ -135,6 +135,52 @@
               "string",
               "null"
             ]
+          },
+          "maxRank": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 20
+          },
+          "setId": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "bonusIds": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "maxItems": 64,
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          "upgradeStatus": {
+            "enum": [
+              "observed",
+              "unrecognized",
+              "unavailable",
+              "not-observed",
+              "ambiguous",
+              null
+            ]
+          },
+          "upgradeText": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 400
           }
         },
         "required": [
@@ -294,6 +340,168 @@
     },
     "extensions": {
       "type": "object"
+    },
+    "classFile": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Z][A-Z0-9_]{0,31}$"
+    },
+    "classId": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 255
+    },
+    "className": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "level": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 255
+    },
+    "specializationId": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 65535
+    },
+    "specializationName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "role": {
+      "enum": [
+        "TANK",
+        "HEALER",
+        "DAMAGER",
+        "NONE",
+        null
+      ]
+    },
+    "fieldSources": {
+      "type": "object",
+      "properties": {
+        "progress": {
+          "type": "object",
+          "properties": {
+            "maxDelveTier": {
+              "type": "object",
+              "required": [
+                "source",
+                "observedAt"
+              ],
+              "properties": {
+                "source": {
+                  "const": "addon"
+                },
+                "observedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "stableTier": {
+              "type": "object",
+              "required": [
+                "source",
+                "observedAt"
+              ],
+              "properties": {
+                "source": {
+                  "const": "addon"
+                },
+                "observedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "vaultWorld": {
+              "type": "object",
+              "required": [
+                "source",
+                "observedAt"
+              ],
+              "properties": {
+                "source": {
+                  "const": "addon"
+                },
+                "observedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "vaultDungeon": {
+              "type": "object",
+              "required": [
+                "source",
+                "observedAt"
+              ],
+              "properties": {
+                "source": {
+                  "const": "addon"
+                },
+                "observedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "vaultRaid": {
+              "type": "object",
+              "required": [
+                "source",
+                "observedAt"
+              ],
+              "properties": {
+                "source": {
+                  "const": "addon"
+                },
+                "observedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "venomstoneUnlocked": {
+              "type": "object",
+              "required": [
+                "source",
+                "observedAt"
+              ],
+              "properties": {
+                "source": {
+                  "const": "addon"
+                },
+                "observedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "required": [

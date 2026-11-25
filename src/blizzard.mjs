@@ -78,6 +78,7 @@ export function normalize(profile,equipment,{realm,name,observedAt}) {
     slot:x.slot?.type,itemId:x.item?.id,name:x.name ?? '',ilvl:x.level?.value,
     track:null,rank:null,inventoryType:x.inventory_type?.type ?? null,
     quality:typeof x.quality?.type==='string' ? x.quality.type : null,icon:null,
+    bonusIds:Array.isArray(x.bonus_list) && x.bonus_list.every(Number.isSafeInteger) ? x.bonus_list : null,
   }));
   const twoHand=items.find(x=>x.slot==='MAIN_HAND')?.inventoryType==='TWOHWEAPON';
   if (items.some(x=>!Number.isSafeInteger(x.itemId) || x.itemId<1 || !Number.isFinite(x.ilvl) || typeof x.slot!=='string')) throw new Error('Blizzard 장비 필드 형식 오류.');

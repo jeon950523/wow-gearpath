@@ -4,18 +4,20 @@ import {useEffect, useRef, useState, type FormEvent} from 'react';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
 import {season} from '../src/rules.mjs';
-import {parseAddon,mergeSnapshots,maxImportBytes} from '../src/addon-import.mjs';
+import {parseAddon,mergeSnapshots,maxImportBytes,type AddonEquipmentDetails} from '../src/addon-import.mjs';
 
 type Snapshot = Parameters<typeof diagnose>[0];
 type Realm = {slug: string; name: string};
 type Search = {realm: string; name: string};
-type Gear = {slot:string; name?:string; itemId:number; ilvl:number; icon?:string|null; quality?:string|null; track?:string|null; rank?:number|null};
+type Gear = AddonEquipmentDetails & {slot:string; name?:string; itemId:number; ilvl:number; icon?:string|null; quality?:string|null; track?:string|null; rank?:number|null};
 
 const slots: Record<string,string> = {
   HEAD:'머리',NECK:'목',SHOULDER:'어깨',BACK:'등',CHEST:'가슴',WRIST:'손목',HANDS:'손',WAIST:'허리',
   LEGS:'다리',FEET:'발',FINGER_1:'반지 1',FINGER_2:'반지 2',TRINKET_1:'장신구 1',TRINKET_2:'장신구 2',MAIN_HAND:'주 무기',OFF_HAND:'보조 무기',
 };
 const qualities: Record<string,string> = {POOR:'하급',COMMON:'일반',UNCOMMON:'고급',RARE:'희귀',EPIC:'영웅',LEGENDARY:'전설',ARTIFACT:'유물'};
+const tracks: Record<string,string> = {explorer:'탐험가',adventurer:'모험가',veteran:'노련가',champion:'챔피언',hero:'영웅',myth:'신화'};
+const roles: Record<string,string> = {TANK:'방어',HEALER:'치유',DAMAGER:'공격'};
 const balances = [
   ['cofferKey','복원된 금고 열쇠'],['cofferKeyShard','열쇠 조각'],['adventurerCrest','모험가 안개문장'],
   ['veteranCrest','노련가 안개문장'],['championCrest','용사 안개문장'],['heroCrest','영웅 안개문장'],
@@ -196,7 +198,7 @@ export default function Planner() {
     {snapshot && result && <>
       <section className="character">
         <div><p className="eyebrow">{isSample ? '가상 샘플' : realmList.find(x=>x.slug===snapshot.realm)?.name ?? snapshot.realm}</p>
-          <h2>{snapshot.name}</h2><p>{profile?.race ?? '종족 미확인'} · {profile?.className ?? '직업 미확인'} · {profile?.specialization ?? '전문화 미확인'} · {profile?.level ?? '—'} 레벨</p>
+          <h2>{snapshot.name}</h2><p>{profile?.race ?? '종족 미확인'} · {profile?.className ?? '직업 미확인'} · {profile?.specialization ?? '전문화 미확인'} · {profile?.level ?? '—'} 레벨{roles[profile?.role] ? ` · ${roles[profile.role]}` : ''}</p>
           <small>조회 시각 {presentTime(snapshot.fetchedAt ?? snapshot.observedAt)} KST</small></div>
         <div className="metric"><span>평균 장착 레벨</span><strong>{result.displayAverage ?? '미확인'}</strong></div>
         <div className="metric"><span>다음 목표</span><strong>{nextGoal ?? '—'}</strong><small>{solo?'솔플만 추천':result.groupEligible?'그룹 후보 표시':result.rawAverage !== null && result.rawAverage>=315?'그룹 추천 보류 · 진단 범위 확인':'315부터 그룹 후보 표시'}</small></div>
@@ -211,7 +213,9 @@ export default function Planner() {
                 <td>{item ? <div className="gear">{item.icon ? <img src={item.icon} width={30} height={30} alt="" /> : <span className="icon" aria-hidden="true" />}
                   <span className={item.quality ?? ''}>{item.name || '이름 미확인'}<small>{qualities[item.quality ?? ''] ?? '등급 미확인'}</small></span></div>
                   : slot==='OFF_HAND'&&snapshot.weaponMode==='two-hand' ? '양손 무기 사용' : '미확인'}</td>
-                <td className="number">{item?.ilvl ?? '—'}</td><td>{item?.track ? `${item.track} ${item.rank ?? '—'}` : '미확인'}</td>
+                <td className="number">{item?.ilvl ?? '—'}</td><td><span>{item?.track ? `${Object.hasOwn(tracks,item.track) ? tracks[item.track] : item.track} ${item.rank ?? '—'}${item.maxRank ? '/'+item.maxRank : ''}` : item?.upgradeStatus==='unrecognized'?'미인식 트랙':'미확인'}</span>
+                  {item?.upgradeText && <small className="upgrade-note">{item.upgradeText}</small>}
+                  {(item?.setId || item?.bonusIds?.length) ? <details><summary>장비 세부 정보</summary>{item.setId ? <div>세트 ID {item.setId}</div> : null}{item.bonusIds?.length ? <div>보너스 ID {item.bonusIds.join(', ')}</div> : null}</details> : null}</td>
               </tr>;
             })}
           </tbody></table></div>

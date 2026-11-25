@@ -2,6 +2,21 @@ import {expect,test} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 
 const data=readFileSync(new URL('../contracts/examples/hunter-regression.json',import.meta.url),'utf8');
+const details=readFileSync(new URL('../contracts/examples/details-0.2.1.json',import.meta.url),'utf8');
+
+test('실제 생성 v0.2.1 예제의 전문화와 강화 세부 표시',async ({page})=>{
+  await page.clock.setFixedTime(new Date('2026-11-26T12:35:00Z'));
+  await page.route('**/api/realms',route=>route.fulfill({json:{realms:[{slug:'azshara',name:'아즈샤라'}]}}));
+  await page.goto('/');
+  await expect(page.getByRole('option',{name:'아즈샤라'})).toBeAttached();
+  await page.getByRole('textbox',{name:'애드온 JSON'}).fill(details);
+  await page.getByRole('button',{name:'JSON 가져오기'}).click();
+  await expect(page.getByText(/사냥꾼 · 야수 · 90 레벨 · 공격/)).toBeVisible();
+  await expect(page.getByText('영웅 3/6',{exact:true})).toBeVisible();
+  await expect(page.getByText('미인식 트랙',{exact:true})).toBeVisible();
+  await page.getByText('장비 세부 정보',{exact:true}).click();
+  await expect(page.getByText('세트 ID 1234')).toBeVisible();
+});
 
 test('JSON 붙여넣기와 파일, 실패 시 유지, 삭제 및 스냅샷 미전송',async ({page})=>{
   await page.clock.setFixedTime(new Date('2026-11-26T12:35:00Z'));
