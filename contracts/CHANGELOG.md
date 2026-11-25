@@ -1,5 +1,7 @@
 # 스냅샷 계약 변경 이력
 
+- v1 · TASK-004. ADDON-003A 0.3.0의 9종 재화와 patch를 유지합니다. `undercoin`, `nebulousVoidcore`, `voidlightMarl` 수신과 선택 ID·범위·상한을 추가했습니다. 소비 검증과 미궁 파편 수신은 별도입니다. [003B 인계](../docs/contracts/ADDON-003B-HANDOFF.md)
+
 - v1 · CONTRACT-001. ADDON-002의 직업·전문화·역할과 강화 상세 선택 필드를 지원합니다. 기존 영문 트랙 키 의미를 유지합니다. 선택적인 `fieldSources.progress` 항목별 관측 시각은 전체 진행 관측 시각보다 우선합니다. 기존 v1 내보내기는 전체 진행 시각을 사용합니다.
 
 - v1 · TASK-003. 웹 저장소를 정본으로 지정했습니다. 애드온 0.1.1의 기존 필드를 유지합니다. 선택 필드 `patch`, `resources.*.state`, `extensions`를 문서화했습니다.

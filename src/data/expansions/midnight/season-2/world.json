@@ -1,0 +1,209 @@
+[
+  {
+    "ruleId": "bountiful-delve-open",
+    "key": "bountiful-delve-open",
+    "category": "delves",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/ko-kr/article/24294369/pvp-2",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {
+      "bountifulAvailable": true
+    }
+  },
+  {
+    "ruleId": "venomstone-bountiful-tier",
+    "key": "venomstone-bountiful-tier",
+    "category": "delves",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-10-21T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/ko-kr/article/24307306/12-1-5",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {
+      "unlock": "맹독석과 승천"
+    },
+    "effect": {
+      "tier": 11,
+      "currency": "venomstone"
+    }
+  },
+  {
+    "ruleId": "season-vault-open",
+    "key": "season-vault-open",
+    "category": "great-vault",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/ko-kr/article/24294369/pvp-2",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {
+      "seasonRewardsAvailable": true
+    }
+  },
+  {
+    "ruleId": "vault-voidcore",
+    "key": "vault-voidcore",
+    "category": "great-vault",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/en-gb/article/24293281/curse-of-ula-tek-content-update-notes",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {
+      "currency": "nebulousVoidcore",
+      "rewardAvailable": true
+    }
+  },
+  {
+    "ruleId": "delve-reward-table",
+    "key": "delve-reward-table",
+    "category": "delves",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/en-gb/article/24293281/curse-of-ula-tek-content-update-notes",
+    "sourceType": "pending",
+    "verificationStatus": "pending",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {},
+    "missing": "단계별 장비, 열쇠 비용, 지도 및 추가 보상"
+  },
+  {
+    "ruleId": "world-vault-thresholds",
+    "key": "world-vault-thresholds",
+    "category": "great-vault",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/en-gb/article/24293281/curse-of-ula-tek-content-update-notes",
+    "sourceType": "pending",
+    "verificationStatus": "pending",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {},
+    "effect": {},
+    "missing": "횟수 임계값, 단계별 장비 레벨"
+  },
+  {
+    "ruleId": "venomstone-bountiful-quantity",
+    "key": "venomstone-bountiful-quantity",
+    "category": "delves",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-11-26T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/en-us/article/24307310/hotfixes-november-24-2026",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {
+      "unlock": "맹독석과 승천"
+    },
+    "effect": {
+      "tier": 11,
+      "currency": "venomstone",
+      "quantity": 1
+    }
+  },
+  {
+    "ruleId": "ritual-vault-parity",
+    "key": "ritual-vault-parity",
+    "category": "great-vault",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/ko-kr/article/24293281/울라텍의+저주+콘텐츠+업데이트+노트",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {
+      "mode": "ritual-site"
+    },
+    "effect": {
+      "matchingDelveTiers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  },
+  {
+    "ruleId": "heroic-raid-vault-track",
+    "key": "heroic-raid-vault-track",
+    "category": "great-vault",
+    "expansionId": "midnight",
+    "seasonId": "midnight-s2",
+    "region": "kr",
+    "patch": "12.1.5",
+    "effectiveFrom": "2026-08-20T00:00:00+09:00",
+    "effectiveUntil": null,
+    "checkedAt": "2026-11-26",
+    "reviewDueAt": "2026-12-03T00:00:00+09:00",
+    "source": "https://news.blizzard.com/en-gb/article/24293281/curse-of-ula-tek-content-update-notes",
+    "sourceType": "blizzard",
+    "verificationStatus": "verified",
+    "reuse": "공식 사실을 자체 문장으로 기록. 외부 표 또는 자산 재배포 없음.",
+    "conditions": {
+      "difficulty": "heroic-raid"
+    },
+    "effect": {
+      "track": "myth",
+      "rank": 1
+    }
+  }
+]

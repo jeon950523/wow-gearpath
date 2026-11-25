@@ -1,0 +1,210 @@
+{
+  "addonVersion": "0.3.0",
+  "collectionWarnings": [],
+  "equipment": [
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1001,
+      "name": "장비",
+      "rank": null,
+      "slot": "HEAD",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1002,
+      "name": "장비",
+      "rank": null,
+      "slot": "NECK",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1003,
+      "name": "장비",
+      "rank": null,
+      "slot": "SHOULDER",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1015,
+      "name": "장비",
+      "rank": null,
+      "slot": "BACK",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1005,
+      "name": "장비",
+      "rank": null,
+      "slot": "CHEST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1009,
+      "name": "장비",
+      "rank": null,
+      "slot": "WRIST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1010,
+      "name": "장비",
+      "rank": null,
+      "slot": "HANDS",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1006,
+      "name": "장비",
+      "rank": null,
+      "slot": "WAIST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1007,
+      "name": "장비",
+      "rank": null,
+      "slot": "LEGS",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1008,
+      "name": "장비",
+      "rank": null,
+      "slot": "FEET",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1011,
+      "name": "장비",
+      "rank": null,
+      "slot": "FINGER_1",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1012,
+      "name": "장비",
+      "rank": null,
+      "slot": "FINGER_2",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1013,
+      "name": "장비",
+      "rank": null,
+      "slot": "TRINKET_1",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1014,
+      "name": "장비",
+      "rank": null,
+      "slot": "TRINKET_2",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_2HWEAPON",
+      "ilvl": 315,
+      "itemId": 1016,
+      "name": "장비",
+      "rank": null,
+      "slot": "MAIN_HAND",
+      "track": null
+    }
+  ],
+  "keystone": null,
+  "name": "테스트",
+  "observedAt": "2026-11-26T12:34:56Z",
+  "patch": "12.1.5",
+  "progress": null,
+  "realm": "azshara",
+  "realmDisplayName": "아즈샤라",
+  "region": "kr",
+  "reportedEquippedAverage": 315,
+  "resources": {
+    "adventurerCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "uncollected",
+      "value": null
+    },
+    "championCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 14
+    },
+    "cofferKey": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 0
+    },
+    "cofferKeyShard": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 43
+    },
+    "gold": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 1234
+    },
+    "heroCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "incomplete",
+      "value": null
+    },
+    "mythCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 7
+    },
+    "venomstone": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 3
+    },
+    "veteranCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "failed",
+      "value": null
+    }
+  },
+  "schemaVersion": 1,
+  "seasonId": "midnight-s2",
+  "source": "addon",
+  "weaponMode": "two-hand"
+}

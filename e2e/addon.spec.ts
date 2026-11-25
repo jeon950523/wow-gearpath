@@ -3,6 +3,24 @@ import {readFileSync} from 'node:fs';
 
 const data=readFileSync(new URL('../contracts/examples/hunter-regression.json',import.meta.url),'utf8');
 const details=readFileSync(new URL('../contracts/examples/details-0.2.1.json',import.meta.url),'utf8');
+const resourceFixture=readFileSync(new URL('../contracts/examples/resources-0.3.0.json',import.meta.url),'utf8');
+
+test('ADDON-003A v0.3.0 생성 예제의 재화 출처와 상태 표시',async ({page})=>{
+  await page.clock.setFixedTime(new Date('2026-11-26T12:35:00Z'));
+  await page.route('**/api/realms',route=>route.fulfill({json:{realms:[{slug:'azshara',name:'아즈샤라'}]}}));
+  await page.goto('/');
+  await expect(page.getByRole('option',{name:'아즈샤라'})).toBeAttached();
+  await page.getByRole('textbox',{name:'애드온 JSON'}).fill(resourceFixture);
+  await page.getByRole('button',{name:'JSON 가져오기'}).click();
+  const table=page.getByRole('table',{name:'보유 재화'});
+  const keys=table.getByRole('row').filter({hasText:'복원된 금고 열쇠'});
+  await expect(keys.getByRole('cell',{name:'0',exact:true})).toBeVisible();
+  await expect(keys.getByText(/애드온 · 관측/)).toBeVisible();
+  await expect(table.getByRole('row').filter({hasText:'노련가 안개문장'}).getByText(/수집 실패/)).toBeVisible();
+  await expect(table.getByRole('row').filter({hasText:'모험가 안개문장'}).getByText(/미수집/)).toBeVisible();
+  await expect(table.getByRole('row').filter({hasText:'공허불빛 이회토'}).getByText(/ID 실측 대기/)).toBeVisible();
+  await expect(page.getByRole('heading',{name:'레이드 보상 후보 비교'})).toBeVisible();
+});
 
 test('실제 생성 v0.2.1 예제의 전문화와 강화 세부 표시',async ({page})=>{
   await page.clock.setFixedTime(new Date('2026-11-26T12:35:00Z'));

@@ -43,7 +43,7 @@ test('404 안내와 샘플 탐색',async ({page})=>{
   await expect(page.getByRole('alert').filter({hasText:'캐릭터를 찾을 수 없습니다.'})).toBeVisible();
   await page.getByRole('button',{name:'샘플 보기'}).click();
   await expect(page.getByRole('heading',{name:'샘플모험가'})).toBeVisible();
-  await expect(page.getByRole('table')).toBeVisible();
+  await expect(page.getByRole('table',{name:'장착 장비'})).toBeVisible();
 });
 
 test('실제 로컬 서버 경로가 잘못된 입력을 먼저 거부',async ({request})=>{

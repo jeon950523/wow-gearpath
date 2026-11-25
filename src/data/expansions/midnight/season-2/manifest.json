@@ -1,0 +1,13 @@
+{
+  "expansionId": "midnight",
+  "seasonId": "midnight-s2",
+  "patch": "12.1.5",
+  "region": "kr",
+  "name": "한밤 2시즌",
+  "effectiveFrom": "2026-08-20T00:00:00+09:00",
+  "effectiveUntil": null,
+  "checkedAt": "2026-11-26",
+  "reviewDueAt": "2026-12-03T00:00:00+09:00",
+  "source": "https://news.blizzard.com/ko-kr/article/24294369/pvp-2",
+  "updateSource": "https://news.blizzard.com/ko-kr/article/24307306/12-1-5"
+}

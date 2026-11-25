@@ -1,5 +1,7 @@
 # WoW GearPath 인계
 
+현행 기준은 TASK-004입니다. 시즌 팩과 애드온 v0.3.0 수신을 검증했고, 새 화폐 세 종의 계약을 문서화했습니다. 다음은 애드온 담당자의 003B 게임 대조와 일반 강화·구렁·금고 표의 실측 검증입니다. [검수](reports/TASK-004-REPORT.md) · [계약](contracts/ADDON-003B-HANDOFF.md)
+
 TASK-003A는 애드온 0.2.1 상세 필드와 개별 관측 시각을 지원합니다. 웹 교차 테스트가 계약 정본을 검증합니다. Actions는 수동 실행만 지원하며 Vercel은 main 자동 배포를 유지합니다. [검수](reports/TASK-003A-REPORT.md)
 
 TASK-003은 [공통 계약](../contracts/CHANGELOG.md), 브라우저 가져오기·삭제, 장비 충돌 비교, 필드별 수집 상태, 솔플만 추천을 추가했습니다. [검수 결과](reports/TASK-003-REPORT.md)와 [로드맵](ROADMAP.md)을 참고하세요.
@@ -15,4 +17,4 @@ TASK-003은 [공통 계약](../contracts/CHANGELOG.md), 브라우저 가져오�
 테스트, 운영 상태, 알려진 문제와 다음 순서는 [TASK-002 보고서](reports/TASK-002-REPORT.md)에 기록합니다.
 
 ## 심크 후속 계획 (사용자 승인)
-[SSOT](SSOT.md)의 SimulationCraft 통합 방향과 [로드맵](ROADMAP.md)을 따른다. 현재 TASK-003A 병합 및 직접 검증 보고 완료. 다음은 TASK-004와 ADDON-003A 재화 계약/교차 검증이며 SIM-001/002는 장비/강화 기반 이후 별도 수행한다. 심크 구현·실행은 미완료. 기존 애드온 개발은 별도 저장소에서 진행 중이다.
+[SSOT](SSOT.md)의 SimulationCraft 통합 방향과 [로드맵](ROADMAP.md)을 따른다. TASK-004 이후 SIM-001/002는 장비/강화 기반 위에서 별도 수행한다. 심크 구현·실행은 미완료다. 기존 애드온 개발은 별도 저장소에서 진행 중이다.

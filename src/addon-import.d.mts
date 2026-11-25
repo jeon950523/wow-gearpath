@@ -1,5 +1,19 @@
 import type {diagnose} from './engine.mjs';
 type Snapshot = Parameters<typeof diagnose>[0];
+export interface AddonResource {
+  source:'addon';
+  observedAt:string;
+  state:'observed'|'uncollected'|'failed'|'incomplete'|'locked';
+  value:number|null;
+  kind?:'currency'|'item'|'money'|null;
+  scope?:'character'|'warband'|'unknown'|null;
+  currencyId?:number|null;
+  itemId?:number|null;
+  name?:string|null;
+  maxQuantity?:number|null;
+  weeklyEarned?:number|null;
+  weeklyLimit?:number|null;
+}
 export interface AddonCharacterDetails {
   classFile?:string|null; classId?:number|null; className?:string|null; level?:number|null;
   specializationId?:number|null; specializationName?:string|null; role?:'TANK'|'HEALER'|'DAMAGER'|'NONE'|null;

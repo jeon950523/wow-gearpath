@@ -1,5 +1,8 @@
 # WoW GearPath 기준 문서
 
+- 한밤 시즌 팩은 `src/data/expansions/midnight/season-2/`에 둡니다. 재검토 일자는 공식 시즌 종료일과 별도로 관리합니다. 검증된 규칙만 운영 판정에 사용합니다.
+- [ADDON-003B 전달 계약](contracts/ADDON-003B-HANDOFF.md)에 신규 수신 키와 한국 클라이언트 검증 상태를 기록합니다. 전투부대 잔액은 캐릭터끼리 합산하지 않습니다.
+
 - 웹 저장소의 [계약 v1](../contracts/snapshot-v1.schema.json)이 애드온 JSON의 정본입니다. [버전 기록](../contracts/CHANGELOG.md) · [로드맵](ROADMAP.md)
 - 애드온 스냅샷은 브라우저 메모리에서 검증하고 장비 세트와 재화의 출처 및 시각을 유지합니다.
 
