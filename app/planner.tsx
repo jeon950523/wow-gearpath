@@ -4,6 +4,7 @@ import {useEffect, useState, type FormEvent} from 'react';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
 import {season} from '../src/rules.mjs';
+import {parseAddon,mergeSnapshots,maxImportBytes} from '../src/addon-import.mjs';
 
 type Snapshot = Parameters<typeof diagnose>[0];
 type Realm = {slug: string; name: string};
@@ -34,7 +35,22 @@ export default function Planner() {
   const [realm, setRealm] = useState('');
   const [name, setName] = useState('');
   const [recent, setRecent] = useState<Search[]>([]);
-  const [snapshot, setSnapshot] = useState<Snapshot|null>(null);
+  const [base, setSnapshot] = useState<Snapshot|null>(null);
+  const [addon, setAddon] = useState<Snapshot|null>(null);
+  const [overlay, setOverlay] = useState<Snapshot|null>(null);
+  const [rawAddon, setRawAddon] = useState('');
+  const [importStatus, setImportStatus] = useState('');
+  const [prefer, setPrefer] = useState<'auto'|'base'|'addon'>('auto');
+  const [solo, setSolo] = useState(false);
+  const combined = addon ? mergeSnapshots(base,addon,{prefer}) : base;
+  const snapshot = combined && overlay ? {...combined,
+    resources:{...combined.resources,...Object.fromEntries(Object.entries(overlay.resources).filter(([,row])=>(row as {value:number|null}).value!==null))},
+    progress:overlay.progress ? {...combined.progress,...Object.fromEntries(Object.entries(overlay.progress).filter(([,value])=>value!==null))}:combined.progress,
+    fieldSources:{...combined.fieldSources,progress:{...combined.fieldSources?.progress,...Object.fromEntries(Object.entries(overlay.progress??{}).filter(([key,value])=>key!=='source'&&key!=='observedAt'&&value!==null).map(([key])=>[key,{source:'manual',observedAt:overlay.progress.observedAt}]))}},
+    keystone:overlay.keystone??combined.keystone} : combined;
+  const equipmentConflict = base && addon && base.source!=='sample' && (
+    base.weaponMode!==addon.weaponMode || base.equipment.length!==addon.equipment.length ||
+    addon.equipment.some((item:Gear)=>!base.equipment.some((other:Gear)=>item.slot===other.slot&&item.itemId===other.itemId&&item.ilvl===other.ilvl)));
   const [isSample, setSample] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -63,12 +79,30 @@ export default function Planner() {
 
   function load(next: Snapshot, demo: boolean) {
     setSnapshot(next);
+    setAddon(null);
+    setOverlay(null);
+    setPrefer('auto');
+    setImportStatus('');
     setSample(demo);
     setManual({});
     setNotes({});
     setSaved('');
     setSavedAt('');
     setError('');
+  }
+
+  function importAddon(raw:string) {
+    try {
+      const next = parseAddon(raw,{against:base?.source==='sample'?null:base??addon,realms:realmList});
+      setAddon(next);
+      if(base?.source==='sample'){setOverlay(null);setManual({});setNotes({});setSaved('');setSavedAt('');}
+      setSample(false);
+      setPrefer('auto');
+      setRawAddon('');
+      setImportStatus('애드온 데이터를 가져왔습니다.');
+    } catch (error) {
+      setImportStatus(error instanceof Error ? error.message : '애드온 데이터를 읽을 수 없습니다.');
+    }
   }
 
   async function search(query: Search) {
@@ -103,13 +137,13 @@ export default function Planner() {
       vaultWorld:value('vaultWorld'),vaultDungeon:value('vaultDungeon'),vaultRaid:value('vaultRaid'),
       venomstoneUnlocked:manual.venomstoneUnlocked==='' || !manual.venomstoneUnlocked ? null : manual.venomstoneUnlocked==='yes',source:'manual',observedAt},
       keystone:dungeon && keyLevel!==null ? {dungeon,level:keyLevel,source:'manual',observedAt} : null};
-    setSnapshot(next);
+    setOverlay({resources:next.resources,progress:next.progress,keystone:next.keystone});
     setNotes({...manual});
     setSavedAt(observedAt);
     setSaved('재화와 진행 상황을 반영했습니다.');
   }
 
-  const result = snapshot ? diagnose(snapshot, isSample ? {demo:!savedAt,now:new Date(savedAt || '2026-11-26T10:00:00+09:00'),web:true} : {web:true}) : null;
+  const result = snapshot ? diagnose(snapshot, isSample ? {demo:!savedAt,now:new Date(savedAt || '2026-11-26T10:00:00+09:00'),web:true,solo} : {web:true,solo}) : null;
   const nextGoal = !result || result.rawAverage === null || result.rawAverage >= 315 ? null : 315;
   const profile = snapshot?.profile;
   const gear: Gear[] = snapshot?.equipment ?? [];
@@ -132,13 +166,30 @@ export default function Planner() {
       {error && <p className="feedback" role="alert">{error}</p>}
       {recent.length>0 && <div className="recent"><span>최근 검색</span>{recent.map(row=><button key={JSON.stringify(row)} disabled={busy} onClick={()=>{setRealm(row.realm);setName(row.name);void search(row);}}>{row.name} · {realmList.find(x=>x.slug===row.realm)?.name ?? row.realm}</button>)}</div>}
     </section>
+    <section className="lookup" aria-label="애드온 연동">
+      <h2>애드온 데이터 가져오기</h2>
+      <label>애드온 JSON<textarea className="snapshot-json" rows={3} maxLength={maxImportBytes} value={rawAddon} onChange={e=>setRawAddon(e.target.value)} /></label>
+      <button type="button" disabled={!rawAddon.trim()||busy} onClick={()=>importAddon(rawAddon)}>JSON 가져오기</button>
+      <label>JSON 파일<input type="file" accept=".json,application/json" disabled={busy} onChange={async e=>{
+        const file=e.target.files?.[0];e.target.value='';
+        if(!file)return;
+        if(file.size>maxImportBytes || !file.name.toLowerCase().endsWith('.json')) {setImportStatus('256 KiB 이하의 JSON 파일을 선택하세요.');return;}
+        try {importAddon(await file.text());} catch {setImportStatus('파일을 읽을 수 없습니다.');}
+      }} /></label>
+      {addon && <button type="button" onClick={()=>{setAddon(null);if(!base || base.source==='sample'){setOverlay(null);setManual({});setNotes({});setSaved('');setSavedAt('');setSample(base?.source==='sample');}setImportStatus('가져온 데이터를 삭제했습니다.');}}>가져온 데이터 삭제</button>}
+      <p role="status">{importStatus}</p>
+      {addon && <p>애드온 {addon.addonVersion ?? '버전 미확인'} · 수집 {presentTime(addon.observedAt)} KST · 장비 출처 {combined?.equipmentSource==='addon'?'애드온':'Blizzard'}</p>}
+      {addon?.collectionWarnings?.map((warning:string,index:number)=><p className="feedback" key={index}>{warning}</p>)}
+      {equipmentConflict && <label>장비 충돌 해결<select value={prefer} onChange={e=>setPrefer(e.target.value as typeof prefer)}><option value="auto">완전성과 최신성 기준</option><option value="addon">애드온 장비 사용</option><option value="base">Blizzard 장비 사용</option></select></label>}
+      <label><span><input style={{width:'auto'}} type="checkbox" checked={solo} onChange={e=>setSolo(e.target.checked)} /> 솔플만 추천</span></label>
+    </section>
     {snapshot && result && <>
       <section className="character">
         <div><p className="eyebrow">{isSample ? '가상 샘플' : realmList.find(x=>x.slug===snapshot.realm)?.name ?? snapshot.realm}</p>
           <h2>{snapshot.name}</h2><p>{profile?.race ?? '종족 미확인'} · {profile?.className ?? '직업 미확인'} · {profile?.specialization ?? '전문화 미확인'} · {profile?.level ?? '—'} 레벨</p>
           <small>조회 시각 {presentTime(snapshot.fetchedAt ?? snapshot.observedAt)} KST</small></div>
         <div className="metric"><span>평균 장착 레벨</span><strong>{result.displayAverage ?? '미확인'}</strong></div>
-        <div className="metric"><span>다음 목표</span><strong>{nextGoal ?? '—'}</strong><small>{result.groupEligible?'그룹 후보 표시':'315부터 그룹 후보 표시'}</small></div>
+        <div className="metric"><span>다음 목표</span><strong>{nextGoal ?? '—'}</strong><small>{solo?'솔플만 추천':result.groupEligible?'그룹 후보 표시':result.rawAverage !== null && result.rawAverage>=315?'그룹 추천 보류 · 진단 범위 확인':'315부터 그룹 후보 표시'}</small></div>
       </section>
       <div className="columns">
         <section className="panel"><div className="section-title"><h2>장착 장비</h2><span>교체 후보 표시</span></div>
@@ -163,7 +214,7 @@ export default function Planner() {
       </div>
       <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>빈칸은 미입력, 0은 보유 없음</span></div>
       <form onSubmit={applyResources}><div className="inputs">
-        {balances.map(([id,label])=><label key={id}>{label}<input type="number" min={0} max={999999999} step={1} placeholder="미입력" value={manual[id]??''} onChange={e=>setManual({...manual,[id]:e.target.value})} /></label>)}
+        {balances.map(([id,label])=>{const row=snapshot.resources?.[id];return <label key={id}>{label}<input type="number" min={0} max={999999999} step={1} placeholder="미입력" value={manual[id]??''} onChange={e=>setManual({...manual,[id]:e.target.value})} />{row && <small>{row.value ?? ({failed:'수집 실패',locked:'미해금',incomplete:'미완료'} as Record<string,string>)[row.state] ?? '미수집'} · {row.source==='addon'?'애드온':'수동'} · {presentTime(row.observedAt)}</small>}</label>;})}
         {progressFields.map(([id,label,max])=><label key={id}>{label}<input type="number" min={id.includes('Tier')?1:0} max={max} step={1} placeholder="미입력" value={manual[id]??''} onChange={e=>setManual({...manual,[id]:e.target.value})} /></label>)}
         <label>승천의 맹독석 해금<select value={manual.venomstoneUnlocked??''} onChange={e=>setManual({...manual,venomstoneUnlocked:e.target.value})}><option value="">미입력</option><option value="yes">해금</option><option value="no">미해금</option></select></label>
         <label>보유 쐐기돌 던전<input maxLength={80} value={manual.dungeon??''} onChange={e=>setManual({...manual,dungeon:e.target.value})} placeholder="미입력" /></label>
