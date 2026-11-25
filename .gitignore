@@ -3,3 +3,8 @@
 !.env.example
 node_modules/
 private/
+.next/
+.vercel/
+next-env.d.ts
+playwright-report/
+test-results/

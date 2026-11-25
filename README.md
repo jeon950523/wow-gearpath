@@ -1,12 +1,23 @@
 # 와우 장비·파밍 경로 도구 — MVP 0.1
 
-한국 리테일 캐릭터의 장착 장비를 진단하고 솔플·구렁 경로를 우선 제시하는 독립 프로젝트입니다. **지금 제공하는 것은 로컬 명령형 MVP와 HTML 진단 보고서입니다.** 실제 시즌 보상표 전체를 검증한 최적 파밍 서비스는 아직 아닙니다.
+한국 리테일 캐릭터의 장착 장비를 진단하고 솔플·구렁 경로를 우선 제시하는 팬 도구입니다. Next.js 웹 화면과 기존 CLI를 제공합니다. [운영 사이트](https://wow-gearpath.kro.kr) · [프로젝트 기준 문서](docs/SSOT.md)
+
+```sh
+npm ci
+npm run dev
+npm test
+npm run build
+npx playwright install chromium --only-shell
+npm run test:e2e
+```
+
+로컬 웹은 `http://localhost:3000`에서 열립니다. API 환경변수 없이도 샘플을 볼 수 있습니다. 로컬에서 실조회할 때만 `.env.local`을 사용하세요. Vercel은 Next.js 프리셋, 저장소 루트, Production 환경변수 `BLIZZARD_CLIENT_ID` 및 `BLIZZARD_CLIENT_SECRET`을 사용합니다. 실제 검증 상태는 [TASK-002 보고서](docs/reports/TASK-002-REPORT.md)에 기록합니다.
 
 ## 바로 보기
 
 [샘플 보고서](sample-report.html)를 브라우저에서 열면 설치 없이 결과를 볼 수 있습니다. 샘플 캐릭터·장비·강화 수치는 가상입니다.
 
-Node.js 22 이상에서 외부 패키지 설치 없이 실행합니다. 아래 명령은 이 프로젝트 폴더에서 사용합니다.
+기존 CLI는 Node.js 22 이상에서 사용할 수 있습니다. 아래 명령은 이 프로젝트 폴더에서 사용합니다.
 
 ```powershell
 npm test
@@ -17,7 +28,7 @@ npm run live -- azshara 캐릭터명
 
 `demo`는 2026-11-26 10:00 KST로 분석 시각을 고정해 재현합니다. `diagnose`와 `live`는 현재 시각을 사용합니다. 수동 입력의 `observedAt`은 실제 확인 시각으로 바꾸세요. 규칙은 2026-12-03 00:00 KST까지 검토 유효하며, 이후에는 재검증 없이 시즌 추천을 내지 않습니다. 이 날짜는 시즌 종료일이 아닙니다.
 
-실제 조회는 `BLIZZARD_CLIENT_ID`, `BLIZZARD_CLIENT_SECRET` 환경 변수가 필요합니다. `.env` 자동 로딩은 하지 않습니다. Node의 `--env-file` 기능을 사용할 수 있지만 실제 비밀키 파일은 버전 관리에 넣지 마세요. 사용자에게 키나 저장소를 제공받지 않아 실제 계정 조회는 수행하지 않았습니다. 기존 포트폴리오 및 다른 프로젝트는 수정하지 않았습니다.
+CLI 실조회는 같은 환경변수를 사용합니다. CLI는 파일을 자동으로 읽지 않으므로 필요한 경우 Node의 `--env-file`을 사용하세요. 웹 서버의 실조회는 Vercel Production 변수로 별도 확인합니다.
 
 ## 구현된 범위
 
