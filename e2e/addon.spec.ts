@@ -21,4 +21,13 @@ test('JSON 붙여넣기와 파일, 실패 시 유지, 삭제 및 스냅샷 미�
   expect(outgoing).toEqual([]);
   await page.getByRole('button',{name:'가져온 데이터 삭제'}).click();
   await expect(page.getByText('308.688',{exact:true})).toHaveCount(0);
+  await page.getByRole('textbox',{name:'애드온 JSON'}).fill(data);
+  await page.getByRole('button',{name:'JSON 가져오기'}).click();
+  const fixture=JSON.parse(data);
+  await page.route('**/api/character?*',route=>route.fulfill({json:{...fixture,source:'blizzard',resources:{}}}));
+  await page.getByRole('combobox',{name:'서버',exact:true}).selectOption('azshara');
+  await page.getByRole('textbox',{name:'캐릭터명'}).fill(fixture.name);
+  await page.getByRole('button',{name:'검색 및 진단'}).click();
+  await expect(page.getByText('최근 검색',{exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'가져온 데이터 삭제'})).toBeVisible();
 });

@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState, type FormEvent} from 'react';
+import {useEffect, useRef, useState, type FormEvent} from 'react';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
 import {season} from '../src/rules.mjs';
@@ -42,6 +42,7 @@ export default function Planner() {
   const [importStatus, setImportStatus] = useState('');
   const [prefer, setPrefer] = useState<'auto'|'base'|'addon'>('auto');
   const [solo, setSolo] = useState(false);
+  const importRevision = useRef(0);
   const combined = addon ? mergeSnapshots(base,addon,{prefer}) : base;
   const snapshot = combined && overlay ? {...combined,
     resources:{...combined.resources,...Object.fromEntries(Object.entries(overlay.resources).filter(([,row])=>(row as {value:number|null}).value!==null))},
@@ -78,12 +79,18 @@ export default function Planner() {
   }, [realmAttempt]);
 
   function load(next: Snapshot, demo: boolean) {
+    importRevision.current++;
+    const equal = (left:string,right:string) => left.normalize('NFC').toLowerCase()===right.normalize('NFC').toLowerCase();
+    const keepAddon = !demo && addon && next.region===addon.region && next.seasonId===addon.seasonId &&
+      equal(next.realm,addon.realm) && equal(next.name,addon.name);
     setSnapshot(next);
+    setSample(demo);
+    setError('');
+    if(keepAddon) return;
     setAddon(null);
     setOverlay(null);
     setPrefer('auto');
     setImportStatus('');
-    setSample(demo);
     setManual({});
     setNotes({});
     setSaved('');
@@ -92,6 +99,7 @@ export default function Planner() {
   }
 
   function importAddon(raw:string) {
+    importRevision.current++;
     try {
       const next = parseAddon(raw,{against:base?.source==='sample'?null:base??addon,realms:realmList});
       setAddon(next);
@@ -173,10 +181,12 @@ export default function Planner() {
       <label>JSON 파일<input type="file" accept=".json,application/json" disabled={busy} onChange={async e=>{
         const file=e.target.files?.[0];e.target.value='';
         if(!file)return;
+        const revision=++importRevision.current;
         if(file.size>maxImportBytes || !file.name.toLowerCase().endsWith('.json')) {setImportStatus('256 KiB 이하의 JSON 파일을 선택하세요.');return;}
-        try {importAddon(await file.text());} catch {setImportStatus('파일을 읽을 수 없습니다.');}
+        try {const json=await file.text();if(revision===importRevision.current) importAddon(json);}
+        catch {if(revision===importRevision.current) setImportStatus('파일을 읽을 수 없습니다.');}
       }} /></label>
-      {addon && <button type="button" onClick={()=>{setAddon(null);if(!base || base.source==='sample'){setOverlay(null);setManual({});setNotes({});setSaved('');setSavedAt('');setSample(base?.source==='sample');}setImportStatus('가져온 데이터를 삭제했습니다.');}}>가져온 데이터 삭제</button>}
+      {addon && <button type="button" onClick={()=>{importRevision.current++;setAddon(null);if(!base || base.source==='sample'){setOverlay(null);setManual({});setNotes({});setSaved('');setSavedAt('');setSample(base?.source==='sample');}setImportStatus('가져온 데이터를 삭제했습니다.');}}>가져온 데이터 삭제</button>}
       <p role="status">{importStatus}</p>
       {addon && <p>애드온 {addon.addonVersion ?? '버전 미확인'} · 수집 {presentTime(addon.observedAt)} KST · 장비 출처 {combined?.equipmentSource==='addon'?'애드온':'Blizzard'}</p>}
       {addon?.collectionWarnings?.map((warning:string,index:number)=><p className="feedback" key={index}>{warning}</p>)}
