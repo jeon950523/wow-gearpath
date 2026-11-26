@@ -16,3 +16,5 @@
 - v1 · TASK-005A. KR 12.1.5에서 관측한 성운의 공허핵 ID를 3418로 정정했습니다. 과거 3513과 ID 없는 애드온 수량은 가져오기 호환 처리에서 격리합니다. 키와 스키마 버전은 유지합니다. [인계](../docs/contracts/ADDON-003B-HANDOFF.md)
 
 - v1 · CONTRACT-WQ-001. 선택적 worldQuests 스캔, 독립 관측/캐시 상태 및 표시 보상 계약을 추가했다. [정책 및 ADDON-004I 인계](../docs/contracts/ADDON-004H-HANDOFF.md)
+
+- TASK-006. 웹 표시·활동 모델을 추가했다. snapshot-v1 wire schema 변경은 없으며 강화 관측은 [제안](../docs/contracts/UPGRADE-OBSERVATIONS-PROPOSAL.md)으로 유지한다.

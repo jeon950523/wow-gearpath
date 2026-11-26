@@ -48,3 +48,7 @@ KR 12.1.5 관측 기준은 3418입니다. 데이터 수신과 소비 규칙 검�
 ## CONTRACT-WQ-001 전역퀘 웹 MVP
 
 선택적 v1 전역퀘 관측 계약과 오늘 할 일 화면을 [웹 검수](reports/CONTRACT-WQ-001-REPORT.md)로 확정했다. [ADDON-004I 운영 수집 통합](contracts/ADDON-004H-HANDOFF.md)과 실제 게임 내보내기 교차 검증이 남아 있다.
+
+## TASK-006 대시보드
+
+웹과 CLI는 기존 성장 진단을 공유한다. 대시보드는 관측, 현재 표시 보상, 보유량, 미수집을 구분하고 주간 완료나 초기화를 추정하지 않는다. [검수](reports/TASK-006-REPORT.md)

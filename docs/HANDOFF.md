@@ -1,5 +1,9 @@
 # WoW GearPath 인계
 
+## 현재 인계 — TASK-006 통합 성장 대시보드
+
+[웹 검수](reports/TASK-006-REPORT.md). 현재 진단으로 캐릭터·목표·활동·장비·재화를 함께 표시한다. 관측된 금고/구렁 수치만 재사용하고 완료와 초기화 확인은 보류한다. 실제 전역퀘 운영 export와 강화 NPC 가격/할인 실측을 기다린다. 아래 이전 작업 기록은 역사적 상태다.
+
 ## CONTRACT-WQ-001 완료 및 ADDON-004I 인계
 [전역퀘 계약 확정 및 웹 MVP 연동 작업지시](tasks/CONTRACT-WQ-001.md). 웹 정본과 합성 fixture 교차 검증을 완료했다. 운영 내보내기는 [ADDON-004I 인계](contracts/ADDON-004H-HANDOFF.md)와 [웹 검수 결과](reports/CONTRACT-WQ-001-REPORT.md)를 따르며, 실제 애드온 export를 받은 뒤 교차 확인한다. 기존 공통 제품 로드맵 및 검증 정책 유지.
 
