@@ -8,3 +8,7 @@ export function formatCopper(value:number|null) {
   return [gold>0 && quantity.format(gold)+'골드',silver>0 && silver+'실버',
     (copper>0 || (gold===0 && silver===0)) && copper+'코퍼'].filter(Boolean).join(' ');
 }
+
+export function formatGoldBalance(wholeGold:number) {
+  return quantity.format(wholeGold)+'골드';
+}

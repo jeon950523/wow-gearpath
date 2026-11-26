@@ -3,7 +3,7 @@
 import {useEffect, useMemo, useRef, useState, type FormEvent} from 'react';
 import {mergeWorldQuestScan} from '../src/world-quests.mjs';
 import {buildWeeklyActivities,activityStatusLabels} from '../src/activity-dashboard.mjs';
-import {formatCopper} from './format-copper';
+import {formatGoldBalance} from './format-copper';
 import {WorldQuestPanel} from './world-quest-panel';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
@@ -248,7 +248,7 @@ export default function Planner() {
           <span>심크 DPS <strong>미측정</strong></span>
           {['gold','cofferKey','heroCrest','mythCrest','nebulousVoidcore'].map(key=>{
             const balance=balanceRows.get(key);
-            return <span key={key}>{costLabel(key)} <strong>{balance?.value==null?'미확인':key==='gold'?formatCopper(balance.value):balance.value}</strong>{balance?.status==='오래됨'?' · 오래됨':''}</span>;
+            return <span key={key}>{costLabel(key)} <strong>{balance?.value==null?'미확인':key==='gold'?formatGoldBalance(balance.value):balance.value}</strong>{balance?.status==='오래됨'?' · 오래됨':''}</span>;
           })}
         </div>
       </section>
@@ -326,12 +326,12 @@ export default function Planner() {
             <td><input type="checkbox" aria-label={`${slots[row.slot]} 강화에서 제외`} checked={excludeSlots.includes(row.slot)} onChange={e=>setExcludeSlots(e.target.checked?[...excludeSlots,row.slot]:excludeSlots.filter(slot=>slot!==row.slot))} /></td>
           </tr>)}</tbody></table></div>
       </section>
-      <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>골드 입력은 코퍼 단위 · 빈칸은 미입력</span></div>
+      <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>골드 입력은 골드 단위 · 빈칸은 미입력</span></div>
       <form onSubmit={applyResources}>
         <div className="table-scroll"><table aria-label="보유 재화"><thead><tr><th>재화</th><th>보유량</th><th>출처와 수집 상태</th><th>용도 및 검증</th><th>수동 입력</th></tr></thead><tbody>
         {resourceDefinitions.map(({key,label,use,collection,identityStatus})=>{
           const row=balanceRows.get(key);
-          return <tr key={key}><th scope="row">{label}</th><td className="number">{row?.value==null?'—':key==='gold'?formatCopper(row.value):row.value}</td>
+          return <tr key={key}><th scope="row">{label}</th><td className="number">{row?.value==null?'—':key==='gold'?formatGoldBalance(row.value):row.value}</td>
             <td>{row ? <>{row.source==='addon'?'애드온':'수동'} · {balanceStates[row.state]??(row.value===null?'미입력':'입력됨')}{row.status==='오래됨'?' · 오래됨':''}
               <small className="upgrade-note">{presentTime(row.observedAt)} · {scopeNames[row.scope]??'범위 미확인'}</small>
               {(row.maxQuantity!=null || row.weeklyEarned!=null || row.weeklyLimit!=null) && <small className="upgrade-note">관측 상한 {row.maxQuantity??'—'} · 주간 {row.weeklyEarned??'—'}/{row.weeklyLimit??'—'}</small>}</>:'미입력'}</td>
