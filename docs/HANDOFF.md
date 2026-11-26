@@ -1,5 +1,13 @@
 # WoW GearPath 인계
 
+## 현재 인계 — TASK-006-2 / TASK-006-3
+
+애드온 구현 기준 웹 정본 커밋 b6c1e09552c5ba0dcb1492a3a5dcac57761e58a7. 작업 순서는 기존 본 TASK-007을 유지한다.
+
+- ADDON-UPGRADE-001-7은 [docs/contracts/UPGRADE-DIAGNOSTICS-V1.md](contracts/UPGRADE-DIAGNOSTICS-V1.md)와 [docs/contracts/SAVEDVARIABLES-001.md](contracts/SAVEDVARIABLES-001.md)의 독립 진단 파일·명시적 체크포인트 규칙을 사용한다.
+- ADDON-004I-5는 같은 [저장 정본](contracts/SAVEDVARIABLES-001.md)의 운영 v1, legacy lastExport, 캐릭터 신원, 한도와 이전 full 보존 정책을 사용한다.
+- [강화 검수](reports/TASK-006-2-REPORT.md) · [저장 파일 검수](reports/TASK-006-3-REPORT.md). 웹은 합성 파일로 확인했다. 애드온은 두 캐릭터의 실제 파일/reload, 인게임 및 패키지 검증을 진행한다. 관측 비용은 성장 계획에 입력하지 않는다. 아래 기존 기록은 역사적 상태다.
+
 ## 현재 인계 — TASK-006-1 (P0)
 
 운영 애드온 소스로 생성한 합성 전체·기본 JSON의 웹 교차 검증과 보유 골드 단위 수정 완료. 실제 v0.4.0 사용자 파일은 미제공으로 인게임 웹 교차 승인 대기. Lua 5.1과 게임 UI 대조도 별도다. 기존 15분 TTL과 본 TASK-007 순서를 유지한다. [검수](reports/TASK-006-1-REPORT.md)
