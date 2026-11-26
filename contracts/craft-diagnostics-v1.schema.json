@@ -1,0 +1,1179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/jeon950523/wow-gearpath/main/contracts/craft-diagnostics-v1.schema.json",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "wgg-craft-diagnostics"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "diagnosticVersion": {
+      "const": "0.5.0"
+    },
+    "patch": {
+      "const": "12.1.5"
+    },
+    "build": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    },
+    "regionID": {
+      "const": 2
+    },
+    "observedAt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 253402300799
+    },
+    "state": {
+      "const": "sample"
+    },
+    "source": {
+      "enum": [
+        "recipeSchematic",
+        "personalCraft",
+        "customerDraft"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "craft",
+        "recraft"
+      ]
+    },
+    "recipeID": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    },
+    "result": {
+      "const": "unverified"
+    },
+    "cost": {
+      "const": "unverified"
+    },
+    "eligibility": {
+      "const": "unverified"
+    },
+    "effectValidation": {
+      "const": "unverified"
+    },
+    "consumption": {
+      "const": "unverified"
+    },
+    "actualShortfall": {
+      "const": "unverified"
+    },
+    "schematic": {
+      "type": "object",
+      "properties": {
+        "recipeType": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "schematicItemID": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "schematicProductQuality": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rawRecipeItemLevel": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "supportsQualities": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dataSlotIndex": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "slotIndex": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "required": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "quantityRequired": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reagentType": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "dataSlotType": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hiddenInCraftingForm": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "state": {
+                "enum": [
+                  "observed",
+                  "partial",
+                  "unknown"
+                ]
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "itemID": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "currencyID": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "itemID",
+                    "currencyID"
+                  ],
+                  "additionalProperties": false,
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "itemID": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "currencyID": {
+                          "type": "null"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "itemID": {
+                          "type": "null"
+                        },
+                        "currencyID": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        }
+                      }
+                    }
+                  ]
+                },
+                "maxItems": 64
+              }
+            },
+            "required": [
+              "dataSlotIndex",
+              "slotIndex",
+              "required",
+              "quantityRequired",
+              "reagentType",
+              "dataSlotType",
+              "hiddenInCraftingForm",
+              "state",
+              "options"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "recipeType",
+        "schematicItemID",
+        "schematicProductQuality",
+        "rawRecipeItemLevel",
+        "supportsQualities",
+        "slots"
+      ],
+      "additionalProperties": false
+    },
+    "allocations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "itemID": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "currencyID": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "enum": [
+              "regular",
+              "modified"
+            ]
+          },
+          "dataSlotIndex": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "itemID",
+          "currencyID",
+          "kind",
+          "dataSlotIndex",
+          "quantity"
+        ],
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "itemID": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "currencyID": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "properties": {
+              "itemID": {
+                "type": "null"
+              },
+              "currencyID": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            }
+          }
+        ]
+      },
+      "maxItems": 256
+    },
+    "draft": {
+      "type": "object",
+      "properties": {
+        "orderType": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minimumQuality": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "postingFeeCopper": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tipCopper": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "orderType",
+        "minimumQuality",
+        "postingFeeCopper",
+        "tipCopper"
+      ],
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "unselected",
+            "partial",
+            "observed"
+          ]
+        },
+        "itemID": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "itemLevel": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "itemID",
+        "itemLevel"
+      ],
+      "additionalProperties": false
+    },
+    "preview": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "observed",
+            "partial",
+            "targetUnavailable",
+            "unsupportedRecipe",
+            "unavailable"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "personalOperation",
+            "customerMinimum",
+            null
+          ]
+        },
+        "qualityRank": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "qualityID": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "concentration": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "itemID": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "equipLoc": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^INVTYPE_[A-Z0-9_]{1,56}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "linkFlag": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "itemLevel": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "kind",
+        "qualityRank",
+        "qualityID",
+        "concentration",
+        "itemID",
+        "equipLoc",
+        "linkFlag",
+        "itemLevel"
+      ],
+      "additionalProperties": false
+    },
+    "inventory": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "sample",
+            "unavailable"
+          ]
+        },
+        "slotState": {
+          "enum": [
+            "sample",
+            "unknown",
+            null
+          ]
+        },
+        "balances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "itemID": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "currencyID": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "scope": {
+                "enum": [
+                  "itemCountNoBanks",
+                  "characterCurrency",
+                  "accountCurrency",
+                  "currencyScopeUnknown"
+                ]
+              },
+              "state": {
+                "enum": [
+                  "observed",
+                  "unknown"
+                ]
+              },
+              "allocated": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "owned": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "allocationGapNoBanks": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "singleRequired": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "singleRequirementUnknown": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "singleRequiredGapNoBanks": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "itemID",
+              "currencyID",
+              "scope",
+              "state",
+              "allocated",
+              "owned",
+              "allocationGapNoBanks",
+              "singleRequired",
+              "singleRequirementUnknown",
+              "singleRequiredGapNoBanks"
+            ],
+            "additionalProperties": false,
+            "oneOf": [
+              {
+                "properties": {
+                  "itemID": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "currencyID": {
+                    "type": "null"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "itemID": {
+                    "type": "null"
+                  },
+                  "currencyID": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  }
+                }
+              }
+            ]
+          },
+          "maxItems": 256
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dataSlotIndex": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "required": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "orderSource": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "mustProvide": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "fullyAllocated": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "singleItemID": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "singleCurrencyID": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "singleRequired": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "originalState": {
+                "enum": [
+                  "notApplicable",
+                  "unknown",
+                  "observed"
+                ]
+              },
+              "originalIdentity": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "itemID": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "currencyID": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "itemID",
+                      "currencyID"
+                    ],
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "properties": {
+                          "itemID": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "currencyID": {
+                            "type": "null"
+                          }
+                        }
+                      },
+                      {
+                        "properties": {
+                          "itemID": {
+                            "type": "null"
+                          },
+                          "currencyID": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "dataSlotIndex",
+              "required",
+              "orderSource",
+              "mustProvide",
+              "fullyAllocated",
+              "singleItemID",
+              "singleCurrencyID",
+              "singleRequired",
+              "originalState",
+              "originalIdentity"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 32
+        },
+        "retention": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "allocation": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 256
+              },
+              "state": {
+                "enum": [
+                  "sameOriginalIdentity",
+                  "differentOriginalIdentity",
+                  "unknown"
+                ]
+              }
+            },
+            "required": [
+              "allocation",
+              "state"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 256
+        }
+      },
+      "required": [
+        "state",
+        "slotState",
+        "balances",
+        "requirements",
+        "retention"
+      ],
+      "additionalProperties": false
+    },
+    "catalog": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": "midnight-s2-12.1.5-r1"
+        },
+        "scope": {
+          "const": "typedIdentityHintsOnly"
+        },
+        "hints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "catalogRef": {
+                "type": "string",
+                "pattern": "^(allocation:[1-9][0-9]{0,2}|option:[1-9][0-9]{0,2}:[1-9][0-9]{0,2})$"
+              },
+              "role": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,47}$"
+              },
+              "key": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "evidence": {
+                "enum": [
+                  "priorLiveIdentity",
+                  "publicReference",
+                  "ptrReference",
+                  "outOfScope",
+                  "invalidIdentity",
+                  "unlisted"
+                ]
+              },
+              "effectHint": {
+                "enum": [
+                  "unverified",
+                  null
+                ]
+              }
+            },
+            "required": [
+              "catalogRef",
+              "role",
+              "key",
+              "evidence",
+              "effectHint"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 512
+        }
+      },
+      "required": [
+        "version",
+        "scope",
+        "hints"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "kind",
+    "schemaVersion",
+    "diagnosticVersion",
+    "patch",
+    "build",
+    "regionID",
+    "observedAt",
+    "state",
+    "source",
+    "mode",
+    "recipeID",
+    "result",
+    "cost",
+    "eligibility",
+    "effectValidation",
+    "consumption",
+    "actualShortfall"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source": {
+            "const": "recipeSchematic"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "schematic"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "allocations"
+              ]
+            },
+            {
+              "required": [
+                "draft"
+              ]
+            },
+            {
+              "required": [
+                "target"
+              ]
+            },
+            {
+              "required": [
+                "preview"
+              ]
+            },
+            {
+              "required": [
+                "inventory"
+              ]
+            }
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "allocations",
+          "preview",
+          "inventory"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source": {
+            "const": "customerDraft"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "draft"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "draft"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "craft"
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": [
+            "target"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "recraft"
+          },
+          "source": {
+            "enum": [
+              "personalCraft",
+              "customerDraft"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "target"
+        ]
+      }
+    }
+  ]
+}

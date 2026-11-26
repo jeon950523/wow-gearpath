@@ -1,0 +1,393 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/jeon950523/wow-gearpath/main/contracts/merchant-diagnostics-v1.schema.json",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "wgg-merchant-diagnostics"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "diagnosticVersion": {
+      "const": "0.1.0"
+    },
+    "patch": {
+      "const": "12.1.5"
+    },
+    "build": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    },
+    "regionID": {
+      "const": 2
+    },
+    "observedAt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 253402300799
+    },
+    "state": {
+      "enum": [
+        "sample",
+        "empty"
+      ]
+    },
+    "coverage": {
+      "const": "visibleMerchantListOnly"
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "npcID": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    },
+    "mapID": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "specID": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "lootSpecID": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "filter": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": -1,
+          "maximum": 2147483647
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 64
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64
+          },
+          "itemID": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "saleCurrencyID": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "infoState": {
+            "enum": [
+              "observed",
+              "unobserved",
+              "identityMismatch"
+            ]
+          },
+          "priceCopper": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stackCount": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numAvailable": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 2147483647
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "isPurchasable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "isUsable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hasExtendedCost": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "costState": {
+            "enum": [
+              "unobserved",
+              "noExtendedCost",
+              "observed",
+              "partial"
+            ]
+          },
+          "costCount": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 8
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "costs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "itemID": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "currencyID": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "index": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 8
+                },
+                "quantity": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "textureID": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "itemID",
+                "currencyID",
+                "index",
+                "quantity",
+                "textureID"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 8
+          },
+          "detailState": {
+            "enum": [
+              "unobserved",
+              "partial",
+              "observed"
+            ]
+          },
+          "itemLevel": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "previewLevel": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "equipLoc": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^INVTYPE_[A-Z0-9_]{1,56}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "index",
+          "itemID",
+          "saleCurrencyID",
+          "infoState",
+          "priceCopper",
+          "stackCount",
+          "numAvailable",
+          "isPurchasable",
+          "isUsable",
+          "hasExtendedCost",
+          "costState",
+          "costCount",
+          "costs",
+          "detailState",
+          "itemLevel",
+          "previewLevel",
+          "equipLoc"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 64
+    },
+    "eligibility": {
+      "const": "unverified"
+    },
+    "actualCost": {
+      "const": "unverified"
+    }
+  },
+  "required": [
+    "kind",
+    "schemaVersion",
+    "diagnosticVersion",
+    "patch",
+    "build",
+    "regionID",
+    "observedAt",
+    "state",
+    "coverage",
+    "level",
+    "npcID",
+    "mapID",
+    "specID",
+    "lootSpecID",
+    "filter",
+    "count",
+    "rows",
+    "eligibility",
+    "actualCost"
+  ],
+  "additionalProperties": false
+}
