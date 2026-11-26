@@ -163,7 +163,37 @@ test('성장 대시보드 목표, 미수집 주간 활동, 미측정 심크 및 
   await submit.click();
   await expect(page.getByRole('region',{name:'오늘 할 일 · 전역퀘'}).getByText(/부분합 · 골드 12골드 34실버 56코퍼/)).toBeVisible();
   const gold=page.getByRole('table',{name:'보유 재화'}).getByRole('row').filter({has:page.getByRole('rowheader',{name:'골드',exact:true})});
-  await expect(gold.getByRole('cell',{name:'12실버 34코퍼',exact:true})).toBeVisible();
+  await expect(gold.getByRole('cell',{name:'1,234골드',exact:true})).toBeVisible();
   await page.getByRole('checkbox',{name:'솔플만 추천'}).check();
   await expect(page.getByRole('heading',{name:'레이드 보상 후보 비교'})).toHaveCount(0);
+});
+
+test('v0.4.0 운영 모의 JSON의 보상 코퍼와 보유 골드 단위, 기본 export 및 TTL',async ({page})=>{
+  const full=readFileSync(new URL('../contracts/examples/addon-0.4.0-generated-full.json',import.meta.url),'utf8');
+  const base=readFileSync(new URL('../contracts/examples/addon-0.4.0-generated-base.json',import.meta.url),'utf8');
+  const observedAt=Date.parse(JSON.parse(full).observedAt);
+  await page.clock.setFixedTime(new Date(observedAt+2000));
+  const outgoing:string[]=[];
+  page.on('request',request=>{if(request.postData()) outgoing.push(request.url());});
+  await page.route('**/api/realms',route=>route.fulfill({json:{realms:[{slug:'azshara',name:'아즈샤라'}]}}));
+  await page.goto('/');
+  await expect(page.getByRole('option',{name:'아즈샤라'})).toBeAttached();
+  const field=page.getByRole('textbox',{name:'애드온 JSON'});
+  const submit=page.getByRole('button',{name:'JSON 가져오기'});
+  const panel=page.getByRole('region',{name:'오늘 할 일 · 전역퀘'});
+  await field.fill(full);
+  await submit.click();
+  await expect(panel.getByText(/부분합 · 골드 1골드 23실버 45코퍼/)).toBeVisible();
+  await expect(page.getByRole('table',{name:'보유 재화'}).getByRole('cell',{name:'1,234골드',exact:true})).toBeVisible();
+  await field.fill(base);
+  await submit.click();
+  await expect(panel.getByText(/갱신 필요/)).toBeVisible();
+  await expect(panel.getByText(/부분합 · 골드 미확인/)).toBeVisible();
+  await page.getByRole('button',{name:'가져온 데이터 삭제'}).click();
+  await page.clock.setFixedTime(new Date(observedAt+16*60000));
+  await field.fill(full);
+  await submit.click();
+  await expect(panel.getByText(/갱신 필요/)).toBeVisible();
+  await expect(panel.getByText(/부분합 · 골드 미확인/)).toBeVisible();
+  expect(outgoing).toEqual([]);
 });
