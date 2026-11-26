@@ -1,6 +1,8 @@
 'use client';
 
 import {useEffect, useRef, useState, type FormEvent} from 'react';
+import {mergeWorldQuestScan} from '../src/world-quests.mjs';
+import {WorldQuestPanel} from './world-quest-panel';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
 import {season,resourceDefinitions as runtimeResources} from '../src/rules.mjs';
@@ -68,6 +70,7 @@ export default function Planner() {
   const [manual, setManual] = useState<Record<string,string>>({});
   const [saved, setSaved] = useState('');
   const [savedAt, setSavedAt] = useState('');
+  const [, refreshWorldQuests] = useState(0);
   const [notes, setNotes] = useState<Record<string,string>>({});
 
   useEffect(() => {
@@ -112,7 +115,7 @@ export default function Planner() {
     importRevision.current++;
     try {
       const next = parseAddon(raw,{against:base?.source==='sample'?null:base??addon,realms:realmList});
-      setAddon(next);
+      setAddon(mergeWorldQuestScan(addon,next));
       if(base?.source==='sample'){setOverlay(null);setManual({});setNotes({});setSaved('');setSavedAt('');}
       setSample(false);
       setPrefer('auto');
@@ -167,6 +170,12 @@ export default function Planner() {
   const result = snapshot ? diagnose(snapshot, isSample ? {demo:!savedAt,now:new Date(savedAt || '2026-11-26T10:00:00+09:00'),web:true,solo,...growthSettings} : {web:true,solo,...growthSettings}) : null;
   const nextGoal = !result || result.rawAverage === null || result.rawAverage >= 315 ? null : 315;
   const profile = snapshot?.profile;
+  const nextQuestRefresh=result?.worldQuests?.nextRefresh;
+  useEffect(()=>{
+    if (nextQuestRefresh===undefined || !Number.isFinite(nextQuestRefresh)) return;
+    const timeout=window.setTimeout(()=>refreshWorldQuests(current=>current+1),Math.max(1,nextQuestRefresh-Date.now()));
+    return ()=>window.clearTimeout(timeout);
+  },[nextQuestRefresh]);
   const balanceRows = new Map(result?.resources.map(row=>[row.key,row]));
   const gear: Gear[] = snapshot?.equipment ?? [];
   const weak = new Set(result?.weakSlots.map((row:Gear)=>row.slot));
@@ -233,6 +242,7 @@ export default function Planner() {
           </tbody></table></div>
         </section>
         <section className="panel"><div className="section-title"><h2>추천 파밍 순서</h2><span>솔플 우선</span></div>
+          {result.worldQuests && <WorldQuestPanel model={result.worldQuests} />}
           <ol className="routes">{result.activities.map(row=><li key={row.id}><div><h3>{row.title}</h3><span className="badge">{row.kind==='group'?'그룹':row.certainty}</span></div><p>{row.id==='weak-slots' ? result.weakSlots.map((item:Gear)=>`${slots[item.slot] ?? item.slot} ${item.ilvl}`).join(' · ') : row.reason}</p></li>)}</ol>
           {savedAt && <div className="progress-note"><strong>입력한 진행 상황</strong><dl>{progressFields.map(([id,label])=><div key={id}><dt>{label}</dt><dd>{notes[id] || '미입력'}</dd></div>)}</dl></div>}
           <details><summary>진단 범위 및 공식 출처</summary><ul>{result.warnings.map(w=><li key={w}>{w}</li>)}</ul><a href={season.source}>한국 시즌 공지</a> · <a href={season.updateSource}>12.1.5 공지</a></details>

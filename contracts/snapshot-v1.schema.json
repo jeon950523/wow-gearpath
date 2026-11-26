@@ -565,15 +565,28 @@
             },
             {
               "if": {
-                "required": ["source", "value"],
+                "required": [
+                  "source",
+                  "value"
+                ],
                 "properties": {
-                  "source": { "const": "addon" },
-                  "value": { "type": "integer" }
+                  "source": {
+                    "const": "addon"
+                  },
+                  "value": {
+                    "type": "integer"
+                  }
                 }
               },
               "then": {
-                "required": ["currencyId"],
-                "properties": { "currencyId": { "const": 3418 } }
+                "required": [
+                  "currencyId"
+                ],
+                "properties": {
+                  "currencyId": {
+                    "const": 3418
+                  }
+                }
               }
             }
           ]
@@ -880,6 +893,9 @@
           }
         }
       }
+    },
+    "worldQuests": {
+      "$ref": "#/$defs/worldQuests"
     }
   },
   "required": [
@@ -1030,6 +1046,818 @@
           "then": {
             "properties": {
               "value": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "worldQuests": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "const": "addon"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "discoveredAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "state": {
+          "enum": [
+            "observed",
+            "incomplete",
+            "uncollected",
+            "failed"
+          ]
+        },
+        "coverage": {
+          "enum": [
+            "seedMapsOnly",
+            "seedPlusDescendantZones"
+          ]
+        },
+        "discoveryPartial": {
+          "type": "boolean"
+        },
+        "mapExpansion": {
+          "enum": [
+            "ok",
+            "partial",
+            "limited",
+            "missing",
+            "nil",
+            "error",
+            "secret"
+          ]
+        },
+        "context": {
+          "$ref": "#/$defs/wq_context"
+        },
+        "maps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/wq_map"
+          },
+          "maxItems": 64
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/wq_row"
+          },
+          "maxItems": 300
+        }
+      },
+      "required": [
+        "source",
+        "observedAt",
+        "discoveredAt",
+        "state",
+        "coverage",
+        "discoveryPartial",
+        "mapExpansion",
+        "context",
+        "maps",
+        "rows"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "uncollected",
+                  "failed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "rows": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "wq_context": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "specializationIndex": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "lootSpecializationId": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        }
+      },
+      "required": [
+        "specializationIndex",
+        "lootSpecializationId"
+      ],
+      "additionalProperties": false
+    },
+    "wq_map": {
+      "type": "object",
+      "properties": {
+        "mapId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "missing",
+            "nil",
+            "secret",
+            "error",
+            "invalid"
+          ]
+        },
+        "count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "mapId",
+        "status",
+        "count"
+      ],
+      "additionalProperties": false
+    },
+    "wq_item": {
+      "type": "object",
+      "properties": {
+        "itemId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "ilvl": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "quality": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 20
+        },
+        "detailState": {
+          "enum": [
+            "observed",
+            "uncollected",
+            "failed"
+          ]
+        },
+        "detailObservedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "equipLoc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 0,
+          "maxLength": 64
+        },
+        "classId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "subclassId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1000
+        }
+      },
+      "required": [
+        "itemId",
+        "name",
+        "quantity",
+        "ilvl",
+        "quality",
+        "detailState",
+        "detailObservedAt",
+        "equipLoc",
+        "classId",
+        "subclassId"
+      ],
+      "additionalProperties": false
+    },
+    "wq_currency": {
+      "type": "object",
+      "properties": {
+        "currencyId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "factionId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 2147483647
+        }
+      },
+      "required": [
+        "currencyId",
+        "name",
+        "quantity",
+        "factionId"
+      ],
+      "additionalProperties": false
+    },
+    "wq_gold": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "observed",
+            "zeroUnverified",
+            "incomplete",
+            "uncollected",
+            "failed"
+          ]
+        },
+        "observedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "value": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "state",
+        "observedAt",
+        "value"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "observed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "integer"
+              },
+              "observedAt": {
+                "type": "string"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "zeroUnverified"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "observedAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "wq_items": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "observed",
+            "incomplete",
+            "uncollected",
+            "failed"
+          ]
+        },
+        "observedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/wq_item"
+          },
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "state",
+        "observedAt",
+        "count",
+        "rows"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "observed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "count": {
+                "type": "integer"
+              },
+              "observedAt": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "uncollected",
+                  "failed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "count": {
+                "type": "null"
+              },
+              "rows": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "count": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "rows": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "wq_currencies": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "observed",
+            "incomplete",
+            "uncollected",
+            "failed"
+          ]
+        },
+        "observedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/wq_currency"
+          },
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "state",
+        "observedAt",
+        "count",
+        "rows"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "observed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "count": {
+                "type": "integer"
+              },
+              "observedAt": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "uncollected",
+                  "failed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "count": {
+                "type": "null"
+              },
+              "rows": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "count": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "rows": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "wq_cached": {
+      "type": "object",
+      "properties": {
+        "gold": {
+          "$ref": "#/$defs/wq_gold"
+        },
+        "items": {
+          "$ref": "#/$defs/wq_items"
+        },
+        "choices": {
+          "$ref": "#/$defs/wq_items"
+        },
+        "currencies": {
+          "$ref": "#/$defs/wq_currencies"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "wq_row": {
+      "type": "object",
+      "properties": {
+        "questId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "mapId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "zoneName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "mapSource": {
+          "enum": [
+            "quest",
+            "scan",
+            "questZone",
+            "questHierarchy",
+            null
+          ]
+        },
+        "mapStatus": {
+          "enum": [
+            "explicit",
+            "scanOnly",
+            "zoneApiResolved",
+            "hierarchyResolved",
+            "ambiguous",
+            "limited"
+          ]
+        },
+        "mapCandidates": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "scanMaps": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "questZoneId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "zoneQueryStatus": {
+          "enum": [
+            "ok",
+            "nil",
+            "missing",
+            "error",
+            "secret",
+            null
+          ]
+        },
+        "candidateLimited": {
+          "type": "boolean"
+        },
+        "activeObservedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "activeUnverified": {
+          "type": "boolean"
+        },
+        "completed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "expiresAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "expiryObservedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "ready": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "gold": {
+          "$ref": "#/$defs/wq_gold"
+        },
+        "items": {
+          "$ref": "#/$defs/wq_items"
+        },
+        "choices": {
+          "$ref": "#/$defs/wq_items"
+        },
+        "currencies": {
+          "$ref": "#/$defs/wq_currencies"
+        },
+        "cached": {
+          "$ref": "#/$defs/wq_cached"
+        }
+      },
+      "required": [
+        "questId",
+        "title",
+        "mapId",
+        "zoneName",
+        "mapSource",
+        "mapStatus",
+        "mapCandidates",
+        "scanMaps",
+        "questZoneId",
+        "zoneQueryStatus",
+        "candidateLimited",
+        "activeObservedAt",
+        "activeUnverified",
+        "completed",
+        "expiresAt",
+        "expiryObservedAt",
+        "ready",
+        "gold",
+        "items",
+        "choices",
+        "currencies"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "expiresAt": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expiryObservedAt": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "expiryObservedAt": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "completed": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "activeUnverified": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mapStatus": {
+                "enum": [
+                  "limited",
+                  "ambiguous"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "mapId": {
+                "type": "null"
+              },
+              "mapSource": {
+                "type": "null"
+              },
+              "zoneName": {
                 "type": "null"
               }
             }
