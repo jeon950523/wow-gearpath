@@ -18,3 +18,5 @@
 - v1 · CONTRACT-WQ-001. 선택적 worldQuests 스캔, 독립 관측/캐시 상태 및 표시 보상 계약을 추가했다. [정책 및 ADDON-004I 인계](../docs/contracts/ADDON-004H-HANDOFF.md)
 
 - TASK-006. 웹 표시·활동 모델을 추가했다. snapshot-v1 wire schema 변경은 없으며 강화 관측은 [제안](../docs/contracts/UPGRADE-OBSERVATIONS-PROPOSAL.md)으로 유지한다.
+
+- TASK-006-1. v1 형식과 해석은 유지한다. 소지금 정수 골드와 전역퀘 표시 보상 정수 코퍼를 웹 화면에서 올바르게 구분했다.
