@@ -23,3 +23,5 @@ Windows, Node v26.13.0, npm 11.20.0, 기존 Chromium 헤드리스. npm ci 성공
 사용자 원본 수령이 불가능하여 웹의 실제 인게임 교차 검증은 대기한다. 원본은 저장소·로그·번들·서버 어디에도 넣지 않았다. 애드온 보고서의 29개 지도, 18개 퀘스트, 72개 그룹 관측 시각, 만료 17/18, 평균 285.375는 애드온 측 실측으로 웹 테스트 수에 포함하지 않는다. [애드온 실측 보고서](https://github.com/jeon950523/wow-gearpath-addon/blob/3baa44bc682370494a3cde318700a68ab75861b0/docs/reports/ADDON-004I-4-live-recheck.md)
 
 실제 파일 제공 시 원본을 수정하지 않고 관측 시각 주입 검사 및 현재 브라우저 시각 검사를 각각 시행한다. 현재 활성까지 확인하려면 새 export가 필요하다. 게임 UI 보상·수량·툴팁, 실제 선택/캐시 복구, Lua 5.1, 사용자 승인과 애드온 PR/Release는 별도다. NPC 실측과 계약 전에는 TASK-006-2를 후보로 유지하고 본 TASK-007의 순서와 번호를 유지한다.
+
+종료 전 원격 재조회에서 전역퀘 PR #3 및 양쪽 시작 main이 그대로였고, 강화 브랜치만 7de7cad5412dc4ead7551735915363553a4027e6으로 갱신됐다. 새 검수는 강화 진단 모의 테스트와 설치 준비이며 NPC/UI 실측은 계속 대기한다. [강화 사전 검수](https://github.com/jeon950523/wow-gearpath-addon/blob/7de7cad5412dc4ead7551735915363553a4027e6/docs/reports/ADDON-UPGRADE-001-1-preflight.md)
