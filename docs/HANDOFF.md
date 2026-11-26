@@ -1,5 +1,11 @@
 # WoW GearPath 인계
 
+## 현재 인계 — TASK-006-4 상인·제작 관측 저장
+
+애드온 ADDON-006-2-1 제안 90b574c0162b1d4da8f9afafcc725fb87e2e08a9을 기준으로 신규 저장 컨테이너와 종류별 JSON을 웹 정본 2f9d167248202ff81e98c419ac5cb867c0a59528에 정의했다. [저장 정본](contracts/GROWTH-DIAGNOSTICS-STORAGE-001.md) · [상인 스키마](../contracts/merchant-diagnostics-v1.schema.json) · [제작 스키마](../contracts/craft-diagnostics-v1.schema.json) · [검수](reports/TASK-006-4-REPORT.md)
+
+애드온 담당은 정본 SHA의 스키마와 합성 자료를 serializer 및 명시적 저장 체크포인트에 연결한 후 실제 두 캐릭터/reload/관측 항목을 검증한다. 운영·강화 저장은 그대로 두며 현재 신규 웹 가져오기·소비 추천은 연결하지 않았다. 본 TASK-007 순서 유지. 아래는 기존 기록이다.
+
 ## 현재 인계 — TASK-006-2 / TASK-006-3
 
 애드온 구현 기준 웹 정본 커밋 b6c1e09552c5ba0dcb1492a3a5dcac57761e58a7. 작업 순서는 기존 본 TASK-007을 유지한다.

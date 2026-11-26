@@ -62,3 +62,7 @@ KR 12.1.5 관측 기준은 3418입니다. 데이터 수신과 소비 규칙 검�
 ## TASK-006-2/006-3 정본
 
 [독립 진단](contracts/UPGRADE-DIAGNOSTICS-V1.md)과 [SavedVariables 컨테이너](contracts/SAVEDVARIABLES-001.md)를 분리한다. 기존 snapshot-v1 및 소비 최적화 정책을 유지한다.
+
+## TASK-006-4 관측 저장 정본
+
+상인·제작은 [독립 저장 계약](contracts/GROWTH-DIAGNOSTICS-STORAGE-001.md)을 따른다. 기존 운영 및 강화 저장과 분리하며 실제 비용·효과·소비·제작 가능성은 별도 실측 전까지 확정하지 않는다.
