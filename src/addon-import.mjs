@@ -1,4 +1,5 @@
 import {validate, SLOTS} from './engine.mjs';
+import {mergeWorldQuestScan} from './world-quests.mjs';
 import {season,resourceDefinitions} from './rules.mjs';
 
 export const maxImportBytes = 256 * 1024;
@@ -71,6 +72,9 @@ export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
   ensure(data.seasonId===season.id && (data.patch==null || data.patch===season.patch),'지원 시즌 또는 패치가 다릅니다.');
   const at=Date.parse(data.observedAt);
   ensure(iso(data.observedAt) && at<=+now+300000,'수집 시각이 올바르지 않거나 미래 시각입니다.');
+  const worldQuests=data.worldQuests===undefined ? {} : {
+    worldQuests:data.worldQuests,worldQuestPatch:data.patch??null,
+  };
   const equipment=[];
   const character=pick(data,characterFields);
   ensure(Array.isArray(data.equipment) && data.equipment.length<=16,'장비 목록을 확인하세요.');
@@ -137,11 +141,11 @@ export function parseAddon(raw, {against=null, now=Date.now(), realms=[]}={}) {
   return validate({
     schemaVersion:1,source:'addon',addonVersion:data.addonVersion??null,region:'kr',realm:data.realm,name:data.name,
     realmDisplayName:text(data.realmDisplayName),seasonId:data.seasonId,patch:data.patch??null,observedAt:data.observedAt,
-    ...character,profile:{...character,specialization:character.specializationName??null},
+    ...worldQuests,...character,profile:{...character,specialization:character.specializationName??null},
     fieldSources:{progress:progressSources},weaponMode:data.weaponMode,equipment,resources,progress,
     keystone:capture(data.keystone,['dungeon','level']),collectionWarnings:warnings,
     reportedEquippedAverage:Number.isFinite(data.reportedEquippedAverage)?data.reportedEquippedAverage:null,
-  });
+  },{now});
 }
 
 export function mergeSnapshots(base,addon,{prefer='auto'}={}){
@@ -153,6 +157,15 @@ export function mergeSnapshots(base,addon,{prefer='auto'}={}){
   }
   ensure(base.region===addon.region && sameName(base.realm,addon.realm) && sameName(base.name,addon.name),'다른 캐릭터의 데이터는 병합할 수 없습니다.');
   ensure(base.seasonId===addon.seasonId,'시즌이 다른 데이터는 병합할 수 없습니다.');
+  const scanSnapshot=mergeWorldQuestScan(base,addon);
+  const worldQuestFields=scanSnapshot.worldQuests===undefined ? {} : {worldQuests:scanSnapshot.worldQuests,
+    worldQuestEnvelope:scanSnapshot.worldQuestEnvelope??scanSnapshot.observedAt,
+    worldQuestPatch:scanSnapshot.worldQuestPatch===undefined ? scanSnapshot.patch : scanSnapshot.worldQuestPatch,
+    worldQuestHistory:scanSnapshot.worldQuestHistory ||
+      (Date.parse(base.observedAt)>Date.parse(scanSnapshot.observedAt) &&
+        base.profile?.specializationId!=null && scanSnapshot.specializationId!=null &&
+        base.profile.specializationId!==scanSnapshot.specializationId),
+    worldQuestConflict:scanSnapshot.worldQuestConflict};
   const complete = row => row.weaponMode!=='unknown' && row.equipment.length===(row.weaponMode==='two-hand'?15:16);
   const takeAddon = prefer==='addon' || (prefer!=='base' && (complete(addon)!==complete(base) ? complete(addon) : Date.parse(addon.observedAt)>=Date.parse(base.observedAt)));
   const equipment = takeAddon?addon:base;
@@ -186,7 +199,7 @@ export function mergeSnapshots(base,addon,{prefer='auto'}={}){
     const selected=choices.reduce((current,row)=>best(current,row),null);
     if(selected){progressValues[key]=selected[key];progressSources[key]=provenance(selected);}
   }
-  return {...base,...details,profile,observedAt:equipment.observedAt,equipment:displayedGear,weaponMode:equipment.weaponMode,
+  return {...base,...worldQuestFields,...details,profile,observedAt:equipment.observedAt,equipment:displayedGear,weaponMode:equipment.weaponMode,
     equipmentSource:equipment.source,resources,progress:progress?{...progress,...progressValues}:null,keystone,collectionWarnings:[...new Set([...(addon.collectionWarnings??[]),...(base.collectionWarnings?.includes(voidcoreWarning) && resources.nebulousVoidcore?.currencyId==null ? [voidcoreWarning] : [])])],
     fieldSources:{equipment:provenance(equipment),addonProfile:provenance(addon),progress:progressSources,keystone:provenance(keystone)}};
 }

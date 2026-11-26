@@ -44,3 +44,7 @@
 ## TASK-005A 성운의 공허핵
 
 KR 12.1.5 관측 기준은 3418입니다. 데이터 수신과 소비 규칙 검증은 각각 진행합니다. 정규 계약, 레거시 처리와 교차 검증 결과는 [ADDON-003B 인계](contracts/ADDON-003B-HANDOFF.md)를 따릅니다.
+
+## CONTRACT-WQ-001 전역퀘 웹 MVP
+
+선택적 v1 전역퀘 관측 계약과 오늘 할 일 화면을 [웹 검수](reports/CONTRACT-WQ-001-REPORT.md)로 확정했다. [ADDON-004I 운영 수집 통합](contracts/ADDON-004H-HANDOFF.md)과 실제 게임 내보내기 교차 검증이 남아 있다.

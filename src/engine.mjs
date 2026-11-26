@@ -1,3 +1,4 @@
+import {analyzeWorldQuests,validateWorldQuests} from './world-quests.mjs';
 import { season, demoRules, rulesAt, resourceDefinitions } from './rules.mjs';
 import { analyzeGear, slotWeight } from './engine/gear-growth.mjs';
 import { optimizeGrowth } from './engine/growth-optimizer.mjs';
@@ -8,7 +9,7 @@ const SOURCES = ['manual','addon','blizzard','sample'];
 const validNumber = x => typeof x === 'number' && Number.isFinite(x) && x >= 0;
 const fail = message => { throw new Error(message); };
 
-export function validate(p) {
+export function validate(p,{now=Date.now()}={}) {
   if (p?.schemaVersion !== 1 || p.region !== 'kr' || typeof p.realm !== 'string' || !p.realm.trim() || typeof p.name !== 'string' || !p.name.trim()) fail('schemaVersion=1 및 한국 캐릭터 식별 정보가 필요합니다.');
   if (typeof p.seasonId !== 'string' || !Number.isFinite(Date.parse(p.observedAt))) fail('시즌과 관측 시각이 필요합니다.');
   if (!['one-hand','two-hand','dual-wield','unknown'].includes(p.weaponMode)) fail('weaponMode 값이 올바르지 않습니다.');
@@ -39,6 +40,7 @@ export function validate(p) {
     }
   }
   if (p.keystone != null && (!SOURCES.includes(p.keystone.source) || !Number.isFinite(Date.parse(p.keystone.observedAt)) || !Number.isInteger(p.keystone.level) || p.keystone.level < 2 || p.keystone.level > 100 || typeof p.keystone.dungeon !== 'string' || !p.keystone.dungeon.trim())) fail('쐐기돌의 던전·단계·출처·시각을 확인하세요.');
+  if (p.worldQuests!==undefined) validateWorldQuests(p.worldQuests,p.worldQuestEnvelope??p.observedAt,now);
   return p;
 }
 
@@ -49,8 +51,9 @@ function fresh(at, now) {
 
 const emptySlots = () => SLOTS.filter(()=>false);
 export function diagnose(input, { now = new Date(), demo = false, web = false, solo = false, target = 315, reserve = {}, excludeSlots = emptySlots(), priority = '' } = {}) {
-  const p = validate(input), timestamp = +new Date(now);
+  const timestamp = +new Date(now);
   if (!Number.isFinite(timestamp)) fail('분석 시각이 올바르지 않습니다.');
+  const p=validate(input,{now:timestamp});
   if (demo && p.source !== 'sample') fail('샘플 출처에서만 데모 계산을 사용할 수 있습니다.');
   if (!Number.isFinite(target) || target<1 || target>2000) fail('목표 레벨은 1~2000이어야 합니다.');
   if (!reserve || Object.values(reserve).some(value=>!Number.isSafeInteger(value)||value<0) || !Array.isArray(excludeSlots) || excludeSlots.some(slot=>!SLOTS.includes(slot))) fail('보존 재화와 제외 슬롯을 확인하세요.');
@@ -125,5 +128,6 @@ export function diagnose(input, { now = new Date(), demo = false, web = false, s
     return {...action,currency,cost:currency?action.costs[currency]:0,gold:action.costs.gold??0};
   });
   const resources = Object.entries(p.resources ?? {}).map(([key,o])=>({key,...o,status:!fresh(o.observedAt,timestamp)?'오래됨':o.value===null?'미입력':'입력됨'}));
-  return {schemaVersion:1, generatedAt:new Date(timestamp).toISOString(), mode:demo?'sample':'conservative', character:{name:p.name,realm:p.realm,region:p.region}, season:season.name, rawAverage, displayAverage:rawAverage===null?null:rawAverage.toFixed(3), groupEligible, missingSlots, weakSlots, equipment:p.equipment, resources, activities, upgrades, remaining, growth, gearAnalysis, warnings, sources:[season.source,season.updateSource]};
+  const worldQuests=analyzeWorldQuests(p,timestamp,seasonValid?season.patch:null);
+  return {worldQuests,schemaVersion:1, generatedAt:new Date(timestamp).toISOString(), mode:demo?'sample':'conservative', character:{name:p.name,realm:p.realm,region:p.region}, season:season.name, rawAverage, displayAverage:rawAverage===null?null:rawAverage.toFixed(3), groupEligible, missingSlots, weakSlots, equipment:p.equipment, resources, activities, upgrades, remaining, growth, gearAnalysis, warnings, sources:[season.source,season.updateSource]};
 }

@@ -1,0 +1,501 @@
+{
+  "addonVersion": "0.4.0",
+  "collectionWarnings": [],
+  "equipment": [
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1001,
+      "name": "장비",
+      "rank": null,
+      "slot": "HEAD",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1002,
+      "name": "장비",
+      "rank": null,
+      "slot": "NECK",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1003,
+      "name": "장비",
+      "rank": null,
+      "slot": "SHOULDER",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1015,
+      "name": "장비",
+      "rank": null,
+      "slot": "BACK",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1005,
+      "name": "장비",
+      "rank": null,
+      "slot": "CHEST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1009,
+      "name": "장비",
+      "rank": null,
+      "slot": "WRIST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1010,
+      "name": "장비",
+      "rank": null,
+      "slot": "HANDS",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1006,
+      "name": "장비",
+      "rank": null,
+      "slot": "WAIST",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1007,
+      "name": "장비",
+      "rank": null,
+      "slot": "LEGS",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1008,
+      "name": "장비",
+      "rank": null,
+      "slot": "FEET",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1011,
+      "name": "장비",
+      "rank": null,
+      "slot": "FINGER_1",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1012,
+      "name": "장비",
+      "rank": null,
+      "slot": "FINGER_2",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1013,
+      "name": "장비",
+      "rank": null,
+      "slot": "TRINKET_1",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_HEAD",
+      "ilvl": 315,
+      "itemId": 1014,
+      "name": "장비",
+      "rank": null,
+      "slot": "TRINKET_2",
+      "track": null
+    },
+    {
+      "equipLoc": "INVTYPE_2HWEAPON",
+      "ilvl": 315,
+      "itemId": 1016,
+      "name": "장비",
+      "rank": null,
+      "slot": "MAIN_HAND",
+      "track": null
+    }
+  ],
+  "keystone": null,
+  "name": "테스트",
+  "observedAt": "2026-11-26T12:34:56Z",
+  "patch": "12.1.5",
+  "progress": null,
+  "realm": "azshara",
+  "realmDisplayName": "아즈샤라",
+  "region": "kr",
+  "reportedEquippedAverage": 315,
+  "resources": {
+    "adventurerCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "uncollected",
+      "value": null
+    },
+    "championCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 14
+    },
+    "cofferKey": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 0
+    },
+    "cofferKeyShard": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 43
+    },
+    "gold": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 1234
+    },
+    "heroCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "incomplete",
+      "value": null
+    },
+    "mythCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 7
+    },
+    "nebulousVoidcore": {
+      "currencyId": 3418,
+      "kind": "currency",
+      "name": "성운의 공허핵",
+      "observedAt": "2026-11-26T12:34:56Z",
+      "scope": "unknown",
+      "source": "addon",
+      "state": "observed",
+      "value": 0
+    },
+    "undercoin": {
+      "currencyId": 2803,
+      "kind": "currency",
+      "name": "지하의 주화",
+      "observedAt": "2026-11-26T12:34:56Z",
+      "scope": "unknown",
+      "source": "addon",
+      "state": "observed",
+      "value": 42
+    },
+    "venomstone": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "observed",
+      "value": 3
+    },
+    "veteranCrest": {
+      "observedAt": "2026-11-26T12:34:56Z",
+      "source": "addon",
+      "state": "failed",
+      "value": null
+    },
+    "voidlightMarl": {
+      "currencyId": 3316,
+      "kind": "currency",
+      "name": "공허불빛 이회토",
+      "observedAt": "2026-11-26T12:34:56Z",
+      "scope": "unknown",
+      "source": "addon",
+      "state": "observed",
+      "value": 100
+    }
+  },
+  "schemaVersion": 1,
+  "seasonId": "midnight-s2",
+  "source": "addon",
+  "weaponMode": "two-hand",
+  "worldQuests": {
+    "source": "addon",
+    "observedAt": "2026-11-26T12:34:56Z",
+    "discoveredAt": "2026-11-26T12:34:54Z",
+    "state": "incomplete",
+    "coverage": "seedPlusDescendantZones",
+    "discoveryPartial": false,
+    "mapExpansion": "ok",
+    "context": {
+      "specializationIndex": 1,
+      "lootSpecializationId": 0
+    },
+    "maps": [
+      {
+        "mapId": 2405,
+        "status": "ok",
+        "count": 4
+      },
+      {
+        "mapId": 2444,
+        "status": "ok",
+        "count": 2
+      }
+    ],
+    "rows": [
+      {
+        "questId": 100001,
+        "title": "가상 퀘스트 100001",
+        "mapId": 2444,
+        "zoneName": "가상 지역",
+        "mapSource": "questZone",
+        "mapStatus": "zoneApiResolved",
+        "mapCandidates": [
+          2405,
+          2444
+        ],
+        "scanMaps": [
+          2405,
+          2444
+        ],
+        "questZoneId": 2444,
+        "zoneQueryStatus": "ok",
+        "candidateLimited": false,
+        "activeObservedAt": "2026-11-26T12:34:56Z",
+        "activeUnverified": false,
+        "completed": false,
+        "expiresAt": "2026-11-26T14:00:00Z",
+        "expiryObservedAt": "2026-11-26T12:34:56Z",
+        "ready": true,
+        "gold": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "value": 123456
+        },
+        "items": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 0,
+          "rows": []
+        },
+        "choices": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 0,
+          "rows": []
+        },
+        "currencies": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 0,
+          "rows": []
+        }
+      },
+      {
+        "questId": 100002,
+        "title": "가상 퀘스트 100002",
+        "mapId": 2405,
+        "zoneName": "가상 지역",
+        "mapSource": "quest",
+        "mapStatus": "explicit",
+        "mapCandidates": [
+          2405
+        ],
+        "scanMaps": [
+          2405
+        ],
+        "questZoneId": null,
+        "zoneQueryStatus": null,
+        "candidateLimited": false,
+        "activeObservedAt": "2026-11-26T12:34:56Z",
+        "activeUnverified": false,
+        "completed": false,
+        "expiresAt": "2026-11-26T14:00:00Z",
+        "expiryObservedAt": "2026-11-26T12:34:56Z",
+        "ready": true,
+        "gold": {
+          "state": "zeroUnverified",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "value": null
+        },
+        "items": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 1,
+          "rows": [
+            {
+              "itemId": 10001,
+              "name": "가상 사슬 장비",
+              "quantity": 1,
+              "ilvl": 320,
+              "quality": 4,
+              "detailState": "observed",
+              "detailObservedAt": "2026-11-26T12:34:56Z",
+              "equipLoc": "INVTYPE_WAIST",
+              "classId": 4,
+              "subclassId": 3
+            }
+          ]
+        },
+        "choices": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 1,
+          "rows": [
+            {
+              "itemId": 10002,
+              "name": "가상 선택 장비",
+              "quantity": 1,
+              "ilvl": 321,
+              "quality": 4,
+              "detailState": "observed",
+              "detailObservedAt": "2026-11-26T12:34:56Z",
+              "equipLoc": "INVTYPE_WAIST",
+              "classId": 4,
+              "subclassId": 3
+            }
+          ]
+        },
+        "currencies": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 0,
+          "rows": []
+        }
+      },
+      {
+        "questId": 100003,
+        "title": "가상 퀘스트 100003",
+        "mapId": null,
+        "zoneName": null,
+        "mapSource": null,
+        "mapStatus": "ambiguous",
+        "mapCandidates": [
+          2405,
+          2444
+        ],
+        "scanMaps": [
+          2405,
+          2444
+        ],
+        "questZoneId": null,
+        "zoneQueryStatus": "nil",
+        "candidateLimited": false,
+        "activeObservedAt": "2026-11-26T12:34:56Z",
+        "activeUnverified": false,
+        "completed": false,
+        "expiresAt": null,
+        "expiryObservedAt": null,
+        "ready": true,
+        "gold": {
+          "state": "zeroUnverified",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "value": null
+        },
+        "items": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 0,
+          "rows": []
+        },
+        "choices": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 0,
+          "rows": []
+        },
+        "currencies": {
+          "state": "observed",
+          "observedAt": "2026-11-26T12:34:56Z",
+          "count": 2,
+          "rows": [
+            {
+              "currencyId": 3310,
+              "name": "가상 열쇠 보상",
+              "quantity": 7,
+              "factionId": null
+            },
+            {
+              "currencyId": 3389,
+              "name": "가상 평판 보상",
+              "quantity": 9,
+              "factionId": 2699
+            }
+          ]
+        }
+      },
+      {
+        "questId": 100004,
+        "title": "가상 퀘스트 100004",
+        "mapId": 2405,
+        "zoneName": "가상 지역",
+        "mapSource": "quest",
+        "mapStatus": "explicit",
+        "mapCandidates": [
+          2405
+        ],
+        "scanMaps": [
+          2405
+        ],
+        "questZoneId": null,
+        "zoneQueryStatus": null,
+        "candidateLimited": false,
+        "activeObservedAt": "2026-11-26T12:34:56Z",
+        "activeUnverified": false,
+        "completed": false,
+        "expiresAt": "2026-11-26T14:00:00Z",
+        "expiryObservedAt": "2026-11-26T12:34:56Z",
+        "ready": false,
+        "gold": {
+          "state": "uncollected",
+          "observedAt": null,
+          "value": null
+        },
+        "items": {
+          "state": "uncollected",
+          "observedAt": null,
+          "count": null,
+          "rows": []
+        },
+        "choices": {
+          "state": "uncollected",
+          "observedAt": null,
+          "count": null,
+          "rows": []
+        },
+        "currencies": {
+          "state": "uncollected",
+          "observedAt": null,
+          "count": null,
+          "rows": []
+        },
+        "cached": {
+          "gold": {
+            "state": "observed",
+            "observedAt": "2026-11-26T12:30:00Z",
+            "value": 4567
+          }
+        }
+      }
+    ]
+  }
+}
