@@ -129,5 +129,5 @@ export function diagnose(input, { now = new Date(), demo = false, web = false, s
   });
   const resources = Object.entries(p.resources ?? {}).map(([key,o])=>({key,...o,status:!fresh(o.observedAt,timestamp)?'오래됨':o.value===null?'미입력':'입력됨'}));
   const worldQuests=analyzeWorldQuests(p,timestamp,seasonValid?season.patch:null);
-  return {worldQuests,schemaVersion:1, generatedAt:new Date(timestamp).toISOString(), mode:demo?'sample':'conservative', character:{name:p.name,realm:p.realm,region:p.region}, season:season.name, rawAverage, displayAverage:rawAverage===null?null:rawAverage.toFixed(3), groupEligible, missingSlots, weakSlots, equipment:p.equipment, resources, activities, upgrades, remaining, growth, gearAnalysis, warnings, sources:[season.source,season.updateSource]};
+  return {worldQuests,equipmentFresh,schemaVersion:1, generatedAt:new Date(timestamp).toISOString(), mode:demo?'sample':'conservative', character:{name:p.name,realm:p.realm,region:p.region}, season:season.name, rawAverage, displayAverage:rawAverage===null?null:rawAverage.toFixed(3), groupEligible, missingSlots, weakSlots, equipment:p.equipment, resources, activities, upgrades, remaining, growth, gearAnalysis, warnings, sources:[season.source,season.updateSource]};
 }

@@ -1,7 +1,9 @@
 'use client';
 
-import {useEffect, useRef, useState, type FormEvent} from 'react';
+import {useEffect, useMemo, useRef, useState, type FormEvent} from 'react';
 import {mergeWorldQuestScan} from '../src/world-quests.mjs';
+import {buildWeeklyActivities,activityStatusLabels} from '../src/activity-dashboard.mjs';
+import {formatCopper} from './format-copper';
 import {WorldQuestPanel} from './world-quest-panel';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
@@ -32,6 +34,10 @@ const costText=(costs?:Record<string,number|null>|null)=>costs ? Object.entries(
 const progressFields = [['maxDelveTier','최고 해금 구렁 단계',11],['stableTier','안정적으로 완료할 구렁 단계',11],
   ['vaultWorld','야외/구렁 금고 진행 횟수',99],['vaultDungeon','던전 금고 진행 횟수',99],['vaultRaid','레이드 금고 진행 횟수',99]] as const;
 
+function sourceLabel(source:string) {
+  return ({addon:'애드온',blizzard:'Blizzard',manual:'수동 입력',sample:'가상 샘플'} as Record<string,string>)[source] ?? '출처 미확인';
+}
+
 function presentTime(value?:string) {
   return value ? new Intl.DateTimeFormat('ko-KR',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Seoul'}).format(new Date(value)) : '—';
 }
@@ -55,12 +61,12 @@ export default function Planner() {
   const [reserveValue,setReserveValue]=useState('');
   const [excludeSlots,setExcludeSlots]=useState<string[]>([]);
   const importRevision = useRef(0);
-  const combined = addon ? mergeSnapshots(base,addon,{prefer}) : base;
-  const snapshot = combined && overlay ? {...combined,
+  const combined = useMemo(()=>addon ? mergeSnapshots(base,addon,{prefer}) : base,[base,addon,prefer]);
+  const snapshot = useMemo(()=>combined && overlay ? {...combined,
     resources:{...combined.resources,...Object.fromEntries(Object.entries(overlay.resources).filter(([,row])=>(row as {value:number|null}).value!==null))},
     progress:overlay.progress ? {...combined.progress,...Object.fromEntries(Object.entries(overlay.progress).filter(([,value])=>value!==null))}:combined.progress,
     fieldSources:{...combined.fieldSources,progress:{...combined.fieldSources?.progress,...Object.fromEntries(Object.entries(overlay.progress??{}).filter(([key,value])=>key!=='source'&&key!=='observedAt'&&value!==null).map(([key])=>[key,{source:'manual',observedAt:overlay.progress.observedAt}]))}},
-    keystone:overlay.keystone??combined.keystone} : combined;
+    keystone:overlay.keystone??combined.keystone} : combined,[combined,overlay]);
   const equipmentConflict = base && addon && base.source!=='sample' && (
     base.weaponMode!==addon.weaponMode || base.equipment.length!==addon.equipment.length ||
     addon.equipment.some((item:Gear)=>!base.equipment.some((other:Gear)=>item.slot===other.slot&&item.itemId===other.itemId&&item.ilvl===other.ilvl)));
@@ -70,7 +76,7 @@ export default function Planner() {
   const [manual, setManual] = useState<Record<string,string>>({});
   const [saved, setSaved] = useState('');
   const [savedAt, setSavedAt] = useState('');
-  const [, refreshWorldQuests] = useState(0);
+  const [questRevision, refreshWorldQuests] = useState(0);
   const [notes, setNotes] = useState<Record<string,string>>({});
 
   useEffect(() => {
@@ -165,19 +171,33 @@ export default function Planner() {
   }
 
   const enteredTarget=Number(growthTarget), enteredReserve=Number(reserveValue);
-  const growthSettings={target:enteredTarget>=1&&enteredTarget<=2000?enteredTarget:315,
-    reserve:{[reserveKey]:Number.isSafeInteger(enteredReserve)&&enteredReserve>=0?enteredReserve:0},excludeSlots,priority:reserveKey};
-  const result = snapshot ? diagnose(snapshot, isSample ? {demo:!savedAt,now:new Date(savedAt || '2026-11-26T10:00:00+09:00'),web:true,solo,...growthSettings} : {web:true,solo,...growthSettings}) : null;
-  const nextGoal = !result || result.rawAverage === null || result.rawAverage >= 315 ? null : 315;
+  const result = useMemo(()=>{
+    if (!snapshot) return null;
+    const now=isSample ? new Date(savedAt || '2026-11-26T10:00:00+09:00') : new Date();
+    return diagnose(snapshot,{demo:isSample&&!savedAt,now,web:true,solo,
+      target:enteredTarget>=1&&enteredTarget<=2000?enteredTarget:315,
+      reserve:{[reserveKey]:Number.isSafeInteger(enteredReserve)&&enteredReserve>=0?enteredReserve:0},
+      excludeSlots,priority:reserveKey});
+  },[snapshot,isSample,savedAt,solo,enteredTarget,enteredReserve,reserveKey,excludeSlots,questRevision]);
+  const weekly=useMemo(()=>snapshot && result ? buildWeeklyActivities(snapshot,result) : [],[snapshot,result]);
+  const goalGap=result?.rawAverage==null ? null : Math.max(0,result.growth.target-result.rawAverage);
+  const trackedGear=result?.gearAnalysis.filter((row:GrowthSlot)=>row.rank!=null) as GrowthSlot[] ?? [];
+  const atMax=trackedGear.filter(row=>row.rank===row.maxRank).length;
   const profile = snapshot?.profile;
-  const nextQuestRefresh=result?.worldQuests?.nextRefresh;
+  const nextRefresh=useMemo(()=>{
+    if (!snapshot || !result || isSample) return Infinity;
+    const analyzedAt=Date.parse(result.generatedAt);
+    const dates=[snapshot.observedAt,...result.resources.map(row=>row.observedAt)];
+    const freshnessBoundaries=dates.map(at=>Date.parse(at)+86400001).filter(at=>at>analyzedAt);
+    return Math.min(result.worldQuests?.nextRefresh??Infinity,...freshnessBoundaries);
+  },[snapshot,result,isSample]);
   useEffect(()=>{
-    if (nextQuestRefresh===undefined || !Number.isFinite(nextQuestRefresh)) return;
-    const timeout=window.setTimeout(()=>refreshWorldQuests(current=>current+1),Math.max(1,nextQuestRefresh-Date.now()));
+    if (!Number.isFinite(nextRefresh)) return;
+    const timeout=window.setTimeout(()=>refreshWorldQuests(current=>current+1),Math.max(1,nextRefresh-Date.now()));
     return ()=>window.clearTimeout(timeout);
-  },[nextQuestRefresh]);
+  },[nextRefresh]);
   const balanceRows = new Map(result?.resources.map(row=>[row.key,row]));
-  const gear: Gear[] = snapshot?.equipment ?? [];
+  const gear=new Map<string,Gear>(result?.equipment.map((item:Gear)=>[item.slot,item]));
   const weak = new Set(result?.weakSlots.map((row:Gear)=>row.slot));
 
   return <main>
@@ -218,17 +238,42 @@ export default function Planner() {
     </section>
     {snapshot && result && <>
       <section className="character">
-        <div><p className="eyebrow">{isSample ? '가상 샘플' : realmList.find(x=>x.slug===snapshot.realm)?.name ?? snapshot.realm}</p>
+        <div><p className="eyebrow">{isSample ? '가상 샘플 · ' : ''}{realmList.find(x=>x.slug===snapshot.realm)?.name ?? snapshot.realm}</p>
           <h2>{snapshot.name}</h2><p>{profile?.race ?? '종족 미확인'} · {profile?.className ?? '직업 미확인'} · {profile?.specialization ?? '전문화 미확인'} · {profile?.level ?? '—'} 레벨{roles[profile?.role] ? ` · ${roles[profile.role]}` : ''}</p>
-          <small>조회 시각 {presentTime(snapshot.fetchedAt ?? snapshot.observedAt)} KST</small></div>
+          <small>장비 {sourceLabel(snapshot.equipmentSource ?? snapshot.source)} · 관측 {presentTime(snapshot.observedAt)} KST{!result.equipmentFresh ? ' · 갱신 필요' : ''}</small></div>
         <div className="metric"><span>평균 장착 레벨</span><strong>{result.displayAverage ?? '미확인'}</strong></div>
-        <div className="metric"><span>다음 목표</span><strong>{nextGoal ?? '—'}</strong><small>{solo?'솔플만 추천':result.groupEligible?'그룹 후보 표시':result.rawAverage !== null && result.rawAverage>=315?'그룹 추천 보류 · 진단 범위 확인':'315부터 그룹 후보 표시'}</small></div>
+        <div className="metric"><span>성장 목표</span><strong>{result.growth.target}</strong><small>{goalGap===null ? '목표 차이 미확인' : goalGap===0 ? '목표 달성' : '목표까지 '+goalGap.toFixed(3)}</small><small>{solo?'솔플만 추천':result.groupEligible?'그룹 후보 표시':result.rawAverage !== null && result.rawAverage>=315?'그룹 추천 보류 · 진단 범위 확인':'315부터 그룹 후보 표시'}</small></div>
+        <div className="summary-strip">
+          <span>강화 단계 확인 <strong>{trackedGear.length}/{result.equipment.length}</strong> · 최대 단계 확인 {atMax}개</span>
+          <span>심크 DPS <strong>미측정</strong></span>
+          {['gold','cofferKey','heroCrest','mythCrest','nebulousVoidcore'].map(key=>{
+            const balance=balanceRows.get(key);
+            return <span key={key}>{costLabel(key)} <strong>{balance?.value==null?'미확인':key==='gold'?formatCopper(balance.value):balance.value}</strong>{balance?.status==='오래됨'?' · 오래됨':''}</span>;
+          })}
+        </div>
       </section>
-      <div className="columns">
+      <div className="dashboard-grid">
+        <section className="panel" aria-label="오늘 할 일">
+          <div className="section-title"><h2>오늘 할 일</h2><span>전역퀘 관측</span></div>
+          {result.worldQuests ? <WorldQuestPanel model={result.worldQuests} /> :
+            <p className="section-body">전역퀘 미수집 · 전역퀘가 포함된 애드온 스냅샷을 가져오면 표시됩니다.</p>}
+        </section>
+        <section className="panel" aria-label="이번 주 활동">
+          <div className="section-title"><h2>이번 주 활동</h2><span>주간 초기화 미확인</span></div>
+          <ul className="weekly-list">{weekly.map(row=><li key={row.id}>
+            <div><strong>{row.label}</strong><span>{activityStatusLabels[row.status as keyof typeof activityStatusLabels]}</span></div>
+            {row.evidence.map((evidence:{label:string;value:number;source:string;observedAt:string})=><small key={evidence.label}>{evidence.label} {evidence.value} · {sourceLabel(evidence.source)} · {presentTime(evidence.observedAt)} KST</small>)}
+          </li>)}</ul>
+          <p className="section-body">관측된 수치만 표시합니다. 이번 주 완료와 보상 수령 여부는 게임에서 확인하세요.</p>
+        </section>
+      </div>
+      <details className="equipment-details panel" open>
+        <summary>장착 장비와 추천 파밍 상세</summary>
+        <div className="columns">
         <section className="panel"><div className="section-title"><h2>장착 장비</h2><span>교체 후보 표시</span></div>
           <div className="table-scroll"><table aria-label="장착 장비"><thead><tr><th>부위</th><th>아이템</th><th>레벨</th><th>강화</th></tr></thead><tbody>
             {Object.entries(slots).map(([slot,label])=>{
-              const item = gear.find(x=>x.slot===slot);
+              const item = gear.get(slot);
               return <tr className={weak.has(slot)?'weak':''} key={slot}>
                 <th scope="row">{label}{weak.has(slot)&&<small>교체 검토</small>}</th>
                 <td>{item ? <div className="gear">{item.icon ? <img src={item.icon} width={30} height={30} alt="" /> : <span className="icon" aria-hidden="true" />}
@@ -242,12 +287,12 @@ export default function Planner() {
           </tbody></table></div>
         </section>
         <section className="panel"><div className="section-title"><h2>추천 파밍 순서</h2><span>솔플 우선</span></div>
-          {result.worldQuests && <WorldQuestPanel model={result.worldQuests} />}
           <ol className="routes">{result.activities.map(row=><li key={row.id}><div><h3>{row.title}</h3><span className="badge">{row.kind==='group'?'그룹':row.certainty}</span></div><p>{row.id==='weak-slots' ? result.weakSlots.map((item:Gear)=>`${slots[item.slot] ?? item.slot} ${item.ilvl}`).join(' · ') : row.reason}</p></li>)}</ol>
           {savedAt && <div className="progress-note"><strong>입력한 진행 상황</strong><dl>{progressFields.map(([id,label])=><div key={id}><dt>{label}</dt><dd>{notes[id] || '미입력'}</dd></div>)}</dl></div>}
           <details><summary>진단 범위 및 공식 출처</summary><ul>{result.warnings.map(w=><li key={w}>{w}</li>)}</ul><a href={season.source}>한국 시즌 공지</a> · <a href={season.updateSource}>12.1.5 공지</a></details>
         </section>
-      </div>
+        </div>
+      </details>
       <section className="panel resources" aria-label="장비 성장 계획">
         <div className="section-title"><h2>장비 성장 계획</h2><span>{result.growth.scope==='synthetic'?'가상 강화 예제':'검증된 강화만 계산'}</span></div>
         <div className="growth-controls">
@@ -271,7 +316,7 @@ export default function Planner() {
               <ol>{path.actions.map((action:GrowthAction)=><li key={action.actionId}>{slots[action.slot]} {action.from} → {action.to}</li>)}</ol>
             </li>)}</ul>
           </details>}
-        </div>:<p className="growth-summary">검증된 비용·할인과 최신 장비 정보가 갖춰지면 강화 경로를 표시합니다. 교체 확률과 DPS는 별도 확인이 필요합니다.</p>}
+        </div>:<p className="growth-summary">강화 비용·할인 또는 최신 장비 정보가 미확인입니다. 재화 부족 판단과 비용이 확정된 소비 계획은 검증된 경로에서 표시합니다.</p>}
         <div className="table-scroll"><table aria-label="슬롯별 성장 분석"><thead><tr><th>부위</th><th>현재 / 상한</th><th>다음 비용 / 평균 증가</th><th>판단</th><th>제외</th></tr></thead>
           <tbody>{result.gearAnalysis.map((row:GrowthSlot)=><tr key={row.slot}><th scope="row">{slots[row.slot]}</th>
             <td>{row.ilvl} / {row.maxIlvl??'미확인'}<small className="upgrade-note">단계 {row.rank??'—'}/{row.maxRank??'—'} · {row.source==='addon'?'애드온':row.source==='blizzard'?'Blizzard':'입력'} · {presentTime(row.observedAt)}</small></td>
@@ -281,12 +326,12 @@ export default function Planner() {
             <td><input type="checkbox" aria-label={`${slots[row.slot]} 강화에서 제외`} checked={excludeSlots.includes(row.slot)} onChange={e=>setExcludeSlots(e.target.checked?[...excludeSlots,row.slot]:excludeSlots.filter(slot=>slot!==row.slot))} /></td>
           </tr>)}</tbody></table></div>
       </section>
-      <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>빈칸은 미입력, 0은 보유 없음</span></div>
+      <section className="panel resources"><div className="section-title"><h2>보유 재화와 진행 상황</h2><span>골드 입력은 코퍼 단위 · 빈칸은 미입력</span></div>
       <form onSubmit={applyResources}>
         <div className="table-scroll"><table aria-label="보유 재화"><thead><tr><th>재화</th><th>보유량</th><th>출처와 수집 상태</th><th>용도 및 검증</th><th>수동 입력</th></tr></thead><tbody>
         {resourceDefinitions.map(({key,label,use,collection,identityStatus})=>{
           const row=balanceRows.get(key);
-          return <tr key={key}><th scope="row">{label}</th><td className="number">{row?.value??'—'}</td>
+          return <tr key={key}><th scope="row">{label}</th><td className="number">{row?.value==null?'—':key==='gold'?formatCopper(row.value):row.value}</td>
             <td>{row ? <>{row.source==='addon'?'애드온':'수동'} · {balanceStates[row.state]??(row.value===null?'미입력':'입력됨')}{row.status==='오래됨'?' · 오래됨':''}
               <small className="upgrade-note">{presentTime(row.observedAt)} · {scopeNames[row.scope]??'범위 미확인'}</small>
               {(row.maxQuantity!=null || row.weeklyEarned!=null || row.weeklyLimit!=null) && <small className="upgrade-note">관측 상한 {row.maxQuantity??'—'} · 주간 {row.weeklyEarned??'—'}/{row.weeklyLimit??'—'}</small>}</>:'미입력'}</td>
