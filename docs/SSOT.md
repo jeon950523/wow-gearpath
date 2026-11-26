@@ -58,3 +58,7 @@ KR 12.1.5 관측 기준은 3418입니다. 데이터 수신과 소비 규칙 검�
 ## TASK-006-1 교차 검증
 
 보유 재화 gold는 정수 골드, 전역퀘 보상 gold는 정수 코퍼로 표시한다. 합성 운영 출력 교차 검증은 완료했고 실제 사용자 원본 검증은 대기한다. [검수](reports/TASK-006-1-REPORT.md)
+
+## TASK-006-2/006-3 정본
+
+[독립 진단](contracts/UPGRADE-DIAGNOSTICS-V1.md)과 [SavedVariables 컨테이너](contracts/SAVEDVARIABLES-001.md)를 분리한다. 기존 snapshot-v1 및 소비 최적화 정책을 유지한다.

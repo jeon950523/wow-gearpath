@@ -19,3 +19,7 @@
 ## TASK-006 진단 검토
 
 ADDON-UPGRADE-001은 사용자가 NPC 창에서 선택한 한 장비의 다음 단계 API 응답을 읽는 진단이다. 아이템 ID/링크의 익명 일치만으로 장비 인스턴스, 장착 슬롯, 트랙을 확정할 수 없다. 현재·다음 rank와 레벨은 각각 PvE/PvP 여부 및 장비 스냅샷에 연결해 검증한다. 기본 가격과 서버 반환 적용 가격은 별도 상태로 기록하고, 적용 할인, 원시 watermarkSlot과 장착 슬롯, 캐릭터·전투부대 watermark 및 반지/장신구/무기 예외는 KR 실측 대조 대상으로 유지한다. 패치·빌드·시즌·관측 UTC·동일 인스턴스 및 골드/화폐별 수량을 함께 검증한 뒤 운영 계약을 논의한다. [진단 보고서](https://github.com/jeon950523/wow-gearpath-addon/blob/3e433b845c642c97815e1dce716b8d25c5dcd9c0/docs/reports/ADDON-UPGRADE-001-observations.md)
+
+## TASK-006-2 수신 정본
+
+독립 진단 수신 형식은 [UPGRADE-DIAGNOSTICS-V1](UPGRADE-DIAGNOSTICS-V1.md)을 참조한다. 운영 가격 적용은 계속 별도 검증한다.

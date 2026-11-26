@@ -4,6 +4,7 @@ import {useEffect, useMemo, useRef, useState, type FormEvent} from 'react';
 import {mergeWorldQuestScan} from '../src/world-quests.mjs';
 import {buildWeeklyActivities,activityStatusLabels} from '../src/activity-dashboard.mjs';
 import {formatGoldBalance} from './format-copper';
+import {SavedVariablesImport} from './saved-variables-import';
 import {WorldQuestPanel} from './world-quest-panel';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
@@ -97,10 +98,10 @@ export default function Planner() {
     return () => controller.abort();
   }, [realmAttempt]);
 
-  function load(next: Snapshot, demo: boolean) {
+  function load(next: Snapshot|null, demo: boolean) {
     importRevision.current++;
     const equal = (left:string,right:string) => left.normalize('NFC').toLowerCase()===right.normalize('NFC').toLowerCase();
-    const keepAddon = !demo && addon && next.region===addon.region && next.seasonId===addon.seasonId &&
+    const keepAddon = !demo && addon && next && next.region===addon.region && next.seasonId===addon.seasonId &&
       equal(next.realm,addon.realm) && equal(next.name,addon.name);
     setSnapshot(next);
     setSample(demo);
@@ -117,11 +118,17 @@ export default function Planner() {
     setError('');
   }
 
-  function importAddon(raw:string) {
+  function importAddon(raw:string, switchCharacter=false, history:string|null=null) {
     importRevision.current++;
     try {
-      const next = parseAddon(raw,{against:base?.source==='sample'?null:base??addon,realms:realmList});
-      setAddon(mergeWorldQuestScan(addon,next));
+      const current=base?.source==='sample'?null:base??addon;
+      const next = parseAddon(raw,{against:switchCharacter?null:current,realms:realmList});
+      const identity=(row:Snapshot)=>JSON.stringify([row.region,row.realm,row.name,row.seasonId]).normalize('NFC').toLowerCase();
+      const changed=switchCharacter && current && identity(current)!==identity(next);
+      const historySnapshot=history ? parseAddon(history,{against:next,realms:realmList}) : null;
+      const incoming=mergeWorldQuestScan(historySnapshot,next);
+      if(changed) load(null,false);
+      setAddon(mergeWorldQuestScan(changed?null:addon,incoming));
       if(base?.source==='sample'){setOverlay(null);setManual({});setNotes({});setSaved('');setSavedAt('');}
       setSample(false);
       setPrefer('auto');
@@ -229,6 +236,7 @@ export default function Planner() {
         try {const json=await file.text();if(revision===importRevision.current) importAddon(json);}
         catch {if(revision===importRevision.current) setImportStatus('파일을 읽을 수 없습니다.');}
       }} /></label>
+      <SavedVariablesImport disabled={busy} onImport={(json,history)=>importAddon(json,true,history)} />
       {addon && <button type="button" onClick={()=>{importRevision.current++;setAddon(null);if(!base || base.source==='sample'){setOverlay(null);setManual({});setNotes({});setSaved('');setSavedAt('');setSample(base?.source==='sample');}setImportStatus('가져온 데이터를 삭제했습니다.');}}>가져온 데이터 삭제</button>}
       <p role="status">{importStatus}</p>
       {addon && <p>애드온 {addon.addonVersion ?? '버전 미확인'} · 수집 {presentTime(addon.observedAt)} KST · 장비 출처 {combined?.equipmentSource==='addon'?'애드온':'Blizzard'}</p>}
