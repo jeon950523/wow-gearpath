@@ -21,3 +21,8 @@
 .equipment-details>summary{cursor:pointer;font-weight:650;color:var(--ink)}
 .equipment-details .columns{margin-top:10px}
 @media(max-width:760px){.dashboard-grid{grid-template-columns:1fr}}
+
+.saved-variables{max-width:680px;padding:10px 0}
+.saved-variables summary{cursor:pointer;color:var(--focus)}
+.saved-variables p,.saved-variables label{margin:8px 0}
+.saved-variables button{margin:4px 8px 4px 0}
