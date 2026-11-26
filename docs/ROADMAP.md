@@ -42,3 +42,7 @@
 ## CONTRACT-WQ-001 전역퀘 웹 MVP
 
 선택적 v1 전역퀘 관측 계약과 오늘 할 일 화면을 [웹 검수](reports/CONTRACT-WQ-001-REPORT.md)로 확정했다. [ADDON-004I 운영 수집 통합](contracts/ADDON-004H-HANDOFF.md)과 실제 게임 내보내기 교차 검증이 남아 있다.
+
+## TASK-006 후속
+
+통합 성장 화면 기반을 연결했다. 실제 ADDON-004I 수신 교차 검증과 강화 NPC 비용·할인 실측을 우선하고, 이후 구렁·금고 계약을 주간 활동에 연결한다. [검수](reports/TASK-006-REPORT.md)
