@@ -29,7 +29,10 @@
       "maximum": 253402300799
     },
     "state": {
-      "const": "sample"
+      "enum": [
+        "sample",
+        "partial"
+      ]
     },
     "source": {
       "enum": [
@@ -98,7 +101,7 @@
           "anyOf": [
             {
               "type": "integer",
-              "minimum": 1,
+              "minimum": 0,
               "maximum": 2147483647
             },
             {
@@ -110,7 +113,7 @@
           "anyOf": [
             {
               "type": "integer",
-              "minimum": 1,
+              "minimum": 0,
               "maximum": 10000
             },
             {
@@ -270,6 +273,16 @@
                           "type": "integer",
                           "minimum": 1,
                           "maximum": 2147483647
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "itemID": {
+                          "type": "null"
+                        },
+                        "currencyID": {
+                          "type": "null"
                         }
                       }
                     }
@@ -764,7 +777,7 @@
               }
             ]
           },
-          "maxItems": 256
+          "maxItems": 288
         },
         "requirements": {
           "type": "array",
@@ -1036,7 +1049,7 @@
             ],
             "additionalProperties": false
           },
-          "maxItems": 512
+          "maxItems": 2048
         }
       },
       "required": [
@@ -1115,7 +1128,12 @@
           "allocations",
           "preview",
           "inventory"
-        ]
+        ],
+        "not": {
+          "required": [
+            "schematic"
+          ]
+        }
       }
     },
     {
@@ -1173,6 +1191,22 @@
         "required": [
           "target"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "partial"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source": {
+            "const": "recipeSchematic"
+          }
+        }
       }
     }
   ]

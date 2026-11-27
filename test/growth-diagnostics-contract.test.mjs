@@ -77,13 +77,13 @@ for(const [label,mutate] of [
 
 test('UTF-8 관측 및 컨테이너 상한은 문자 수와 별도로 적용한다',()=>{
   const raw=JSON.stringify(craft());
-  const atLimit=raw+' '.repeat(262144-Buffer.byteLength(raw));
+  const atLimit=raw+' '.repeat(786432-Buffer.byteLength(raw));
   assert.deepEqual(parseGrowthDiagnostic('craft',atLimit,options),craft());
   assert.throws(()=>parseGrowthDiagnostic('craft',atLimit+' ',options),/크기/);
   const data=storage();
-  data.characters[0].craft=Array.from({length:8},(_,i)=>{
+  data.characters[0].craft=Array.from({length:3},(_,i)=>{
     const row=JSON.stringify({...craft(),recipeID:i+1});
-    return row+' '.repeat(262144-Buffer.byteLength(row));
+    return row+' '.repeat(786432-Buffer.byteLength(row));
   });
   assert.throws(()=>validateGrowthDiagnosticsStorage(data,options),/저장 용량/);
 });
@@ -92,4 +92,96 @@ test('신규 저장 루트는 기존 브라우저 가져오기에서 계속 미�
   const {readSavedVariables}=await import('../src/saved-variables.mjs');
   const raw=readFileSync(new URL('../contracts/examples/growth-diagnostics-storage-v1-synthetic.lua',import.meta.url),'utf8');
   assert.throws(()=>readSavedVariables(raw,options),/SavedVariables Lua 데이터 형식/);
+});
+
+test('제작 수집기 상한 잔액 288개와 분류 2048개 전량 수신',()=>{
+  const selected=craft();
+  const balance=selected.inventory.balances[0];
+  selected.inventory.balances=Array.from({length:288},(_,i)=>({...balance,itemID:i===0?9001:i,allocated:i===0?2:0,allocationGapNoBanks:i===0?2:0}));
+  assert.equal(parse('craft',selected).inventory.balances.length,288);
+  selected.inventory.balances.push({...balance,itemID:289});
+  assert.throws(()=>parse('craft',selected));
+  const recipe=schematic();
+  recipe.schematic.slots=Array.from({length:32},(_,i)=>({dataSlotIndex:i+1,slotIndex:i+1,required:null,
+    quantityRequired:0,reagentType:null,dataSlotType:null,hiddenInCraftingForm:false,state:'observed',
+    options:Array.from({length:64},(_,j)=>({itemID:i*64+j+1,currencyID:null}))}));
+  recipe.catalog={version:'midnight-s2-12.1.5-r1',scope:'typedIdentityHintsOnly',hints:recipe.schematic.slots.flatMap((slot,i)=>
+    slot.options.map((option,j)=>({catalogRef:'option:'+(i+1)+':'+(j+1),role:'unknown',key:null,evidence:'unlisted',effectHint:null})))};
+  assert.equal(parse('craft',recipe).catalog.hints.length,2048);
+  recipe.catalog.hints.push(recipe.catalog.hints[0]);
+  assert.throws(()=>parse('craft',recipe));
+});
+
+function schematic(){
+  const draft=craft();
+  const {allocations,preview,inventory,catalog,draft:order,...base}=draft;
+  return {...base,source:'recipeSchematic',schematic:{recipeType:0,schematicItemID:null,schematicProductQuality:null,
+    rawRecipeItemLevel:null,supportsQualities:null,slots:[]}};
+}
+
+test('부분 레시피는 관측 근거대로 저장하고 0을 null로 바꾸지 않는다',()=>{
+  const data={...schematic(),state:'partial'};
+  data.schematic.slots=[{dataSlotIndex:1,slotIndex:1,required:null,quantityRequired:0,reagentType:0,
+    dataSlotType:null,hiddenInCraftingForm:false,state:'partial',options:[]}];
+  assert.deepEqual(parse('craft',data),data);
+  assert.throws(()=>parse('craft',{...craft(),state:'partial'}));
+  data.schematic.schematicProductQuality=0;
+  data.schematic.rawRecipeItemLevel=0;
+  data.schematic.slots[0].options=[{itemID:null,currencyID:null}];
+  assert.deepEqual(parse('craft',data),data);
+  data.schematic.slots[0].options=[{itemID:0,currencyID:null}];
+  assert.throws(()=>parse('craft',data));
+  const raw=JSON.stringify({...schematic(),state:'partial'});
+  const db=storage();
+  db.characters[0].craft=[raw];
+  assert.equal(JSON.parse(validateGrowthDiagnosticsStorage(db,options).characters[0].craft[0]).state,'partial');
+});
+
+test('상인 최대 관측은 64 KiB 초과가 가능하며 128 KiB 내에서 전체를 보존한다',()=>{
+  const data=merchant();
+  const base=data.rows[1];
+  data.count=64;
+  data.rows=Array.from({length:64},(_,i)=>({...base,index:i+1,itemID:2147483647,priceCopper:Number.MAX_SAFE_INTEGER,
+    stackCount:2147483647,numAvailable:2147483647,hasExtendedCost:true,costState:'observed',costCount:8,
+    costs:Array.from({length:8},(_,j)=>({index:j+1,itemID:2147483647,currencyID:null,quantity:2147483647,textureID:2147483647}))}));
+  const raw=JSON.stringify(data);
+  assert.ok(Buffer.byteLength(raw)>65536);
+  assert.equal(parseGrowthDiagnostic('merchant',raw,options).rows.length,64);
+  assert.throws(()=>parseGrowthDiagnostic('merchant',raw+' '.repeat(131073-Buffer.byteLength(raw)),options),/크기/);
+});
+
+test('Lua codec의 중복 키·이스케이프·지수·소수 거부와 웹 수신을 대조한다',()=>{
+  const raw=JSON.stringify(merchant());
+  for(const invalid of [raw.replace('"build":','"build":70001,"build":'),
+    raw.replace('"build":70001','"build":70001.0'),raw.replace('"build":70001','"build":70001e0'),
+    raw.replace('"unverified"','"unverifi\\u0065d"')]){
+    assert.throws(()=>parseGrowthDiagnostic('merchant',invalid,options),/관측 계약 오류/);
+  }
+});
+
+test('CraftSim 값은 별도 출처와 비교 시각으로만 검증한다',async()=>{
+  const {parseCraftSimAdvisory}=await import('../src/growth-diagnostics-contract.mjs');
+  const sample=fixture('craftsim-advisory');
+  const opts={now:(sample.observedAt+1)*1000};
+  assert.deepEqual(parseCraftSimAdvisory(JSON.stringify(sample),opts),sample);
+  assert.throws(()=>parseCraftSimAdvisory(JSON.stringify({...sample,agreesWithPreview:true}),opts));
+  assert.throws(()=>parseCraftSimAdvisory(JSON.stringify({...sample,comparedObservationAt:sample.observedAt-6}),opts));
+  assert.throws(()=>parse('craft',{...craft(),advisory:sample}));
+  const db=storage();
+  db.characters[0].craft=[JSON.stringify(sample)];
+  assert.throws(()=>validateGrowthDiagnosticsStorage(db,opts));
+});
+
+test('Lua 제작 validator의 배정량, 잔액 행, 필수 슬롯 반례와 일치한다',()=>{
+  for (const mutate of [
+    value=>{value.inventory.balances=[];},
+    value=>{value.inventory.balances[0].allocated=1;value.inventory.balances[0].allocationGapNoBanks=1;},
+    value=>{value.inventory.requirements=[];},
+    value=>{Object.assign(value.inventory.requirements[0],{singleItemID:9001,singleRequired:0});},
+    value=>{value.preview.equipLoc=null;},
+  ]){
+    const item=craft();
+    mutate(item);
+    assert.throws(()=>parse('craft',item),/관측 계약 오류/);
+  }
 });
