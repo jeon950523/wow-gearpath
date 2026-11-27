@@ -1,0 +1,308 @@
+{
+  "region": "kr",
+  "seasonId": "midnight-s2",
+  "patch": "12.1.5",
+  "clientBuild": 70961,
+  "checkedAt": "2026-11-28",
+  "reviewDueAt": "2026-12-03T00:00:00+09:00",
+  "sources": {
+    "blizzardPatch": {
+      "label": "블리자드 한국 12.1.5 공지",
+      "url": "https://news.blizzard.com/ko-kr/article/24307306/12-1-5",
+      "type": "official",
+      "scope": "KR 12.1.5"
+    },
+    "blizzardWeekly": {
+      "label": "블리자드 주간 소식 · 와두 교환",
+      "url": "https://news.blizzard.com/en-us/article/24315647/wow-celebration-pass-wow-forever-s-al-aketh-rising-comic-december-trading-post-and-more-in-wow-weekly",
+      "type": "official",
+      "scope": "한밤 2시즌 글로벌 공지, KR 현재 창 미관측"
+    },
+    "journey": {
+      "label": "TheWoWDB · 구렁 여정",
+      "url": "https://thewowdb.com/guides/midnight/delves-season-2/",
+      "type": "public-reference",
+      "scope": "12.1.5 build 70961 클라이언트 데이터, 지역별 판매 확인 아님"
+    },
+    "delves": {
+      "label": "Wowhead · 한밤 2시즌 구렁",
+      "url": "https://www.wowhead.com/guide/midnight/delves-season-journey-best-builds-nemesis-rewards",
+      "type": "public-reference",
+      "scope": "한밤 2시즌 공개 가이드, KR 재검증 대기"
+    },
+    "labyrinth": {
+      "label": "Wowhead · 킨도잔의 미궁",
+      "url": "https://www.wowhead.com/guide/midnight/delves/labyrinth-of-kindojan-megadelve-nemesis-rewards",
+      "type": "public-reference",
+      "scope": "라이브 12.1.5 가이드, 신화 단계는 최신 공식 공지 우선"
+    },
+    "bow": {
+      "label": "Wowhead · Aln’hara Sprigshot 레시피",
+      "url": "https://www.wowhead.com/spell=1230062/alnhara-sprigshot",
+      "type": "public-reference",
+      "scope": "라이브 한밤 레시피 ID 1230062, 주문 결과 및 가격 미확인"
+    },
+    "spark": {
+      "label": "Wowhead · 해일의 불꽃",
+      "url": "https://www.wowhead.com/news/three-sparks-available-this-week-for-some-characters-but-not-all-382428",
+      "type": "public-reference",
+      "scope": "한밤 2시즌 라이브 불꽃 자료"
+    },
+    "cane": {
+      "label": "Wowhead · Aln’hara Cane 레시피",
+      "url": "https://www.wowhead.com/spell=1230060/alnhara-cane",
+      "type": "public-reference",
+      "scope": "라이브 한밤 레시피 ID 1230060, 주문 결과 및 가격 미확인"
+    }
+  },
+  "vendors": [
+    {
+      "id": "zahran-champion",
+      "name": "자흐란 · 용사 장비",
+      "policy": "rotating",
+      "conditions": "구렁 탐험가의 여정 5등급, 시즌 3주차부터 6단계 이상 구렁 종료 시 등장하는 것으로 안내됩니다.",
+      "track": "용사",
+      "itemLevel": null,
+      "cost": {
+        "kind": "currency",
+        "id": 2803,
+        "label": "지하의 주화",
+        "quantity": null
+      },
+      "sources": [
+        "journey",
+        "delves"
+      ]
+    },
+    {
+      "id": "zahran-hero",
+      "name": "자흐란 · 영웅 장비",
+      "policy": "rotating",
+      "conditions": "구렁 탐험가의 여정 9등급에서 영웅 장비 교환이 안내됩니다.",
+      "track": "영웅",
+      "itemLevel": null,
+      "cost": {
+        "kind": "currency",
+        "id": 3356,
+        "label": "Untainted Mana-Crystals",
+        "quantity": null
+      },
+      "sources": [
+        "delves"
+      ]
+    },
+    {
+      "id": "rivergleam-keys",
+      "name": "날레이데아 · 복원된 금고 열쇠",
+      "policy": "catalog",
+      "conditions": "구렁 탐험가의 여정 6등급의 열쇠 구매 해금 후보입니다.",
+      "track": null,
+      "itemLevel": null,
+      "cost": null,
+      "sources": [
+        "delves"
+      ]
+    },
+    {
+      "id": "kindojan-heroic",
+      "name": "킨도잔 · 영웅 영혼 파편 결합",
+      "policy": "catalog",
+      "conditions": "미궁의 풍요로운 보관함에서 파편을 모아 무작위 영웅 장비를 만드는 공개 경로입니다.",
+      "track": "영웅 2/6",
+      "itemLevel": 308,
+      "cost": {
+        "kind": null,
+        "id": null,
+        "label": "Heroic Soul Fragment",
+        "quantity": 3
+      },
+      "sources": [
+        "labyrinth"
+      ]
+    },
+    {
+      "id": "kindojan-myth",
+      "name": "킨도잔 · 와두 신화 장비 교환",
+      "policy": "catalog",
+      "conditions": "의식의 방을 완료하고 킨두루와 대화해 미궁을 연 뒤, 와두가 지정한 방의 퀘스트를 순서대로 확인하세요. 8단계 이상 조건은 공개 가이드 기준입니다.",
+      "track": "신화 2/6",
+      "itemLevel": null,
+      "cost": {
+        "kind": null,
+        "id": null,
+        "label": "Mythical Soul Fragment",
+        "quantity": 3
+      },
+      "sources": [
+        "blizzardPatch",
+        "blizzardWeekly",
+        "labyrinth"
+      ]
+    }
+  ],
+  "delveRewards": {
+    "source": "delves",
+    "tiers": [
+      {
+        "tier": 1,
+        "bountiful": 266,
+        "bounty": null,
+        "vault": 279
+      },
+      {
+        "tier": 2,
+        "bountiful": 269,
+        "bounty": null,
+        "vault": 282
+      },
+      {
+        "tier": 3,
+        "bountiful": 272,
+        "bounty": null,
+        "vault": 285
+      },
+      {
+        "tier": 4,
+        "bountiful": 276,
+        "bounty": 282,
+        "vault": 289
+      },
+      {
+        "tier": 5,
+        "bountiful": 279,
+        "bounty": 289,
+        "vault": 292
+      },
+      {
+        "tier": 6,
+        "bountiful": 282,
+        "bounty": 292,
+        "vault": 298
+      },
+      {
+        "tier": 7,
+        "bountiful": 292,
+        "bounty": 295,
+        "vault": 302
+      },
+      {
+        "tier": 8,
+        "bountiful": 295,
+        "bounty": 305,
+        "vault": 305
+      },
+      {
+        "tier": 9,
+        "bountiful": 295,
+        "bounty": 305,
+        "vault": 305
+      },
+      {
+        "tier": 10,
+        "bountiful": 295,
+        "bounty": 305,
+        "vault": 305
+      },
+      {
+        "tier": 11,
+        "bountiful": 295,
+        "bounty": 305,
+        "vault": 305
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "recipeId": 1230062,
+      "itemId": 265337,
+      "label": "Aln’hara Sprigshot",
+      "profession": "주문각인",
+      "slot": "원거리 활",
+      "unlock": "활 도안 특화 15",
+      "baseMaterials": [
+        {
+          "label": "Majestic Fin",
+          "kind": "item",
+          "id": 238530,
+          "quantity": 1
+        },
+        {
+          "label": "Tormented Tantalum",
+          "kind": "item",
+          "id": 251283,
+          "quantity": 1
+        },
+        {
+          "label": "Codified Azeroot",
+          "kind": "item",
+          "id": 245764,
+          "quantity": 8
+        },
+        {
+          "label": "Soul Cipher",
+          "kind": "item",
+          "id": 245766,
+          "quantity": 2
+        }
+      ],
+      "reagentSlots": [
+        {
+          "label": "불꽃 재료군",
+          "kind": null,
+          "id": null,
+          "quantity": 4
+        }
+      ],
+      "sources": [
+        "bow",
+        "spark"
+      ]
+    },
+    {
+      "recipeId": 1230060,
+      "itemId": 245770,
+      "label": "Aln’hara Cane",
+      "profession": "주문각인",
+      "slot": "양손 지팡이",
+      "unlock": "지팡이 도안 특화 5",
+      "baseMaterials": [
+        {
+          "label": "Majestic Hide",
+          "kind": "item",
+          "id": 238529,
+          "quantity": 1
+        },
+        {
+          "label": "Tormented Tantalum",
+          "kind": "item",
+          "id": 251283,
+          "quantity": 1
+        },
+        {
+          "label": "Codified Azeroot",
+          "kind": "item",
+          "id": 245764,
+          "quantity": 6
+        },
+        {
+          "label": "Soul Cipher",
+          "kind": "item",
+          "id": 245766,
+          "quantity": 3
+        }
+      ],
+      "reagentSlots": [
+        {
+          "label": "불꽃 재료군",
+          "kind": null,
+          "id": null,
+          "quantity": 4
+        }
+      ],
+      "sources": [
+        "cane",
+        "spark"
+      ]
+    }
+  ]
+}
