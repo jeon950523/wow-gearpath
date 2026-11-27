@@ -1,5 +1,10 @@
 # WoW GearPath 인계
 
+## TASK-006-5 — 공통 시즌 데이터 웹 우선
+
+공통 판매·교환·해금·보상·제작 레시피와 기본 재료는 웹 시즌 팩부터 구축한다. 시즌·패치·빌드·지역·확인일·출처·권리 범위를 기록한다. 애드온은 캐릭터별 장비·재화·전역퀘·실제 다음 강화 단계와 선택 제작 상태를 관측한다. 상인 실측은 선택이며 미수집을 판매 없음으로 해석하지 않는다. 공개 후보와 실제 판매·적격성·소비는 독립적으로 관리한다. 기존 TASK 순서와 실행·추천 승인 정책을 유지한다. [웹 검수 및 인계](reports/TASK-006-5-REPORT.md)
+
+
 ## 현재 인계 — TASK-006-4 상인·제작 관측 저장
 
 애드온 ADDON-006-2-1 제안 90b574c0162b1d4da8f9afafcc725fb87e2e08a9을 기준으로 신규 저장 컨테이너와 종류별 JSON을 웹 정본 2f9d167248202ff81e98c419ac5cb867c0a59528에 처음 정의하고, 애드온 b59fa9abfea1200240e5f9668f165be694c2c7d6과 대조해 최종 정본 91da6d7706aa4d336ef0a7210a79a66d1a3c00f5로 갱신했다. [저장 정본](contracts/GROWTH-DIAGNOSTICS-STORAGE-001.md) · [상인 스키마](../contracts/merchant-diagnostics-v1.schema.json) · [제작 스키마](../contracts/craft-diagnostics-v1.schema.json) · [검수](reports/TASK-006-4-REPORT.md)

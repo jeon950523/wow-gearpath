@@ -239,3 +239,22 @@ test('SavedVariables 다중 캐릭터를 선택하고 원래 시각의 JSON을 �
   await expect(page.getByRole('heading',{name:'보조캐릭터',exact:true})).toHaveCount(0);
   expect(outgoing).toEqual([]);
 });
+
+test('캐릭터나 상인 관측 없이 공개 성장 가이드를 탐색한다',async ({page})=>{
+  await page.clock.setFixedTime(new Date('2026-11-28T09:00:00Z'));
+  await page.route('**/api/realms',route=>route.fulfill({json:{realms:[{slug:'azshara',name:'아즈샤라'}]}}));
+  const outgoing:string[]=[];
+  page.on('request',request=>{if(request.postData())outgoing.push(request.url());});
+  await page.goto('/');
+  const guide=page.getByRole('region',{name:'공개 시즌 성장 가이드'});
+  await expect(guide.getByText(/개인 해금 및 구매 가능 여부는 게임에서/)).toBeVisible();
+  await guide.getByText('구렁 상인과 킨도잔 교환',{exact:true}).click();
+  await expect(guide.getByText('자흐란 · 용사 장비')).toBeVisible();
+  await expect(guide.getByText(/지하의 주화 수량 미확인/)).toBeVisible();
+  await expect(guide.getByText(/Mythical Soul Fragment 3개/)).toBeVisible();
+  await guide.getByText('구렁 난이도별 보상과 위대한 금고',{exact:true}).click();
+  await expect(guide.getByRole('table',{name:'구렁 공개 보상'}).getByRole('row')).toHaveCount(12);
+  await guide.getByText('제작 레시피와 기본 재료',{exact:true}).click();
+  await expect(guide.getByText(/활 도안 특화 15.*Tormented Tantalum ×1/)).toBeVisible();
+  expect(outgoing).toEqual([]);
+});

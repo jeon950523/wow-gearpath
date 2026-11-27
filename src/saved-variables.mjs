@@ -6,12 +6,11 @@ export const maxSavedVariablesFiles=8;
 const maxPayloadBytes=2*1024*1024;
 const maxDepth=32;
 const maxEntries=10000;
-const maxStringLength=maxImportBytes;
 const encoder=new TextEncoder();
 const decoder=new TextDecoder('utf-8',{fatal:true,ignoreBOM:true});
 const reserved=new Set(['__proto__','prototype','constructor']);
 
-function readLuaData(text) {
+function readLuaData(text,roots,maxStringLength) {
   let offset=text.charCodeAt(0)===0xfeff ? 1 : 0, entries=0;
   const positional=new WeakMap();
   const whitespace=/[ \t\r\n\f\v]+/y;
@@ -131,7 +130,7 @@ function readLuaData(text) {
   }
   skip();
   const root=match(name);
-  if(root!=='WowGearPathDB' && root!=='WowGearPathUpgradeDB') fail();
+  if(!roots.includes(root)) fail();
   expect('=');
   const result=table(1);
   take(';');
@@ -159,10 +158,33 @@ function normalizeSnapshot(raw,options) {
     observedAt:snapshot.observedAt,hasWorldQuests:snapshot.worldQuests!==undefined,historyJson:null};
 }
 
-export function readSavedVariables(raw,options) {
+function readBoundedLua(raw,roots,maxStringLength) {
   if(typeof raw!=='string' || raw.length>maxSavedVariablesBytes ||
       encoder.encode(raw).length>maxSavedVariablesBytes) throw new Error('SavedVariables 파일은 10 MiB 이하여야 합니다.');
-  const {root,database,positional}=readLuaData(raw);
+  return readLuaData(raw,roots,maxStringLength);
+}
+
+// Offline staging for the separate diagnostic root. This does not add a selectable browser import.
+export function decodeGrowthSavedVariables(raw) {
+  const {database,positional}=readBoundedLua(raw,['WowGearPathGrowthDiagnosticsDB'],768*1024);
+  function dense(value,limit) {
+    requireStorage(value!==null && typeof value==='object');
+    const count=Object.keys(value).length;
+    requireStorage(count<=limit);
+    return Array.from({length:count},(_,index)=>{
+      requireStorage(positional.get(value)?.has(index+1));
+      return value[index+1];
+    });
+  }
+  const characters=dense(database.characters,16).map(row=>{
+    requireStorage(row!==null && typeof row==='object');
+    return {...row,merchant:dense(row.merchant,8),craft:dense(row.craft,8)};
+  });
+  return {...database,characters};
+}
+
+export function readSavedVariables(raw,options) {
+  const {root,database,positional}=readBoundedLua(raw,['WowGearPathDB','WowGearPathUpgradeDB'],maxImportBytes);
   const operational=root==='WowGearPathDB';
   let payloadBytes=0;
   function charge(value,limit) {

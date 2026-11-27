@@ -5,6 +5,7 @@ import {mergeWorldQuestScan} from '../src/world-quests.mjs';
 import {buildWeeklyActivities,activityStatusLabels} from '../src/activity-dashboard.mjs';
 import {formatGoldBalance} from './format-copper';
 import {SavedVariablesImport} from './saved-variables-import';
+import {SeasonCatalogPanel} from './season-catalog-panel';
 import {WorldQuestPanel} from './world-quest-panel';
 import {diagnose} from '../src/engine.mjs';
 import {sample} from '../src/sample.mjs';
@@ -354,6 +355,7 @@ export default function Planner() {
       </section>
     </>}
     {!result && <div className="empty"><strong>장착 장비와 파밍 경로</strong><p>한국 리테일 캐릭터를 검색하거나 샘플을 열어 진단 내용을 확인하세요.</p></div>}
+    <SeasonCatalogPanel scope={{region:snapshot?.region??season.region,seasonId:snapshot?.seasonId??season.id,patch:snapshot ? snapshot.patch??null : season.patch}} />
     <footer>WoW GearPath · 월드 오브 워크래프트 팬 도구 <span>315는 서비스의 추천 기준입니다.</span></footer>
   </main>;
 }
