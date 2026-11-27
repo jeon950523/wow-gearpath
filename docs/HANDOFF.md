@@ -1,5 +1,11 @@
 # WoW GearPath 인계
 
+## 현재 인계 — TASK-006-4 상인·제작 관측 저장
+
+애드온 ADDON-006-2-1 제안 90b574c0162b1d4da8f9afafcc725fb87e2e08a9을 기준으로 신규 저장 컨테이너와 종류별 JSON을 웹 정본 2f9d167248202ff81e98c419ac5cb867c0a59528에 처음 정의하고, 애드온 b59fa9abfea1200240e5f9668f165be694c2c7d6과 대조해 최종 정본 91da6d7706aa4d336ef0a7210a79a66d1a3c00f5로 갱신했다. [저장 정본](contracts/GROWTH-DIAGNOSTICS-STORAGE-001.md) · [상인 스키마](../contracts/merchant-diagnostics-v1.schema.json) · [제작 스키마](../contracts/craft-diagnostics-v1.schema.json) · [검수](reports/TASK-006-4-REPORT.md)
+
+애드온 담당은 최종 SHA의 한도(상인 128 KiB, 제작 768 KiB, 잔액 288, 분류 2,048), 부분·원시 0 및 JSON wire 규칙을 serializer/validator/저장 커널에 함께 반영한 후 실제 두 캐릭터/reload/관측 항목을 검증한다. 운영·강화 저장은 그대로 두며 현재 신규 웹 가져오기·소비 추천은 연결하지 않았다. [CraftSim 참고 스키마](../contracts/craftsim-advisory-v1.schema.json)는 독립이며 현재 저장에 포함하지 않는다. [기성 애드온 활용 정책](research/ADDON-INTEGRATION-POLICY.md)을 동기화했다. 본 TASK-007 순서 유지. 아래는 기존 기록이다.
+
 ## 현재 인계 — TASK-006-2 / TASK-006-3
 
 애드온 구현 기준 웹 정본 커밋 b6c1e09552c5ba0dcb1492a3a5dcac57761e58a7. 작업 순서는 기존 본 TASK-007을 유지한다.

@@ -1,0 +1,20 @@
+{
+  "kind": "wgg-craftsim-advisory",
+  "schemaVersion": 1,
+  "provider": "CraftSim",
+  "providerVersion": "27.0.8",
+  "apiReferenceRevision": "e15fb18c1004b2f373ee3247b2ade0b917fbea69",
+  "patch": "12.1.5",
+  "regionID": 2,
+  "source": "personalCraft",
+  "mode": "craft",
+  "allocationScope": "modifiedOnly",
+  "freshness": "unverified",
+  "build": 70001,
+  "observedAt": 1795752001,
+  "comparedObservationAt": 1795752000,
+  "recipeID": 110,
+  "expectedQualityRank": 2,
+  "previewQualityRank": 1,
+  "agreesWithPreview": false
+}

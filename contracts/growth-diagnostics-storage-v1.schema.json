@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/jeon950523/wow-gearpath/main/contracts/growth-diagnostics-storage-v1.schema.json",
+  "type": "object",
+  "properties": {
+    "storageVersion": {
+      "const": 1
+    },
+    "characters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "region": {
+            "const": "kr"
+          },
+          "realmDisplayName": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9가-힣-](?:[A-Za-z0-9가-힣 -]{0,126}[A-Za-z0-9가-힣-])?$"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9가-힣-](?:[A-Za-z0-9가-힣 -]{0,126}[A-Za-z0-9가-힣-])?$"
+          },
+          "merchant": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 131072
+            },
+            "maxItems": 8
+          },
+          "craft": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 786432
+            },
+            "maxItems": 8
+          }
+        },
+        "required": [
+          "region",
+          "realmDisplayName",
+          "name",
+          "merchant",
+          "craft"
+        ],
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "properties": {
+              "merchant": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "craft": {
+                "minItems": 1
+              }
+            }
+          }
+        ]
+      },
+      "maxItems": 16
+    }
+  },
+  "required": [
+    "storageVersion",
+    "characters"
+  ],
+  "additionalProperties": false
+}

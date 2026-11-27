@@ -1,0 +1,68 @@
+{
+  "kind": "wgg-merchant-diagnostics",
+  "diagnosticVersion": "0.1.0",
+  "schemaVersion": 1,
+  "patch": "12.1.5",
+  "build": 70001,
+  "regionID": 2,
+  "observedAt": 1795752000,
+  "state": "sample",
+  "coverage": "visibleMerchantListOnly",
+  "level": 90,
+  "npcID": 1001,
+  "mapID": null,
+  "specID": 253,
+  "lootSpecID": 0,
+  "filter": null,
+  "count": 2,
+  "eligibility": "unverified",
+  "actualCost": "unverified",
+  "rows": [
+    {
+      "index": 1,
+      "itemID": 1002,
+      "saleCurrencyID": null,
+      "infoState": "observed",
+      "priceCopper": 0,
+      "stackCount": 1,
+      "numAvailable": -1,
+      "isPurchasable": false,
+      "isUsable": null,
+      "hasExtendedCost": true,
+      "costState": "partial",
+      "costCount": 1,
+      "costs": [
+        {
+          "index": 1,
+          "itemID": null,
+          "currencyID": null,
+          "textureID": 111,
+          "quantity": 2
+        }
+      ],
+      "detailState": "unobserved",
+      "itemLevel": null,
+      "previewLevel": null,
+      "equipLoc": null
+    },
+    {
+      "index": 2,
+      "itemID": 1002,
+      "saleCurrencyID": null,
+      "infoState": "observed",
+      "priceCopper": null,
+      "stackCount": 1,
+      "numAvailable": 0,
+      "isPurchasable": null,
+      "isUsable": false,
+      "hasExtendedCost": false,
+      "costState": "noExtendedCost",
+      "costCount": 0,
+      "costs": [],
+      "detailState": "observed",
+      "itemLevel": 300,
+      "previewLevel": false,
+      "equipLoc": "INVTYPE_HEAD"
+    }
+  ]
+}
